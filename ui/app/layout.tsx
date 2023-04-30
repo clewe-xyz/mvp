@@ -1,7 +1,5 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import "../assets/styles/theme/main.scss";
 
 export const metadata = {
   title: "CleWe",
@@ -18,10 +16,7 @@ export default function RootLayout({
       lang="en"
       className="uk-background-white dark:uk-background-gray-100 dark:uk-text-gray-20 uk-dark"
     >
-      <head>
-        <link rel="stylesheet" href="../styles/theme/main.scss" />
-      </head>
-      <body className={inter.className}>{children}</body>
+      <body className="uni-body">{children}</body>
     </html>
   );
 }
