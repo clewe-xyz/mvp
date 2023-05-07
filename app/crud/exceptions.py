@@ -10,8 +10,13 @@ class CRUDError(Exception):
 
 class NotFound(CRUDError):
     def __init__(self, message: str = "Not found"):
+        super().__init__(status_code=status.HTTP_404_NOT_FOUND, message=message)
+
+
+class AlreadyExists(CRUDError):
+    def __init__(self, message: str = "Record already exists"):
         super().__init__(
-            status_code=status.HTTP_404_NOT_FOUND, message=message
+            status_code=status.HTTP_400_BAD_REQUEST, message=message
         )
 
 

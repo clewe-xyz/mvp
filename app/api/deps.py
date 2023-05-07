@@ -47,9 +47,7 @@ async def get_current_user(
             headers={'WWW-Authenticate': 'Bearer'},
         )
 
-    user = (
-        db.query(UserTable).filter(UserTable.email == token_data.sub).first()
-    )
+    user = db.query(UserTable).filter(UserTable.email == token_data.sub).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -77,7 +75,5 @@ async def get_new_access_token(
             headers={'WWW-Authenticate': 'Bearer'},
         )
 
-    jwt_token = JWTTokenResponse(
-        access_token=access_token, refresh_token=token
-    )
+    jwt_token = JWTTokenResponse(access_token=access_token, refresh_token=token)
     return jwt_token

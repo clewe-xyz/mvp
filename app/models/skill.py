@@ -7,20 +7,22 @@ from app.db.base_class import Base
 
 
 if TYPE_CHECKING:
-    from app.models import UserTable
+    from app.models import UserTable, UsersSkills, QuestionsSkills, Question
 
 
 class Skill(Base):
     id: int = Column(Integer, primary_key=True, index=True)
-    user_id: int = Column(
-        Integer, ForeignKey('usertable.id', ondelete='CASCADE'), index=True
-    )
     topic: str = Column(VARCHAR(255))
-    title: str = Column(VARCHAR(255))
-    level: int = Column(Integer, default=0)
-    experience: float = Column(DECIMAL)
-
-    user: Mapped["UserTable"] = relationship(
-        'UserTable',
-        back_populates='skills',
+    tag: str = Column(VARCHAR(255))
+    users: Mapped[list['UserTable']] = relationship(
+        secondary='usersskills', back_populates='skills'
+    )
+    questions: Mapped[list['Question']] = relationship(
+        secondary='questionsskills', back_populates='skills'
+    )
+    users_skills: Mapped[list['UsersSkills']] = relationship(
+        back_populates='skill'
+    )
+    questions_skills: Mapped[list['QuestionsSkills']] = relationship(
+        back_populates='skill'
     )
