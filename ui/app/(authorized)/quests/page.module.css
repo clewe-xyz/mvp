@@ -1,0 +1,63 @@
+.main {
+  margin-bottom: 96px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.quest {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.26);
+  position: relative;
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+.quest:not(:last-child) {
+  margin-bottom: 36px;
+}
+
+.bgImageWrapper {
+  overflow: hidden;
+  left: 0;
+  top: 0;
+  max-height: 240px;
+  padding-bottom: 24px;
+}
+
+.questAbout {
+  padding: 24px;
+}
+
+.questImage {
+  border-radius: 16px 16px 0 0;
+  max-width: 100%;
+  height: auto;
+}
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 12px;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.singleSkill {
+  display: flex;
+  align-items: center;
+}
+
+.skillIcon {
+  margin-right: 8px;
+}
+
+.questActions {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 48px 32px;
+}
+
+.questActionButton {
+  width: 100%;
+}
