@@ -1,5 +1,8 @@
+import gradientCircle from "@/images/gradient-circle.svg";
+import { mabryPro, spaceGrotesk, stolzl } from "@/ui-kit/fonts";
+import classNames from "classnames";
+import Image from "next/image";
 import "./globals.css";
-import "../assets/styles/theme/main.scss";
 
 export const metadata = {
   title: "CleWe",
@@ -14,9 +17,29 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="uk-background-white dark:uk-background-gray-100 dark:uk-text-gray-20 uk-dark"
+      className={classNames(
+        spaceGrotesk.variable,
+        mabryPro.variable,
+        stolzl.variable
+      )}
     >
-      <body className="uni-body">{children}</body>
+      <body>
+        <div className="bg-attributes">
+          <Image
+            className="bg-circle bg-circle-top"
+            src={gradientCircle}
+            alt="Circle"
+            width="390"
+          />
+          <Image
+            className="bg-circle bg-circle-bottom"
+            src={gradientCircle}
+            alt="Circle"
+            width="390"
+          />
+        </div>
+        {children}
+      </body>
     </html>
   );
 }
