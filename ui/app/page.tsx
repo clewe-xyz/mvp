@@ -18,9 +18,9 @@ export default function Home() {
           fundamentals to feel what is like to be a CleWer
         </h5>
         <div className={styles.heroHook}>
-          <a href="#" className="button button-accent">
+          <Link href="/quests" className="button button-accent">
             Start quest
-          </a>
+          </Link>
         </div>
       </main>
     </>

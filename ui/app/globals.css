@@ -180,6 +180,7 @@ a {
   border-radius: 56px;
   padding: 18px 24px;
   transition: 0.2s ease;
+  z-index: 1;
 }
 
 .button::before {
