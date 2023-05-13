@@ -2,11 +2,20 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, Integer, VARCHAR, Text
 from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.ext.hybrid import hybrid_method
 
+from app.crud import NotFound
 from app.db.base_class import Base
 
 if TYPE_CHECKING:
-    from app.models import Quest, Skill, Trophy, UsersQuests
+    from app.models import (
+        Quest,
+        Skill,
+        Achievement,
+        UsersAchievements,
+        UsersQuests,
+        UsersSkills,
+    )
 
 
 class UserTable(Base):
@@ -21,13 +30,28 @@ class UserTable(Base):
     completed_quests: Mapped[list['Quest']] = relationship(
         secondary="usersquests", back_populates='users'
     )
+    skills: Mapped[list['Skill']] = relationship(
+        secondary='usersskills', back_populates='users'
+    )
+    achievements: Mapped[list['Achievement']] = relationship(
+        secondary='usersachievements', back_populates='users'
+    )
     users_quests: Mapped[list['UsersQuests']] = relationship(
         back_populates='user'
     )
-    skills: Mapped[list['Skill']] = relationship(
-        'Skill', back_populates='user', lazy='select'
+    users_skills: Mapped[list['UsersSkills']] = relationship(
+        back_populates='user'
+    )
+    users_achievements: Mapped[list['UsersAchievements']] = relationship(
+        back_populates='user'
     )
 
-    trophies: Mapped[list['Trophy']] = relationship(
-        'Trophy', back_populates='user', lazy='select'
-    )
+    @hybrid_method
+    def get_single_quest(self, quest_id):
+        quest = next(
+            (quest for quest in self.completed_quests if quest.id == quest_id),
+            None,
+        )
+        if not quest:
+            raise NotFound()
+        return quest

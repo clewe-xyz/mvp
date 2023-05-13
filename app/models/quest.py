@@ -6,21 +6,23 @@ from sqlalchemy.orm import relationship, Mapped
 from app.db.base_class import Base
 
 if TYPE_CHECKING:
-    from app.models import UserTable, UsersQuests
+    from app.models import UserTable, UsersQuests, Question, QuestsQuestions
 
 
 class Quest(Base):
     id: int = Column(Integer, primary_key=True, index=True)
     name: str = Column(VARCHAR(255))
-    slug: str = Column(VARCHAR(255), unique=True)
-    topic: str = Column(VARCHAR(255))
-    skill_reward = Column(Float)
     description: str = Column(Text)
-    difficulty: int = Column(Integer)
-    exp_reward: int = Column(Integer)
+    tag: str = Column(VARCHAR(255))
     users: Mapped[list['UserTable']] = relationship(
         secondary="usersquests", back_populates='completed_quests'
     )
+    questions: Mapped[list['Question']] = relationship(
+        secondary='questsquestions', back_populates='quests'
+    )
     users_quests: Mapped[list['UsersQuests']] = relationship(
+        back_populates='quest'
+    )
+    quests_questions: Mapped[list['QuestsQuestions']] = relationship(
         back_populates='quest'
     )

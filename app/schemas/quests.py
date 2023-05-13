@@ -1,20 +1,36 @@
+from typing import Optional
+
 from app.schemas.base import DBBaseModel, BaseModel
+from app.schemas.questions import QuestionWithSkillsDetails
 
 
 class Quest(DBBaseModel):
-    id: int
     name: str
-    topic: str
-    skill_reward: float
-    slug: str
     description: str
-    difficulty: int
-    exp_reward: int
+    tag: str
+
+
+class QuestCreate(Quest):
+    ...
+
+
+class QuestUpdate(QuestCreate):
+    id: int
 
 
 class QuestRequest(DBBaseModel):
     user_id: int
 
 
-class CompletedResponse(BaseModel):
-    trophy_achieved: bool = False
+class QuestDetails(Quest):
+    id: int
+
+
+class SetQuestionToQuestRequest(BaseModel):
+    question_id: int
+    skill_id: int
+    point: int
+
+
+class QuestWithQuestionDetails(QuestDetails):
+    questions: list[Optional[QuestionWithSkillsDetails]]

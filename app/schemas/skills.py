@@ -2,8 +2,22 @@ from app.schemas.base import DBBaseModel
 
 
 class Skill(DBBaseModel):
-    id: int
+    tag: str
     topic: str
-    title: str
-    level: int
-    experience: float
+
+
+class SkillCreate(Skill):
+    ...
+
+
+class SkillUpdate(SkillCreate):
+    id: int
+
+
+class SkillDetails(Skill):
+    id: int
+
+
+class QuestionSkillDetails(DBBaseModel):
+    skill: SkillDetails
+    point: int
