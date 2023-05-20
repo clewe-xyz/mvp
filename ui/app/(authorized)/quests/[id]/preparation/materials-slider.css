@@ -1,0 +1,25 @@
+.splide__pagination li {
+  margin: 0 4px;
+}
+
+.splide__pagination__page {
+  background: var(--color-gray-10);
+  border: 0;
+  border-radius: 50%;
+  display: inline-block;
+  height: 16px;
+  margin: 0 0.1rem;
+  padding: 0;
+  position: relative;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  width: 16px;
+}
+
+.splide__pagination__page.is-active {
+  background-color: var(--gradient-first);
+  background-image: linear-gradient(
+    var(--gradient-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+}

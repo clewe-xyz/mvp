@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import styles from "./layout.module.css";
+import Link from "next/link";
 import NavigationMenu from "./NavigationMenu";
+import styles from "./layout.module.css";
 
 export default function AuthorizedLayout({
   children,
@@ -11,7 +11,9 @@ export default function AuthorizedLayout({
     <>
       <header className={styles.header}>
         <nav className={styles.nav}>
-          <span className={styles.logo}>CleWe</span>
+          <Link href="/" className={styles.logo}>
+            CleWe
+          </Link>
           <NavigationMenu />
         </nav>
       </header>

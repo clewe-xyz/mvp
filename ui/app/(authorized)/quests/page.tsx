@@ -1,13 +1,14 @@
-import Image from "next/image";
-import styles from "./page.module.css";
 import quest1 from "@/images/quests/01.jpg";
 import quest2 from "@/images/quests/02.jpg";
 import quest3 from "@/images/quests/03.jpg";
+import blockchain from "@/images/skills/blockchain.png";
+import daos from "@/images/skills/daos.png";
 import finance from "@/images/skills/finance.png";
 import token from "@/images/skills/tokens.png";
-import daos from "@/images/skills/daos.png";
-import blockchain from "@/images/skills/blockchain.png";
 import classNames from "classnames";
+import Image from "next/image";
+import Link from "next/link";
+import styles from "./page.module.css";
 
 export default function Quests() {
   return (
@@ -45,8 +46,8 @@ export default function Quests() {
           </div>
         </div>
         <div className={styles.questActions}>
-          <a
-            href="#"
+          <Link
+            href="/quests/123/preparation"
             className={classNames(
               "button",
               "button-accent",
@@ -54,7 +55,7 @@ export default function Quests() {
             )}
           >
             Start quest
-          </a>
+          </Link>
         </div>
       </div>
       <div className={styles.quest}>
@@ -81,7 +82,7 @@ export default function Quests() {
           </div>
         </div>
         <div className={styles.questActions}>
-          <a
+          <Link
             href="#"
             className={classNames(
               "button",
@@ -90,7 +91,7 @@ export default function Quests() {
             )}
           >
             Start quest
-          </a>
+          </Link>
         </div>
       </div>
       <div className={styles.quest}>
@@ -126,7 +127,7 @@ export default function Quests() {
           </div>
         </div>
         <div className={styles.questActions}>
-          <a
+          <Link
             href="#"
             className={classNames(
               "button",
@@ -135,7 +136,7 @@ export default function Quests() {
             )}
           >
             Start quest
-          </a>
+          </Link>
         </div>
       </div>
     </main>
