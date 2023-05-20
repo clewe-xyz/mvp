@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, VARCHAR, Text
 from sqlalchemy.orm import relationship, Mapped
 from sqlalchemy.ext.hybrid import hybrid_method
 
-from app.crud import NotFound
+
 from app.db.base_class import Base
 
 if TYPE_CHECKING:
@@ -48,6 +48,8 @@ class UserTable(Base):
 
     @hybrid_method
     def get_single_quest(self, quest_id):
+        from app.crud import NotFound
+
         quest = next(
             (quest for quest in self.completed_quests if quest.id == quest_id),
             None,
