@@ -1,31 +1,21 @@
-.navButton {
-  all: unset;
-  font-family: var(--font-space-grotesk);
-  font-size: 1.25rem;
-}
-
-.navButton::before {
-  position: static;
-  box-shadow: none;
-}
-
-.navMenu {
+.modal {
   background-color: var(--color-gray-100);
-  min-height: 100vh;
   width: 100%;
   position: fixed;
-  top: 0;
-  left: 100%;
+  left: 0;
   right: auto;
-  transition: left 0.3s ease-out;
+  top: 100%;
+  transition: top 0.3s ease-out;
   z-index: 1000;
 }
 
-.navMenu.opened {
-  left: 0;
+.modal.opened {
+  min-height: 100%;
+  position: absolute;
+  top: 0;
 }
 
-.navBlockContent::before {
+.modalContent::before {
   content: "";
   display: block;
   height: 4px;
@@ -37,7 +27,7 @@
   );
 }
 
-.navBlockHeader {
+.modalHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -50,14 +40,13 @@
   font-weight: 700;
 }
 
-.navMenuItems {
-  font-size: var(--sizes-heading-h2-size);
-  font-weight: 700;
-  list-style: none;
-  margin-top: 96px;
-  text-align: center;
+.navButton {
+  all: unset;
+  font-family: var(--font-space-grotesk);
+  font-size: 1.25rem;
 }
 
-.navMenuItems li:not(:last-child) {
-  margin-bottom: 24px;
+.navButton::before {
+  position: static;
+  box-shadow: none;
 }
