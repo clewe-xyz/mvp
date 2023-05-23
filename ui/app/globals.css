@@ -52,7 +52,7 @@
 
 html,
 body {
-  background-color: var(--color-gray-100, #fff);
+  background-color: var(--color-gray-100, #000);
   color: var(--color-gray-10);
   font-weight: 400;
   font-size: var(--body-font-size, 16px);
@@ -149,8 +149,10 @@ p {
   margin-bottom: 20px;
 }
 
-a {
+a,
+button {
   color: inherit;
+  font-size: inherit;
   text-decoration: none;
 }
 
@@ -182,6 +184,9 @@ a {
 
 .button {
   position: relative;
+  background-color: transparent;
+  border: none;
+  color: var(--color-gray-10);
   display: inline-flex;
   align-items: center;
   font-weight: 700;
@@ -230,4 +235,15 @@ a {
     var(--gradient-first),
     var(--gradient-second)
   );
+}
+
+.text-accent {
+  background-color: var(--gradient-first);
+  background-image: linear-gradient(
+    var(--gradient-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+  background-clip: text;
+  color: transparent;
 }

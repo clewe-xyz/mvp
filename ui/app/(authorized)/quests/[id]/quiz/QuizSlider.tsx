@@ -1,18 +1,14 @@
+import { SkillReward } from "@/app/(authorized)/skill";
+import { ProgressLine } from "@/ui-kit/progress-line";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { useRef, useState } from "react";
 import MultipleAnswersQuestion, {
   MultipleAnswer,
 } from "./MultipleAnswersQuestion";
 import OpenQuestion, { OpenQuestionAnswer } from "./OpenQuestion";
-import ProgressLine from "./ProgressLine";
 import SingleAnswerQuestion, { SingleAnswer } from "./SingleAnswerQuestion";
 import styles from "./page.module.css";
-import {
-  QuestionAnswers,
-  QuestionType,
-  QuizQuestion,
-  SkillReward,
-} from "./types";
+import { QuestionAnswers, QuestionType, QuizQuestion } from "./types";
 
 type Props = {
   questions: QuizQuestion[];
@@ -72,7 +68,7 @@ export default function QuizSlider({
   return (
     <>
       <div className={styles.quizProgress}>
-        <ProgressLine progress={quizProgress} />
+        <ProgressLine currentProgress={quizProgress} />
       </div>
       <Splide
         className={styles.quiz}

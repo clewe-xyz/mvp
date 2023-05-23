@@ -1,0 +1,72 @@
+.achievementsSlide {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.statusBadgeContainer {
+  display: inline-block;
+  position: relative;
+}
+
+.statusBadge {
+  background-color: var(--gradient-first);
+  background-image: linear-gradient(
+    var(--gradient-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+  border-radius: 4px;
+  padding: 0 8px;
+  position: absolute;
+  font-size: 0.9rem;
+  top: 8px;
+  right: -20px;
+  z-index: 1;
+}
+
+.locked .statusBadge {
+  border-width: 1px;
+  background-color: var(--color-gray-100, #000);
+  background-image: none;
+  border-image-source: linear-gradient(
+    var(--gradient-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+  border-image-slice: 1;
+}
+
+.achievementImage {
+  padding-top: 4px;
+  text-align: center;
+}
+
+.achievementImage img {
+  border-radius: 16px;
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+}
+
+.locked .achievementImage img {
+  filter: grayscale(100%) blur(4px);
+}
+
+.achievementText {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.achievementsTitle {
+  margin-bottom: 0;
+}
+
+.achievementsDescription {
+  font-size: 0.9rem;
+}
+
+.achievementActions {
+  margin-top: 12px;
+  text-align: center;
+}

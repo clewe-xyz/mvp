@@ -1,0 +1,38 @@
+.skill {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.26);
+  min-width: 180px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+.skillImageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: -15px;
+  top: -15px;
+  z-index: 0;
+}
+
+.skillImage {
+  opacity: 0.3;
+}
+
+.skillText {
+  padding: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.skillPoints {
+  font-size: var(--sizes-heading-h2-size);
+}
+
+.measure {
+  font-size: 1rem;
+}

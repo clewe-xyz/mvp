@@ -1,17 +1,15 @@
 "use client";
 
-import finance from "@/images/skills/finance.png";
+import { Skill, SkillReward } from "@/app/(authorized)/skill";
 import { Modal } from "@/ui-kit/modal";
 import "@splidejs/react-splide/css/core";
 import classNames from "classnames";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import QuizPlayer from "./QuizPlayer";
 import QuizSlider from "./QuizSlider";
 import styles from "./page.module.css";
-import { Quiz, SkillReward } from "./types";
-import SkillImage from "./SkillImage";
+import { Quiz } from "./types";
 
 const MOCKED_QUIZ: Quiz = {
   id: "ae4jjo8",
@@ -186,18 +184,12 @@ export default function SingleQuiz() {
               <h4 className={styles.skillsSummaryTitle}>Improved skills</h4>
               <div className={styles.skillsSummaryContainer}>
                 {accumSkills.map((skill) => (
-                  <div key={skill.id} className={styles.statBlock}>
-                    <div className={styles.skillImageContainer}>
-                      <SkillImage
-                        className={styles.skillImage}
-                        tag={skill.tag}
-                      />
-                    </div>
-                    <div className={styles.statText}>
-                      <div className={styles.statResult}>+{skill.points}</div>
-                      <div className={styles.statTitle}>{skill.topic}</div>
-                    </div>
-                  </div>
+                  <Skill
+                    key={skill.id}
+                    name={skill.topic}
+                    tag={skill.tag}
+                    points={`+${skill.points}`}
+                  />
                 ))}
               </div>
             </div>
