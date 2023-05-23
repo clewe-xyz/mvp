@@ -1,0 +1,77 @@
+.section {
+  background-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.26);
+  margin-bottom: 24px;
+  padding: 15px;
+  position: relative;
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+.section.nft {
+  background-color: rgba(255, 255, 255, 0.05);
+  background-image: linear-gradient(
+    var(--gradient-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+  box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.16);
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.section.nft .picture {
+  padding-right: 24px;
+}
+
+.mintNFTTitle {
+  margin-bottom: 12px;
+}
+
+.mintNFTDescription {
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.mintNFTActions button {
+  font-size: 0.9rem;
+}
+
+.nickName {
+  margin-bottom: 12px;
+}
+
+.levelContainer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.level {
+  margin-bottom: 4px;
+}
+
+.levelProgress {
+  height: 8px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: var(--color-gray-10);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.addedExperience {
+  padding-right: 16px;
+}
+
+.skillsSummaryContainer {
+  display: grid;
+  align-items: start;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  column-gap: 20px;
+  row-gap: 20px;
+  grid-template-rows: max-content;
+  overflow-x: auto;
+}

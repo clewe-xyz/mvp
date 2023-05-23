@@ -1,5 +1,5 @@
+import { ProgressLine } from "@/ui-kit/progress-line";
 import classNames from "classnames";
-import ProgressLine from "./ProgressLine";
 import styles from "./page.module.css";
 
 type Props = {
@@ -33,7 +33,7 @@ export default function QuizPlayer({
           ) : null}
         </div>
         <div className={styles.levelProgress}>
-          <ProgressLine progress={totalExperience} />
+          <ProgressLine currentProgress={totalExperience} />
         </div>
       </div>
     </>

@@ -1,3 +1,5 @@
+import { SkillReward } from "@/app/(authorized)/skill";
+
 export type Quiz = {
   id: string;
   title: string;
@@ -19,10 +21,3 @@ export type QuestionAnswers = {
 };
 
 export type QuestionType = "multiple-options" | "single-option" | "opened-text";
-
-export type SkillReward = {
-  id: string;
-  topic: string;
-  tag: string;
-  points: number;
-};
