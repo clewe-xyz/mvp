@@ -1,6 +1,6 @@
-import { Input } from "@/ui-kit/inputs/Input";
-import styles from "./styles.module.css";
 import Link from "next/link";
+import { LoginForm } from "./LoginForm";
+import styles from "./styles.module.css";
 
 export default function LoginPage() {
   return (
@@ -13,19 +13,7 @@ export default function LoginPage() {
         </nav>
       </header>
       <main className={styles.main}>
-        <form className={styles.loginForm}>
-          <div className={styles.inputBlock}>
-            <Input type="text" label="Nickname" id="Nickname" />
-          </div>
-          <div className={styles.inputBlock}>
-            <Input type="password" label="Password" id="Password" />
-          </div>
-          <div className={styles.actions}>
-            <button type="submit" className="button button-accent">
-              Log in
-            </button>
-          </div>
-        </form>
+        <LoginForm />
       </main>
       <footer className={styles.actionsFooter}>
         Do not have an account?{" "}
