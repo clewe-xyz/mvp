@@ -1,0 +1,54 @@
+.registrationPage {
+  position: relative;
+}
+
+.main {
+  margin-top: 80px;
+}
+
+.registrationForm {
+  position: relative;
+  padding: 0 15px;
+}
+
+.inputBlock {
+  margin-bottom: 24px;
+}
+
+.actions {
+  margin: 48px 0 24px;
+}
+
+.actions button {
+  width: 100%;
+}
+
+/* Header */
+.header {
+  padding: 15px;
+  position: relative;
+  margin-bottom: 32px;
+  z-index: 1;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: var(--font-space-grotesk);
+  font-size: var(--sizes-heading-h3-size);
+  font-weight: 700;
+}
+
+/* Footer */
+.actionsFooter {
+  padding: 0 15px;
+  text-align: center;
+}
+
+.actionsFooter .redirectionLink {
+  border-bottom: 1px solid var(--color-gray-50);
+}

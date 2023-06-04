@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <nav className={styles.unauthorizedNav}>
-        <Link href="#" className="button button-outline">
+        <Link href="/login" className="button button-outline">
           Log in
         </Link>
       </nav>
@@ -19,7 +19,7 @@ export default function Home() {
         </h5>
         <div className={styles.heroHook}>
           <Link href="/quests" className="button button-accent">
-            Start quest
+            Start your first quest
           </Link>
         </div>
       </main>
