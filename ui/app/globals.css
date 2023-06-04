@@ -67,7 +67,9 @@ body {
 html,
 body,
 a,
-button {
+button,
+input,
+textarea {
   font-family: var(
     --font-mabry-pro,
     -apple-system,
