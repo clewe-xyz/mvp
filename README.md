@@ -2,8 +2,8 @@
 
 ## Backend technology stack
 
-* FastAPI
-* Postgres 10+
+- FastAPI
+- Postgres 10+
 
 ### start project
 
@@ -13,12 +13,10 @@ Pre-requirements: docker and docker-compose should be installed
 
 `make migrate` - run migrations
 
-
 ### Useful project links
 
-* swagger - http://localhost/api/docs/
-* redoc - http://localhost/api/redoc/
-
+- swagger - http://localhost:8005/api/docs/
+- redoc - http://localhost:8005/api/redoc/
 
 An application should run on `http://127.0.0.1:8000/`
 
