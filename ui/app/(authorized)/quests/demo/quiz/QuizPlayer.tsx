@@ -1,6 +1,7 @@
 import { ProgressLine } from "@/ui-kit/progress-line";
 import classNames from "classnames";
 import styles from "./page.module.css";
+import { useRef } from "react";
 
 type Props = {
   nickname: string;
@@ -15,6 +16,13 @@ export default function QuizPlayer({
   totalExperience,
   experienceReward,
 }: Props) {
+  const experienceNode = useRef<HTMLSpanElement>(null);
+  if (experienceNode.current) {
+    experienceNode.current.style.animation = "none";
+    // !!! Trigger reflow to ensure that animation restarts
+    void experienceNode.current.offsetWidth;
+    experienceNode.current.style.animation = "";
+  }
   return (
     <>
       <h4 className={styles.nickName}>{nickname}</h4>
@@ -27,6 +35,7 @@ export default function QuizPlayer({
                 [styles.correctAnswer]: experienceReward > 0,
                 [styles.incorrectAnswer]: experienceReward === 0,
               })}
+              ref={experienceNode}
             >
               {experienceReward > 0 ? `+${experienceReward} XP` : `0 XP`}
             </span>
