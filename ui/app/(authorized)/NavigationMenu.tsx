@@ -41,13 +41,13 @@ export default function NavigationMenu() {
               </header>
               <ul className={styles.navMenuItems}>
                 <li>
-                  <Link href="#">Profile</Link>
+                  <Link href="/profile">Profile</Link>
                 </li>
                 <li>
-                  <Link href="#">Quests</Link>
+                  <Link href="/quests">Quests</Link>
                 </li>
                 <li>
-                  <Link href="#">Log out</Link>
+                  <Link href="/">Log out</Link>
                 </li>
               </ul>
             </div>

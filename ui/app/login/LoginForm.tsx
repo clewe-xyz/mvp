@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/ui-kit/inputs/Input";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.css";
 
@@ -10,9 +11,11 @@ type FormData = {
 };
 
 export function LoginForm() {
+  const { push } = useRouter();
   const { register, handleSubmit } = useForm<FormData>();
   const logIn = ({ nickname, password }: FormData) => {
     console.log("Log in user", nickname, password);
+    push("profile");
   };
 
   return (

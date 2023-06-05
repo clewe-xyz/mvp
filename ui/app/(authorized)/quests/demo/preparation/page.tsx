@@ -49,11 +49,19 @@ export default function SingleQuestPreparation() {
               you hail from.
             </p>
           </SplideSlide>
+          <SplideSlide className={styles.materialsSlide}>
+            <p>
+              There’s a place for you somewhere. And if you don’t manage to find
+              it, you can create one yourself. The movement behind Web3
+              represents a fundamental change in our world, freeing information
+              and identity from borders, censorship, and single-source control.
+            </p>
+          </SplideSlide>
         </Splide>
       </section>
       <section className={styles.actionsContainer}>
         <Link
-          href="/quests/123/quiz"
+          href="/quests/demo/quiz"
           className={classNames("button", "button-accent")}
         >
           Start quiz

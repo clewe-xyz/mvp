@@ -41,13 +41,13 @@ export default function Quests() {
                 alt="Tokens skill"
                 width="32"
               />
-              Cpypto basics
+              Crypto basics
             </div>
           </div>
         </div>
         <div className={styles.questActions}>
           <Link
-            href="/quests/123/preparation"
+            href="#"
             className={classNames(
               "button",
               "button-accent",

@@ -10,6 +10,8 @@ import QuizPlayer from "./QuizPlayer";
 import QuizSlider from "./QuizSlider";
 import styles from "./page.module.css";
 import { Quiz } from "./types";
+import { Input } from "@/ui-kit/inputs/Input";
+import { useForm } from "react-hook-form";
 
 const MOCKED_QUIZ: Quiz = {
   id: "ae4jjo8",
@@ -97,14 +99,27 @@ const MOCKED_QUIZ: Quiz = {
   ],
 };
 
+type NickNameData = {
+  nickname: string;
+};
+
 export default function SingleQuiz() {
+  const [nickname, setNickname] = useState("");
   const [accumExp, setAccumExp] = useState(0);
   const [expReward, setExpReward] = useState<number | undefined>(undefined);
   const [accumSkills, setAccumSkills] = useState<SkillReward[]>([]);
-  const [userLevel, setUserLevel] = useState(2);
+  const [userLevel, setUserLevel] = useState(1);
   const [correctAnswersAmount, setCorrectAnswersAmount] = useState(0);
   const [incorrectAnswersAmount, setIncorrectAnswersAmount] = useState(0);
-  const [isModalOpened, setOpenModal] = useState(false);
+  const [isCompletionModalOpened, openCompletionModal] = useState(false);
+  const [isNicknameModalOpened, openNicknameModal] = useState(true);
+
+  const { register, handleSubmit } = useForm<NickNameData>();
+
+  const setupNickname = ({ nickname }: NickNameData) => {
+    setNickname(nickname);
+    openNicknameModal(false);
+  };
 
   const expRewardTimeoutRef = useRef<NodeJS.Timeout>();
   const updateExpReward = (reward: number) => {
@@ -139,20 +154,40 @@ export default function SingleQuiz() {
               updateExpReward(0);
             }}
             onFinish={() => {
-              setOpenModal(true);
+              openCompletionModal(true);
             }}
           />
         </section>
         <section className={styles.user}>
           <QuizPlayer
-            nickname="ClewerPlayer"
+            nickname={nickname}
             level={userLevel}
             totalExperience={accumExp}
             experienceReward={expReward}
           />
         </section>
       </main>
-      <Modal isOpened={isModalOpened} hideClose>
+      <Modal isOpened={isNicknameModalOpened} hideClose>
+        <div className={styles.quizStatsContent}>
+          <form onSubmit={handleSubmit(setupNickname)}>
+            <h3>
+              <label htmlFor="demo-quest-nickname">Nickname</label>
+            </h3>
+            <Input
+              type="text"
+              id="demo-quest-nickname"
+              required
+              {...register("nickname", { required: true })}
+            />
+            <div className={styles.statsActions}>
+              <button className={classNames("button", "button-accent")}>
+                Start quiz
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
+      <Modal isOpened={isCompletionModalOpened} hideClose>
         <div className={styles.quizStatsContent}>
           <h2>Quest completed!</h2>
           <div className={styles.experienceSummary}>
@@ -196,11 +231,12 @@ export default function SingleQuiz() {
           ) : null}
 
           <div className={styles.statsActions}>
+            <p>Want to save the progress and try more quests?</p>
             <Link
-              href="/quests"
+              href={`/registration?nickname=${nickname}`}
               className={classNames("button", "button-accent")}
             >
-              Back to all quests
+              Create an account
             </Link>
           </div>
         </div>
