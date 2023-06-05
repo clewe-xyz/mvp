@@ -17,7 +17,7 @@ type UserProfile = {
 async function getProfileData() {
   const userProfile: UserProfile = {
     nickname: "Clewer Player",
-    level: 2,
+    level: 1,
     expToNextLevel: 68,
     currentLevelExperience: 32,
     skills: [

@@ -20,8 +20,8 @@ export function Modal({ isOpened, children, hideClose, onClose }: Props) {
           })}
         >
           <div className={styles.modalContent}>
-            <header className={styles.modalHeader}>
-              {hideClose ? null : (
+            {hideClose ? null : (
+              <header className={styles.modalHeader}>
                 <button
                   type="button"
                   className={classNames("button", styles.navButton)}
@@ -29,8 +29,8 @@ export function Modal({ isOpened, children, hideClose, onClose }: Props) {
                 >
                   Close
                 </button>
-              )}
-            </header>
+              </header>
+            )}
             {children}
           </div>
         </div>,

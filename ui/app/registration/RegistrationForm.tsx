@@ -1,8 +1,13 @@
 "use client";
 
 import { Input } from "@/ui-kit/inputs/Input";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.css";
+
+type Props = {
+  nickname?: string;
+};
 
 type FormData = {
   email: string;
@@ -11,10 +16,12 @@ type FormData = {
   passwordConfirmation: string;
 };
 
-export function RegistrationForm() {
+export function RegistrationForm({ nickname }: Props) {
+  const { push } = useRouter();
   const { register, handleSubmit, watch } = useForm<FormData>();
-  const registration = ({ email, nickname, password }: FormData) => {
-    console.log("Accoutn creation", email, nickname, password);
+  const registration = (credentials: FormData) => {
+    console.log("Accoutn creation", credentials);
+    push("profile");
   };
   const pwd = watch("password");
 
@@ -28,6 +35,7 @@ export function RegistrationForm() {
           type="text"
           label="Nickname"
           id="Nickname"
+          defaultValue={nickname}
           required
           {...register("nickname", {
             required: true,
