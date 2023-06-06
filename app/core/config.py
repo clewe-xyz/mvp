@@ -72,7 +72,7 @@ class Settings(BaseSettings):
     BASE_DIR: str = str(Path(os.path.dirname(__file__)).parents[1])
     BASE_DIR_APP: str = str(Path(os.path.dirname(__file__)).parents[0])
 
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 30 minutes
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 3000000  # 30 minutes
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     ALGORITHM: str
     JWT_SECRET_KEY: str

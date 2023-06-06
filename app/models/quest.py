@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship, Mapped
 from app.db.base_class import Base
 
 if TYPE_CHECKING:
-    from app.models import UserTable, UsersQuests, Question, QuestsQuestions
+    from app.models import UserTable, UsersQuests, Question
 
 
 class Quest(Base):
@@ -15,14 +15,17 @@ class Quest(Base):
     description: str = Column(Text)
     tag: str = Column(VARCHAR(255))
     users: Mapped[list['UserTable']] = relationship(
+        'UserTable',
         secondary="usersquests", back_populates='completed_quests'
     )
-    questions: Mapped[list['Question']] = relationship(
-        secondary='questsquestions', back_populates='quests'
-    )
+    # questions: Mapped[list['Question']] = relationship(
+    #     secondary='questsquestions', back_populates='quests'
+    # )
     users_quests: Mapped[list['UsersQuests']] = relationship(
-        back_populates='quest'
+        'UsersQuests',
+        back_populates='quest', cascade="all, delete",
     )
-    quests_questions: Mapped[list['QuestsQuestions']] = relationship(
-        back_populates='quest'
+    questions: Mapped[list['Question']] = relationship(
+        'Question',
+        back_populates='quest', cascade="all, delete",
     )
