@@ -4,4 +4,5 @@ from . import skills  # noqa
 from . import achievements  # noqa
 from . import quests  # noqa
 from . import auth_schema  # noqa
-from . import questions
+from . import questions  # noqa
+from . import levels  # noqa

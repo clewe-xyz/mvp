@@ -5,16 +5,15 @@ from pydantic import validator, Field, root_validator, EmailStr
 from app.schemas.base import DBBaseModel, BaseModel
 from app.schemas.skills import Skill
 from app.schemas.achievements import Achievement
-from app.schemas.quests import Quest
+from app.schemas.quests import Quest, QuestDetails
 from app import utils
 
 
 class User(DBBaseModel):
     nickname: str
     wallet_address: Optional[str] = None
-    level: Optional[int]
-    level_total_exp: int
-    exp_to_next_level: int = Field(alias='experience_reward')
+    level_id: Optional[int]
+    level_accumulated_exp: Optional[int]
 
 
 class UserBase(User):
@@ -42,6 +41,23 @@ class UserCreate(User):
         return utils.get_hashed_password(value)
 
 
+class UserRegister(DBBaseModel):
+    id: Optional[int]
+    nickname: str
+    email: EmailStr
+    password: str = Field(min_length=9)
+
+    @validator('password')
+    def get_hashed_password(cls, value):
+        return utils.get_hashed_password(value)
+
+
+class UserRegisterCreate(UserRegister):
+    is_active: bool = True
+    level_id: int = 1
+    level_accumulated_exp: int = 0
+
+
 class UserSignup(UserCreate):
     completed_quest_id: int
     users_skills: list[Optional[UserSkills]]
@@ -65,10 +81,28 @@ class UserResponse(User):
     id: int
     level_total_exp: Optional[int]
     exp_to_next_level: Optional[int]
-    skills: list[Optional[Skill]]
-    completed_quests: list[Optional[Quest]]
+    completed_quests: list[Optional[QuestDetails]]
+
+
+class SkillRequest(BaseModel):
+    skill_id: int
 
 
 class UserCompleteQuestIn(DBBaseModel):
-    exp_to_next_level: int = Field(alias='experience_reward')
-    skills_reward: list[UserSkills]
+    experience_reward: int
+    skills: list[SkillRequest]
+
+
+class UserNotActiveResponse(DBBaseModel):
+    id: int
+
+
+class UserNotActiveRequest(DBBaseModel):
+    nickname: str
+
+
+class UserNotActiveCreate(UserNotActiveRequest):
+    is_active: bool = False
+    level_id: int = 1
+    level_accumulated_exp: int = 0
+
