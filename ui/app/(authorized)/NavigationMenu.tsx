@@ -53,7 +53,7 @@ export default function NavigationMenu() {
             </div>
           </div>
         </div>,
-        document.body
+        window.document.body
       )}
     </>
   );
