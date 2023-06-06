@@ -20,41 +20,43 @@ export default function NavigationMenu() {
       >
         Menu
       </button>
-      {createPortal(
-        <div
-          className={classNames(styles.navMenu, {
-            [styles.opened]: isOpened,
-          })}
-        >
-          <div className={styles.navBlock}>
-            <div className={styles.navBlockContent}>
-              <header className={styles.navBlockHeader}>
-                <button
-                  type="button"
-                  className={classNames("button", styles.navButton)}
-                  onClick={() => {
-                    setOpened(false);
-                  }}
-                >
-                  Close
-                </button>
-              </header>
-              <ul className={styles.navMenuItems}>
-                <li>
-                  <Link href="/profile">Profile</Link>
-                </li>
-                <li>
-                  <Link href="/quests">Quests</Link>
-                </li>
-                <li>
-                  <Link href="/">Log out</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>,
-        window.document.body
-      )}
+      {typeof window !== "undefined"
+        ? createPortal(
+            <div
+              className={classNames(styles.navMenu, {
+                [styles.opened]: isOpened,
+              })}
+            >
+              <div className={styles.navBlock}>
+                <div className={styles.navBlockContent}>
+                  <header className={styles.navBlockHeader}>
+                    <button
+                      type="button"
+                      className={classNames("button", styles.navButton)}
+                      onClick={() => {
+                        setOpened(false);
+                      }}
+                    >
+                      Close
+                    </button>
+                  </header>
+                  <ul className={styles.navMenuItems}>
+                    <li>
+                      <Link href="/profile">Profile</Link>
+                    </li>
+                    <li>
+                      <Link href="/quests">Quests</Link>
+                    </li>
+                    <li>
+                      <Link href="/">Log out</Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>,
+            window.document.body
+          )
+        : null}
     </>
   );
 }

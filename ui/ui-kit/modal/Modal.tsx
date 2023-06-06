@@ -13,29 +13,31 @@ type Props = {
 export function Modal({ isOpened, children, hideClose, onClose }: Props) {
   return (
     <>
-      {createPortal(
-        <div
-          className={classNames(styles.modal, {
-            [styles.opened]: isOpened,
-          })}
-        >
-          <div className={styles.modalContent}>
-            {hideClose ? null : (
-              <header className={styles.modalHeader}>
-                <button
-                  type="button"
-                  className={classNames("button", styles.navButton)}
-                  onClick={onClose}
-                >
-                  Close
-                </button>
-              </header>
-            )}
-            {children}
-          </div>
-        </div>,
-        document.body
-      )}
+      {typeof window !== "undefined"
+        ? createPortal(
+            <div
+              className={classNames(styles.modal, {
+                [styles.opened]: isOpened,
+              })}
+            >
+              <div className={styles.modalContent}>
+                {hideClose ? null : (
+                  <header className={styles.modalHeader}>
+                    <button
+                      type="button"
+                      className={classNames("button", styles.navButton)}
+                      onClick={onClose}
+                    >
+                      Close
+                    </button>
+                  </header>
+                )}
+                {children}
+              </div>
+            </div>,
+            window.document.body
+          )
+        : null}
     </>
   );
 }

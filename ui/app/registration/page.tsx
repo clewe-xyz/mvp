@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RegistrationForm } from "./RegistrationForm";
 import styles from "./styles.module.css";
+import { Suspense } from "react";
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -17,9 +18,9 @@ export default function RegistrationPage({ searchParams }: Props) {
         </nav>
       </header>
       <main className={styles.main}>
-        <RegistrationForm
-          nickname={searchParams.nickname as string | undefined}
-        />
+        <Suspense fallback={<p>Loading...</p>}>
+          <RegistrationForm />
+        </Suspense>
       </main>
       <footer className={styles.actionsFooter}>
         Have an account?{" "}
