@@ -57,8 +57,8 @@ export function AchievementsSlider() {
         <div className={styles.achievementText}>
           <h5 className={styles.achievementsTitle}>Finance SkillGen</h5>
           <div className={styles.achievementsDescription}>
-            Earn more than 10 points on the "Finance fundamentals" skill in one
-            day
+            Earn more than 10 points on the &ldquo;Finance fundamentals&rdquo;
+            skill in one day
           </div>
         </div>
       </SplideSlide>
