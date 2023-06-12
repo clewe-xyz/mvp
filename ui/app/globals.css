@@ -159,14 +159,7 @@ button {
 }
 
 .bg-attributes {
-  max-width: 100%;
-  min-height: 100vh;
   mix-blend-mode: soft-light;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 0;
 }
 
 .bg-circle {

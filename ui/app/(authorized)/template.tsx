@@ -8,7 +8,7 @@ export default function AuthorizedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className={styles.authorizedLayout}>
       <header className={styles.header}>
         <nav className={styles.nav}>
           <Link href="/" className={styles.logo}>
@@ -17,7 +17,8 @@ export default function AuthorizedLayout({
           <NavigationMenu />
         </nav>
       </header>
-      {children}
-    </>
+      {/* Container needed to setup a base layout */}
+      <div>{children}</div>
+    </div>
   );
 }

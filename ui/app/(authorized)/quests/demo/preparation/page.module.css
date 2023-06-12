@@ -1,10 +1,10 @@
 .preparation {
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: auto max-content;
+  grid-template-rows: calc(100% - 86px) 86px;
   position: relative;
   width: 100%;
-  height: calc(100vh - 80px);
+  height: 100%;
   z-index: 1;
 }
 
@@ -26,7 +26,6 @@
 .materialsSlide {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   overflow-y: auto;
 }
 

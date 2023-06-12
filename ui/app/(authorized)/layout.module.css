@@ -1,7 +1,12 @@
+.authorizedLayout {
+  display: grid;
+  grid-template-rows: 80px calc(100vh - 80px - 30px);
+  row-gap: 30px;
+}
+
 .header {
   padding: 15px;
   position: relative;
-  margin-bottom: 32px;
   z-index: 1;
 }
 

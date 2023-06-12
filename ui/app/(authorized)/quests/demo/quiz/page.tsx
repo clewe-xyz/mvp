@@ -21,7 +21,7 @@ const MOCKED_QUIZ: Quiz = {
       id: "ior934",
       type: "opened-text",
       question:
-        "What are main decisions in the architecture of the first blockchain?",
+        "What are main decisions in the architecture of the first blockchain? One-two in a moment. Lets take control and add everything in a row fpr the sake of checking-out how it would behave in long-term questions. And where it going to lead us in this wonderful life",
       answers: {
         true_answers: "Publicity and trust",
         fake_answers: null,
@@ -134,30 +134,33 @@ export default function SingleQuiz() {
   return (
     <>
       <main className={styles.singleQuiz}>
-        <h3 className={styles.title}>{MOCKED_QUIZ.title}</h3>
-        <section className={styles.quizContainer}>
-          <QuizSlider
-            questions={MOCKED_QUIZ.questions}
-            onCorrectAnswer={({ expirienceReward, skillsReward }) => {
-              setAccumExp(accumExp + expirienceReward);
-              setAccumSkills(
-                updateSkillsReward({
-                  accumulated: accumSkills,
-                  reward: skillsReward,
-                })
-              );
-              setCorrectAnswersAmount(correctAnswersAmount + 1);
-              updateExpReward(expirienceReward);
-            }}
-            onIncorrectAnswer={() => {
-              setIncorrectAnswersAmount(incorrectAnswersAmount + 1);
-              updateExpReward(0);
-            }}
-            onFinish={() => {
-              openCompletionModal(true);
-            }}
-          />
-        </section>
+        {/* This is the container to align the layout properly */}
+        <div className={styles.questionContainer}>
+          <h3 className={styles.title}>{MOCKED_QUIZ.title}</h3>
+          <section className={styles.quizContainer}>
+            <QuizSlider
+              questions={MOCKED_QUIZ.questions}
+              onCorrectAnswer={({ expirienceReward, skillsReward }) => {
+                setAccumExp(accumExp + expirienceReward);
+                setAccumSkills(
+                  updateSkillsReward({
+                    accumulated: accumSkills,
+                    reward: skillsReward,
+                  })
+                );
+                setCorrectAnswersAmount(correctAnswersAmount + 1);
+                updateExpReward(expirienceReward);
+              }}
+              onIncorrectAnswer={() => {
+                setIncorrectAnswersAmount(incorrectAnswersAmount + 1);
+                updateExpReward(0);
+              }}
+              onFinish={() => {
+                openCompletionModal(true);
+              }}
+            />
+          </section>
+        </div>
         <section className={styles.user}>
           <QuizPlayer
             nickname={nickname}

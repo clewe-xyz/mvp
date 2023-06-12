@@ -14,8 +14,8 @@ export default function Home() {
           Dive into web3 by completing quests and earn rewards
         </h2>
         <h5 className={styles.offer}>
-          Does not have an account? Complete your first quest about finance
-          fundamentals to feel what is like to be a CleWer
+          Do not have an account? Complete your first quest about finance
+          fundamentals and feel what is like to be a CleWer
         </h5>
         <div className={styles.heroHook}>
           <Link

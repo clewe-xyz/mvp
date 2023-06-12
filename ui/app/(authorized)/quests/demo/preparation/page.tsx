@@ -48,6 +48,13 @@ export default function SingleQuestPreparation() {
               all to use, regardless of where you are located or what industry
               you hail from.
             </p>
+            <p>
+              You have to start all over since the platform owns your data and
+              profits from it. Whereas with Web3, you can choose to take your
+              data and money to another platform whenever you want as you aren’t
+              anchored down. The database and platform become the equivalent of
+              a global utility, accessible and open to anyone for any purpose.
+            </p>
           </SplideSlide>
           <SplideSlide className={styles.materialsSlide}>
             <p>
