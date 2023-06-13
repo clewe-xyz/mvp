@@ -14,9 +14,7 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: list[AnyHttpUrl] = []
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
-    def assemble_cors_origins(
-        cls, v: Union[str, list[str]]
-    ) -> Union[list[str], str]:
+    def assemble_cors_origins(cls, v: Union[str, list[str]]) -> Union[list[str], str]:
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
         elif isinstance(v, (list, str)):
@@ -36,9 +34,7 @@ class Settings(BaseSettings):
         return value if os.getenv('TEST', 'False') == 'False' else 'test'
 
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(
-        cls, v: Optional[str], values: dict[str, Any]
-    ) -> Any:
+    def assemble_db_connection(cls, v: Optional[str], values: dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
@@ -72,7 +68,7 @@ class Settings(BaseSettings):
     BASE_DIR: str = str(Path(os.path.dirname(__file__)).parents[1])
     BASE_DIR_APP: str = str(Path(os.path.dirname(__file__)).parents[0])
 
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 3000000  # 30 minutes
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 30 minutes
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     ALGORITHM: str
     JWT_SECRET_KEY: str

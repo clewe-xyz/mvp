@@ -10,7 +10,6 @@ from app.db.base_class import Base
 if TYPE_CHECKING:
     from app.models import (
         Quest,
-        # Achievement,
         UsersQuests,
         Level,
         UserSkill,
@@ -21,20 +20,25 @@ class UserTable(Base):
     id: int = Column(Integer, primary_key=True, index=True)
     nickname: str = Column(VARCHAR(255))
     wallet_address: str = Column(VARCHAR(255))
-    level_id: Mapped[int] = Column(Integer, ForeignKey('level.id', ondelete='SET NULL'), index=True)
+    level_id: Mapped[int] = Column(
+        Integer, ForeignKey('level.id', ondelete='SET NULL'), index=True
+    )
     level_accumulated_exp: int = Column(Integer)  # текущий эксп (обнулять )
     email: str = Column(VARCHAR(128), unique=True, index=True)
     password: str = Column(Text)
     is_active: bool = Column(Boolean, default=False)
     level: Mapped["Level"] = relationship('Level', back_populates='users')
-    completed_quests: Mapped[list['Quest']] = relationship('Quest',
-        secondary="usersquests", back_populates='users'
+    completed_quests: Mapped[list['Quest']] = relationship(
+        'Quest', secondary="usersquests", back_populates='users'
     )
     users_quests: Mapped[list['UsersQuests']] = relationship(
-        back_populates='user', cascade="all, delete",
+        back_populates='user',
+        cascade="all, delete",
     )
     skills: Mapped[list['UserSkill']] = relationship(
-        'UserSkill', back_populates='user', cascade="all, delete",
+        'UserSkill',
+        back_populates='user',
+        cascade="all, delete",
     )
 
     @hybrid_method

@@ -12,9 +12,7 @@ from app import utils
 router = APIRouter()
 
 
-@router.get(
-    '/', response_model=list[users.User], status_code=http_status.HTTP_200_OK
-)
+@router.get('/', response_model=list[users.User], status_code=http_status.HTTP_200_OK)
 def get_all_users(
     db: Session = Depends(deps.get_db),
     user: users.User = Depends(deps.get_current_user),
@@ -38,11 +36,10 @@ def get_single_user(
 @router.post(
     '/create/not-active/',
     summary='Create not active user',
-    response_model=users.UserNotActiveResponse
+    response_model=users.UserNotActiveResponse,
 )
 def create_not_active_user(
-    user_data: users.UserNotActiveRequest,
-    db: Session = Depends(deps.get_db)
+    user_data: users.UserNotActiveRequest, db: Session = Depends(deps.get_db)
 ):
     user_create_schema = users.UserNotActiveCreate(nickname=user_data.nickname)
     return crud.user.create(db=db, obj_in=user_create_schema)
@@ -75,11 +72,7 @@ def register_user(
 async def login(
     request_data: users.UserAuth, db: Session = Depends(deps.get_db)
 ) -> auth_schema.JWTTokenResponse:
-    user = (
-        db.query(UserTable)
-        .filter(UserTable.email == request_data.email)
-        .first()
-    )
+    user = db.query(UserTable).filter(UserTable.email == request_data.email).first()
     if not user:
         raise IncorrectAuthRequest()
 
@@ -108,9 +101,7 @@ async def get_me(user: users.User = Depends(deps.get_current_user)):
     status_code=http_status.HTTP_200_OK,
 )
 async def get_new_access_token(
-    jwt_token: auth_schema.JWTTokenResponse = Depends(
-        deps.get_new_access_token
-    ),
+    jwt_token: auth_schema.JWTTokenResponse = Depends(deps.get_new_access_token),
 ):
     return jwt_token
 

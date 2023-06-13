@@ -45,14 +45,9 @@ def create_skill(
     status_code=http_status.HTTP_201_CREATED,
 )
 def bulk_create_skills(
-    list_skill_in: list[skills.Skill],
-    db: Session = Depends(deps.get_db)
+    list_skill_in: list[skills.Skill], db: Session = Depends(deps.get_db)
 ):
-    skills_obj = [
-        models.BaseSkill(
-            **obj.dict()
-        ) for obj in list_skill_in
-    ]
+    skills_obj = [models.BaseSkill(**obj.dict()) for obj in list_skill_in]
     return crud.base_skill.create_many_objects(db=db, multi_obj_in=skills_obj)
 
 

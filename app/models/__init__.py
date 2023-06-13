@@ -2,6 +2,7 @@ from .level import Level  # noqa
 from .user import UserTable  # noqa
 from .quest import Quest  # noqa
 from .skill import Skill, BaseSkill, UserSkill  # noqa
+
 # from .achievement import Achievement  # noqa
 from .questions import Question, BaseQuestion  # noqa
 from .association_tables import (

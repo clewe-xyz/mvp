@@ -6,9 +6,7 @@ from sqlalchemy.orm import relationship, Mapped
 from app.db.base_class import Base
 
 if TYPE_CHECKING:
-    from app.models import (
-        UserTable
-    )
+    from app.models import UserTable
 
 
 class Level(Base):

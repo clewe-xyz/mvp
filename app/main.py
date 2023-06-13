@@ -28,9 +28,5 @@ app.include_router(api_router, prefix=settings.API_PATH)
 
 # pylint: disable=unused-argument
 @app.exception_handler(CRUDError)
-async def not_found_exception_handler(
-    request: Request, exc: CRUDError
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=exc.status_code, content={"detail": exc.message}
-    )
+async def not_found_exception_handler(request: Request, exc: CRUDError) -> JSONResponse:
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})

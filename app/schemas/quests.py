@@ -1,8 +1,11 @@
 from typing import Optional
 
 from app.schemas.base import DBBaseModel, BaseModel
-from app.schemas.questions import QuestionWithSkillsDetails, QuestionWithFakeAnswersAndSkillsDetails, \
-    QuestionDetailsResponse
+from app.schemas.questions import (
+    QuestionWithSkillsDetails,
+    QuestionWithFakeAnswersAndSkillsDetails,
+    QuestionDetailsResponse,
+)
 from app.schemas.skills import SkillRequest
 
 
@@ -24,7 +27,6 @@ class QuestionWithSkills(BaseModel):
 
 class QuestCreateRequest(QuestCreate):
     questions_with_skills: list[QuestionWithSkills]
-
 
 
 class QuestUpdate(QuestCreate):
