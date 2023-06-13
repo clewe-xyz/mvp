@@ -37,13 +37,15 @@ def create_quest(
     create_quest_schema = quests.Quest(**quest_in.dict())
     quest = crud.quest.create(db=db, obj_in=create_quest_schema, commit=False)
     for base_question in quest_in.questions_with_skills:
-        base_question_obj = crud.base_question.read(db=db, params={'id': base_question.base_question_id})
+        base_question_obj = crud.base_question.read(
+            db=db, params={'id': base_question.base_question_id}
+        )
         question_schema = questions.CreateQuestion(
             quest_id=quest.id,
             question=base_question_obj.question,
             type=base_question_obj.type,
             answers=base_question_obj.answers,
-            experience_reward=base_question.experience_reward
+            experience_reward=base_question.experience_reward,
         )
         question = crud.question.create(db=db, obj_in=question_schema, commit=False)
         for skill in base_question.skills_list:
@@ -68,9 +70,7 @@ def bulk_create_quests(
     list_quest_in: list[quests.Quest],
     db: Session = Depends(deps.get_db),
 ):
-    quest_objs = [
-        models.Quest(**obj.dict()) for obj in list_quest_in
-    ]
+    quest_objs = [models.Quest(**obj.dict()) for obj in list_quest_in]
     return crud.quest.create_many_objects(db=db, multi_obj_in=quest_objs)
 
 
@@ -147,20 +147,32 @@ def complete_quest(
     user.completed_quests.append(quest)
 
     if user.is_level_completed(complete_quest_in.experience_reward):
-        level = db.query(models.Level).filter(models.Level.level_value == (user.level.level_value + 1)).first()
+        level = (
+            db.query(models.Level)
+            .filter(models.Level.level_value == (user.level.level_value + 1))
+            .first()
+        )
         level_id = level.id
         exp_reward = user.new_exp_reward(complete_quest_in.experience_reward)
     else:
         exp_reward = user.level_accumulated_exp + complete_quest_in.experience_reward
         level_id = user.level.id
     crud.user.update(
-        db=db, db_obj=user, obj_in={'level_id': level_id, 'level_accumulated_exp': exp_reward},
+        db=db,
+        db_obj=user,
+        obj_in={'level_id': level_id, 'level_accumulated_exp': exp_reward},
     )
     update_skill_obj = []
     update_skill_dict = {}
     crete_skill_dict = {}
 
-    skills_objs = db.query(models.Skill).filter(models.Skill.id.in_([skill.skill_id for skill in complete_quest_in.skills])).all()
+    skills_objs = (
+        db.query(models.Skill)
+        .filter(
+            models.Skill.id.in_([skill.skill_id for skill in complete_quest_in.skills])
+        )
+        .all()
+    )
 
     for skill_obj in skills_objs:
         if skill_obj.tag in user.get_skill_map:
@@ -172,12 +184,20 @@ def complete_quest(
             if skill_obj.tag in crete_skill_dict:
                 crete_skill_dict[skill_obj.tag]['point'] += skill_obj.point
             else:
-                crete_skill_dict[skill_obj.tag] = {'point': skill_obj.point, 'obj': skill_obj}
+                crete_skill_dict[skill_obj.tag] = {
+                    'point': skill_obj.point,
+                    'obj': skill_obj,
+                }
 
     for skill_obj in skills_objs:
         if skill_obj.tag in user.get_skill_map:
             update_skill = user.get_skill_map.get(skill_obj.tag)
-            update_skill_obj.append({'id': update_skill.id, 'point': update_skill.point + update_skill_dict.get(skill_obj.tag)})
+            update_skill_obj.append(
+                {
+                    'id': update_skill.id,
+                    'point': update_skill.point + update_skill_dict.get(skill_obj.tag),
+                }
+            )
 
     if update_skill_obj:
         db.bulk_update_mappings(models.UserSkill, mappings=update_skill_obj)
@@ -186,8 +206,9 @@ def complete_quest(
             tag=obj_in['obj'].tag,
             topic=obj_in['obj'].topic,
             user_id=user.id,
-            point=obj_in['point']
-        ) for obj_in in crete_skill_dict.values()
+            point=obj_in['point'],
+        )
+        for obj_in in crete_skill_dict.values()
     ]
     db.bulk_save_objects(objects=objects, return_defaults=True)
     db.commit()

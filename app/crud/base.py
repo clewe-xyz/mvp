@@ -39,9 +39,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             raise NotFound()
         return obj
 
-    def read(
-        self, db: Session, params: dict, options: list = None
-    ) -> ModelType:
+    def read(self, db: Session, params: dict, options: list = None) -> ModelType:
         query = db.query(self.model).filter_by(**params)
         if options:
             query = query.options(*options)
@@ -54,9 +52,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     @staticmethod
     def order_by(query: Query, sort_by: str, sort_order: str = 'desc'):
         return query.order_by(
-            asc(sort_by)
-            if sort_order.strip().lower() == 'asc'
-            else desc(sort_by)
+            asc(sort_by) if sort_order.strip().lower() == 'asc' else desc(sort_by)
         )
 
     def get_multi(
@@ -71,9 +67,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return (
             db.query(self.model)
             .order_by(
-                asc(sort_by_column)
-                if sort_order == "ASC"
-                else desc(sort_by_column)
+                asc(sort_by_column) if sort_order == "ASC" else desc(sort_by_column)
             )
             .offset(skip)
             .limit(limit)
@@ -91,9 +85,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> list[ModelType]:
         return (
             query.order_by(
-                asc(sort_by_column)
-                if sort_order == "ASC"
-                else desc(sort_by_column)
+                asc(sort_by_column) if sort_order == "ASC" else desc(sort_by_column)
             )
             .offset(skip)
             .limit(limit)
@@ -111,9 +103,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> Query:
         return (
             query.order_by(
-                asc(sort_by_column)
-                if sort_order == "ASC"
-                else desc(sort_by_column)
+                asc(sort_by_column) if sort_order == "ASC" else desc(sort_by_column)
             )
             .offset(skip)
             .limit(limit)
@@ -159,9 +149,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def create_many_schema(
         self, db: Session, multi_obj_in: list[CreateSchemaType], commit=True
     ) -> list[ModelType]:
-        objects = [
-            self.model(**self._parse_params(obj_in)) for obj_in in multi_obj_in
-        ]
+        objects = [self.model(**self._parse_params(obj_in)) for obj_in in multi_obj_in]
         db.bulk_save_objects(objects=objects, return_defaults=True)
         if commit:
             db.commit()
@@ -200,9 +188,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             db.refresh(db_obj)
         return db_obj
 
-    def delete(
-        self, db: Session, *, entity_id: int, commit: bool = True
-    ) -> None:
+    def delete(self, db: Session, *, entity_id: int, commit: bool = True) -> None:
         obj = self.get(db=db, id=entity_id)
         db.delete(obj)
         db.flush()
@@ -267,7 +253,5 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         if isinstance(params, dict):
             return params
         if isinstance(params, BaseModel):
-            return params.dict(
-                exclude_unset=exclude_unset, exclude_none=exclude_none
-            )
+            return params.dict(exclude_unset=exclude_unset, exclude_none=exclude_none)
         raise ValueError("Incorrect request parameters")

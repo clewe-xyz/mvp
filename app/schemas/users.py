@@ -47,15 +47,15 @@ class UserRegister(DBBaseModel):
     email: EmailStr
     password: str = Field(min_length=9)
 
-    @validator('password')
-    def get_hashed_password(cls, value):
-        return utils.get_hashed_password(value)
-
 
 class UserRegisterCreate(UserRegister):
     is_active: bool = True
     level_id: int = 1
     level_accumulated_exp: int = 0
+
+    @validator('password')
+    def get_hashed_password(cls, value):
+        return utils.get_hashed_password(value)
 
 
 class UserSignup(UserCreate):
@@ -105,4 +105,3 @@ class UserNotActiveCreate(UserNotActiveRequest):
     is_active: bool = False
     level_id: int = 1
     level_accumulated_exp: int = 0
-

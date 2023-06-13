@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Integer, VARCHAR, Text, Float
+from sqlalchemy import Column, Integer, VARCHAR, Text
 from sqlalchemy.orm import relationship, Mapped
 
 from app.db.base_class import Base
@@ -15,17 +15,15 @@ class Quest(Base):
     description: str = Column(Text)
     tag: str = Column(VARCHAR(255))
     users: Mapped[list['UserTable']] = relationship(
-        'UserTable',
-        secondary="usersquests", back_populates='completed_quests'
+        'UserTable', secondary="usersquests", back_populates='completed_quests'
     )
-    # questions: Mapped[list['Question']] = relationship(
-    #     secondary='questsquestions', back_populates='quests'
-    # )
     users_quests: Mapped[list['UsersQuests']] = relationship(
         'UsersQuests',
-        back_populates='quest', cascade="all, delete",
+        back_populates='quest',
+        cascade="all, delete",
     )
     questions: Mapped[list['Question']] = relationship(
         'Question',
-        back_populates='quest', cascade="all, delete",
+        back_populates='quest',
+        cascade="all, delete",
     )

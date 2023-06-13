@@ -36,7 +36,6 @@ class Question(DBBaseModel):
     @root_validator
     def check(cls, values):
         question_type = values['type']
-        print('\n\n\nXXX', values)
         if question_type == QuestionType.OpenedText:
             values['answers'] = AnswerOpenedText(**values['answers'].dict())
         if question_type == QuestionType.SingleOption:
@@ -106,4 +105,3 @@ class QuestionCheckAnswer(BaseModel):
 
 class Answer(BaseModel):
     answers: Union[list[str], str]
-

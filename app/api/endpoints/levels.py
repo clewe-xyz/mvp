@@ -23,10 +23,7 @@ def get_all_skills(db: Session = Depends(deps.get_db)):
     response_model=levels.LevelDetails,
     status_code=http_status.HTTP_201_CREATED,
 )
-def create_level(
-    level_in: levels.Level,
-    db: Session = Depends(deps.get_db)
-):
+def create_level(level_in: levels.Level, db: Session = Depends(deps.get_db)):
     return crud.level.create(db=db, obj_in=level_in)
 
 
@@ -39,7 +36,5 @@ def bulk_create_levels(
     list_level_in: list[levels.Level],
     db: Session = Depends(deps.get_db),
 ):
-    level_objs = [
-        models.Level(**obj.dict()) for obj in list_level_in
-    ]
+    level_objs = [models.Level(**obj.dict()) for obj in list_level_in]
     return crud.level.create_many_objects(db=db, multi_obj_in=level_objs)

@@ -46,15 +46,10 @@ def create_question(
     status_code=http_status.HTTP_201_CREATED,
 )
 def bulk_create_questions(
-    list_question_in: list[questions.Question],
-    db: Session = Depends(deps.get_db)
+    list_question_in: list[questions.Question], db: Session = Depends(deps.get_db)
 ):
     # создавать в этом же месте связанные скилы (айди скила и поинт)
-    questions_obj = [
-        models.BaseQuestion(
-            **obj.dict()
-        ) for obj in list_question_in
-    ]
+    questions_obj = [models.BaseQuestion(**obj.dict()) for obj in list_question_in]
     return crud.base_question.create_many_objects(db=db, multi_obj_in=questions_obj)
 
 
@@ -73,14 +68,18 @@ def get_single_question(question_id: int, db: Session = Depends(deps.get_db)):
     status_code=http_status.HTTP_200_OK,
 )
 def check_question_answer(
-    question_id: int,
-    answer: questions.Answer,
-    db: Session = Depends(deps.get_db)
+    question_id: int, answer: questions.Answer, db: Session = Depends(deps.get_db)
 ):
     question = crud.question.read(db=db, params={'id': question_id})
     true_answer = question.answers['true_answers']
-    true_answer = question.answers['true_answers'].split() if isinstance(true_answer, str) else true_answer
-    check_answer = answer.answers.split() if isinstance(answer.answers, str) else answer.answers
+    true_answer = (
+        question.answers['true_answers'].split()
+        if isinstance(true_answer, str)
+        else true_answer
+    )
+    check_answer = (
+        answer.answers.split() if isinstance(answer.answers, str) else answer.answers
+    )
     is_correct = set(true_answer) == set(check_answer)
     if is_correct:
         crud.question.update(db=db, db_obj=question, obj_in={'is_answered': True})
@@ -106,7 +105,5 @@ def update_question(
     db: Session = Depends(deps.get_db),
 ):
     question = crud.question.read(db=db, params={'id': question_id})
-    updated_question = crud.question.update(
-        db=db, db_obj=question, obj_in=quest_in
-    )
+    updated_question = crud.question.update(db=db, db_obj=question, obj_in=quest_in)
     return updated_question
