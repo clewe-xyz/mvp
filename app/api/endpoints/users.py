@@ -12,7 +12,7 @@ from app import utils
 router = APIRouter()
 
 
-@router.get('/', response_model=list[users.User], status_code=http_status.HTTP_200_OK)
+@router.get("/", response_model=list[users.User], status_code=http_status.HTTP_200_OK)
 def get_all_users(
     db: Session = Depends(deps.get_db),
     user: users.User = Depends(deps.get_current_user),
@@ -21,7 +21,7 @@ def get_all_users(
 
 
 @router.get(
-    '/single/{user_id}/',
+    "/single/{user_id}/",
     response_model=users.User,
     status_code=http_status.HTTP_200_OK,
 )
@@ -30,12 +30,12 @@ def get_single_user(
     db: Session = Depends(deps.get_db),
     user: users.User = Depends(deps.get_current_user),
 ):
-    return crud.user.read(db=db, params={'id': user_id})
+    return crud.user.read(db=db, params={"id": user_id})
 
 
 @router.post(
-    '/create/not-active/',
-    summary='Create not active user',
+    "/create/not-active/",
+    summary="Create not active user",
     response_model=users.UserNotActiveResponse,
 )
 def create_not_active_user(
@@ -46,7 +46,7 @@ def create_not_active_user(
 
 
 @router.post(
-    '/register/',
+    "/register/",
     response_model=auth_schema.JWTTokenResponse,
 )
 def register_user(
@@ -55,7 +55,7 @@ def register_user(
 ):
     user_create_schema = users.UserRegisterCreate(**data.dict())
     if data.id:
-        user = crud.user.read(db=db, params={'id': user_create_schema.id})
+        user = crud.user.read(db=db, params={"id": user_create_schema.id})
         if user.is_active:
             raise AlreadyExists()
         user = crud.user.update(db=db, db_obj=user, obj_in=user_create_schema.dict())
@@ -68,7 +68,7 @@ def register_user(
     return jwt_token
 
 
-@router.post('/login/', response_model=auth_schema.JWTTokenResponse)
+@router.post("/login/", response_model=auth_schema.JWTTokenResponse)
 async def login(
     request_data: users.UserAuth, db: Session = Depends(deps.get_db)
 ) -> auth_schema.JWTTokenResponse:
@@ -87,7 +87,7 @@ async def login(
 
 
 @router.get(
-    '/me/',
+    "/me/",
     response_model=users.UserResponse,
     status_code=http_status.HTTP_200_OK,
 )
@@ -123,7 +123,7 @@ def get_me(
 
 
 @router.get(
-    '/me/access-token/',
+    "/me/access-token/",
     response_model=auth_schema.JWTTokenResponse,
     status_code=http_status.HTTP_200_OK,
 )
@@ -134,7 +134,7 @@ async def get_new_access_token(
 
 
 @router.get(
-    '/me/skills/',
+    "/me/skills/",
     response_model=list[skills.UserSkill],
     status_code=http_status.HTTP_200_OK,
 )
