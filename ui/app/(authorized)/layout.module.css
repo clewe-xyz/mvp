@@ -1,7 +1,17 @@
+.authorizedLayout {
+  display: grid;
+  grid-template-rows: 80px calc(100% - 80px - 30px);
+  grid-template-columns: 100%;
+  /* Mobile browsers have native elements: search bar, bottom panel. 
+   * 90vh is an empirical value to fit into a single screen without scrolling
+   */
+  height: calc(90vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  row-gap: 30px;
+}
+
 .header {
   padding: 15px;
   position: relative;
-  margin-bottom: 32px;
   z-index: 1;
 }
 

@@ -1,0 +1,52 @@
+.modal {
+  background-color: var(--color-gray-100);
+  width: 100%;
+  position: fixed;
+  left: 0;
+  right: auto;
+  top: 100%;
+  transition: top 0.3s ease-out;
+  z-index: 1000;
+}
+
+.modal.opened {
+  min-height: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.modalContent::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background-color: var(--gradient-first);
+  background-image: linear-gradient(
+    var(--gradient-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.headerTitle {
+  font-family: var(--font-space-grotesk);
+  font-size: var(--sizes-heading-h3-size);
+  font-weight: 700;
+}
+
+.navButton {
+  all: unset;
+  font-family: var(--font-space-grotesk);
+  font-size: 1.25rem;
+}
+
+.navButton::before {
+  position: static;
+  box-shadow: none;
+}

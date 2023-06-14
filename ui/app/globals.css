@@ -15,6 +15,7 @@
   --color-gray-20: #e7e6e8;
   --color-gray-10: #f3f2f4;
 
+  /* Theme sizes */
   --sizes-heading-hero-size: 124px;
   --sizes-heading-hero-lh: 1;
   --sizes-heading-hero-lp: 0.04rem;
@@ -36,6 +37,11 @@
   --sizes-heading-h6-size: 18px;
   --sizes-heading-h6-lh: 1.5;
   --sizes-heading-h6-lp: 0.01rem;
+
+  /* Theme gradients */
+  --gradient-first: #2600fc;
+  --gradient-second: #ff00ea;
+  --gradient-angle: 25deg;
 }
 
 * {
@@ -46,8 +52,24 @@
 
 html,
 body {
-  background-color: var(--color-gray-100, #fff);
+  background-color: var(--color-gray-100, #000);
   color: var(--color-gray-10);
+  font-weight: 400;
+  font-size: var(--body-font-size, 16px);
+  font-weight: var(--body-font-weight, 400);
+  letter-spacing: var(--body-font-spacing, normal);
+  line-height: 1.5;
+  position: relative;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+html,
+body,
+a,
+button,
+input,
+textarea {
   font-family: var(
     --font-mabry-pro,
     -apple-system,
@@ -63,14 +85,6 @@ body {
     "Segoe UI Symbol",
     "Noto Color Emoji"
   );
-  font-weight: 400;
-  font-size: var(--body-font-size, 16px);
-  font-weight: var(--body-font-weight, 400);
-  letter-spacing: var(--body-font-spacing, normal);
-  line-height: 1.5;
-  position: relative;
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
 h1,
@@ -137,20 +151,15 @@ p {
   margin-bottom: 20px;
 }
 
-a {
+a,
+button {
   color: inherit;
+  font-size: inherit;
   text-decoration: none;
 }
 
 .bg-attributes {
-  max-width: 100%;
-  min-height: 100vh;
   mix-blend-mode: soft-light;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 0;
 }
 
 .bg-circle {
@@ -170,6 +179,9 @@ a {
 
 .button {
   position: relative;
+  background-color: transparent;
+  border: none;
+  color: var(--color-gray-10);
   display: inline-flex;
   align-items: center;
   font-weight: 700;
@@ -212,6 +224,21 @@ a {
   inset: 0;
   z-index: -1;
   transition: 0.2s ease;
-  background-color: #2600fc;
-  background-image: linear-gradient(25deg, #2600fc, #ff00ea);
+  background-color: var(--gradient-first);
+  background-image: linear-gradient(
+    var(--gradient-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+}
+
+.text-accent {
+  background-color: var(--gradient-first);
+  background-image: linear-gradient(
+    var(--gradient-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+  background-clip: text;
+  color: transparent;
 }

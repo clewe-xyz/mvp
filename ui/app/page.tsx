@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <nav className={styles.unauthorizedNav}>
-        <Link href="#" className="button button-outline">
+        <Link href="/login" className="button button-outline">
           Log in
         </Link>
       </nav>
@@ -14,12 +14,15 @@ export default function Home() {
           Dive into web3 by completing quests and earn rewards
         </h2>
         <h5 className={styles.offer}>
-          Does not have an account? Complete your first quest about finance
-          fundamentals to feel what is like to be a CleWer
+          Do not have an account? Complete your first quest about finance
+          fundamentals and feel what is like to be a CleWer
         </h5>
         <div className={styles.heroHook}>
-          <Link href="/quests" className="button button-accent">
-            Start quest
+          <Link
+            href="/quests/demo/preparation"
+            className="button button-accent"
+          >
+            Start your first quest
           </Link>
         </div>
       </main>
