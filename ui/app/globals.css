@@ -54,7 +54,6 @@ html,
 body {
   background-color: var(--color-gray-100, #000);
   color: var(--color-gray-10);
-  font-weight: 400;
   font-size: var(--body-font-size, 16px);
   font-weight: var(--body-font-weight, 400);
   letter-spacing: var(--body-font-spacing, normal);

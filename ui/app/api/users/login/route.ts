@@ -1,20 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 
+type Credentials = {
+  email: string;
+  password: string;
+};
+
 export async function POST(request: NextRequest) {
-  const res = await request.json();
-  console.log("Log in with credentials", res);
-  const [accessTokenMock, refreshTokenMock] = [
-    "0000hke98weiu443",
-    "3fdus0oiewjof43094or",
-  ];
-  const response = NextResponse.json("", { status: 200 });
+  const credentials: Credentials = await request.json();
+  const result = await fetch(`${process.env.API_HOST_URL}/users/login`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  });
+  if (!result.ok) {
+    const errorDetails = await result.json();
+    return NextResponse.json(errorDetails, { status: result.status });
+  }
+  const { access_token, refresh_token } = await result.json();
+  const response = NextResponse.json(null, { status: 200 });
   response.headers.append(
     "Set-Cookie",
-    `access_token=${accessTokenMock}; Max-Age=2592000`
+    `access_token=${access_token}; HttpOnly; SameSite=Strict; Path=/api; Max-Age=172800`
   );
   response.headers.append(
     "Set-Cookie",
-    `refresh_token=${refreshTokenMock}; Max-Age=5592000`
+    `refresh_token=${refresh_token}; HttpOnly; SameSite=Strict; Path=/api; Max-Age=604800`
   );
   return response;
 }
