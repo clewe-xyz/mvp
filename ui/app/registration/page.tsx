@@ -24,7 +24,7 @@ export default function RegistrationPage({ searchParams }: Props) {
       </main>
       <footer className={styles.actionsFooter}>
         Have an account?{" "}
-        <Link href="/login" className={styles.redirectionLink}>
+        <Link href="/login" className="link">
           Log&nbsp;in
         </Link>
       </footer>

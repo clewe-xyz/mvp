@@ -157,6 +157,10 @@ button {
   text-decoration: none;
 }
 
+.link {
+  border-bottom: 1px solid var(--color-gray-50);
+}
+
 .bg-attributes {
   mix-blend-mode: soft-light;
 }

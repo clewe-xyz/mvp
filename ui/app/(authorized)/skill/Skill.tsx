@@ -5,7 +5,7 @@ export type SkillReward = {
   id: string;
   topic: string;
   tag: string;
-  points: number;
+  point: number;
 };
 
 type Props = {
