@@ -1,27 +1,57 @@
-import finance from "@/images/skills/finance.png";
 import blockchain from "@/images/skills/blockchain.png";
 import dao from "@/images/skills/daos.png";
+import finance from "@/images/skills/finance.png";
 import tokens from "@/images/skills/tokens.png";
 import Image from "next/image";
 
 type Props = {
   className?: string;
   tag: string;
+  height?: number;
+  width?: number;
 };
 
-export default function SkillImage({ tag, className }: Props) {
+export function SkillImage({ tag, className, height, width }: Props) {
   switch (tag) {
     case "finance":
-      return <Image className={className} src={finance} alt="Finance skill" />;
+      return (
+        <Image
+          className={className}
+          src={finance}
+          height={height}
+          width={width}
+          alt="Finance skill"
+        />
+      );
     case "blockchain":
       return (
-        <Image className={className} src={blockchain} alt="Blockchain skill" />
+        <Image
+          className={className}
+          src={blockchain}
+          height={height}
+          width={width}
+          alt="Blockchain skill"
+        />
       );
     case "dao":
-      return <Image className={className} src={dao} alt="DAOs skill" />;
+      return (
+        <Image
+          className={className}
+          src={dao}
+          height={height}
+          width={width}
+          alt="DAOs skill"
+        />
+      );
     case "tokens":
       return (
-        <Image className={className} src={tokens} alt="Tokenomics skill" />
+        <Image
+          className={className}
+          src={tokens}
+          height={height}
+          width={width}
+          alt="Tokenomics skill"
+        />
       );
     default:
       break;
