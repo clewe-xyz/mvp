@@ -101,13 +101,19 @@ def get_single_quest(
 
 @router.get(
     '/my/list/quests/',
-    response_model=list[quests.QuestDetailsResponse],
+    response_model=list,
     status_code=http_status.HTTP_200_OK,
 )
 def get_my_quests(
+    db: Session = Depends(deps.get_db),
     user: models.UserTable = Depends(deps.get_current_user),
 ):
-    return user.completed_quests
+    user_completed_quests_id = {quest.id for quest in user.completed_quests}
+    quest_objs = db.query(models.Quest).all()
+    quest_schemas = [quests.MyQuestDetailsResponse.from_orm(quest_obj) for quest_obj in quest_objs]
+    for schema in quest_schemas:
+        schema.is_completed = schema.id in user_completed_quests_id
+    return quest_schemas
 
 
 @router.delete(

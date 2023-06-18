@@ -45,6 +45,10 @@ class QuestDetailsResponse(QuestDetails):
     questions: list[QuestionDetailsResponse]
 
 
+class MyQuestDetailsResponse(QuestDetailsResponse):
+    is_completed: bool = False
+
+
 class SkillToQuestion(BaseModel):
     skill_id: int
     point: int
