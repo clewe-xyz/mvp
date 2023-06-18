@@ -62,3 +62,7 @@
 .navMenuItems li:not(:last-child) {
   margin-bottom: 24px;
 }
+
+.navMenuItems .logOut {
+  all: unset;
+}

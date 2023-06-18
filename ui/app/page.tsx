@@ -1,13 +1,20 @@
 import Link from "next/link";
 import styles from "./page.module.css";
+import { isAuthorized } from "./api/authorizedRequest";
 
 export default function Home() {
   return (
     <>
       <nav className={styles.unauthorizedNav}>
-        <Link href="/login" className="button button-outline">
-          Log in
-        </Link>
+        {isAuthorized() ? (
+          <Link href="/profile" className="button button-outline">
+            Go to Profile
+          </Link>
+        ) : (
+          <Link href="/login" className="button button-outline">
+            Log in
+          </Link>
+        )}
       </nav>
       <main className={styles.main}>
         <h2 className={styles.title}>

@@ -6,16 +6,20 @@ import { useForm } from "react-hook-form";
 import styles from "./styles.module.css";
 
 type FormData = {
-  nickname: string;
+  email: string;
   password: string;
 };
 
 export function LoginForm() {
   const { push } = useRouter();
   const { register, handleSubmit } = useForm<FormData>();
-  const logIn = ({ nickname, password }: FormData) => {
-    console.log("Log in user", nickname, password);
-    push("profile");
+  const logIn = ({ email, password }: FormData) => {
+    fetch("/api/users/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    })
+      .then(() => push("profile"))
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -23,10 +27,10 @@ export function LoginForm() {
       <div className={styles.inputBlock}>
         <Input
           type="text"
-          label="Nickname"
-          id="Nickname"
+          label="Email"
+          id="Email"
           required
-          {...register("nickname", {
+          {...register("email", {
             required: true,
           })}
         />

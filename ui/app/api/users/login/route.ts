@@ -23,11 +23,11 @@ export async function POST(request: NextRequest) {
   const response = NextResponse.json(null, { status: 200 });
   response.headers.append(
     "Set-Cookie",
-    `access_token=${access_token}; HttpOnly; SameSite=Strict; Path=/api; Max-Age=172800`
+    `access_token=${access_token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=172800`
   );
   response.headers.append(
     "Set-Cookie",
-    `refresh_token=${refresh_token}; HttpOnly; SameSite=Strict; Path=/api; Max-Age=604800`
+    `refresh_token=${refresh_token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=604800`
   );
   return response;
 }

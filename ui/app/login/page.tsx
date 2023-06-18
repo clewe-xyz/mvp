@@ -17,7 +17,7 @@ export default function LoginPage() {
       </main>
       <footer className={styles.actionsFooter}>
         Do not have an account?{" "}
-        <Link href="/registration" className={styles.redirectionLink}>
+        <Link href="/registration" className="link">
           Create&nbsp;a&nbsp;new&nbsp;one
         </Link>
       </footer>

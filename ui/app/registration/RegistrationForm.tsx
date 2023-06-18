@@ -15,9 +15,13 @@ type FormData = {
 export function RegistrationForm() {
   const { push } = useRouter();
   const { register, handleSubmit, watch } = useForm<FormData>();
-  const registration = (credentials: FormData) => {
-    console.log("Accoutn creation", credentials);
-    push("profile");
+  const registration = ({ passwordConfirmation, ...creds }: FormData) => {
+    fetch("/api/users/signup", {
+      method: "POST",
+      body: JSON.stringify(creds),
+    })
+      .then(() => push("profile"))
+      .catch((error) => console.error(error));
   };
   const searchParams = useSearchParams();
   const pwd = watch("password");

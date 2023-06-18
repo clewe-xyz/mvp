@@ -1,13 +1,22 @@
 "use client";
 
 import classNames from "classnames";
-import styles from "./navigation.module.css";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import styles from "./navigation.module.css";
 
 export default function NavigationMenu() {
   const [isOpened, setOpened] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const url = `${pathname}?${searchParams}`;
+
+  useEffect(() => {
+    setOpened(false);
+  }, [url]);
 
   return (
     <>
@@ -42,13 +51,27 @@ export default function NavigationMenu() {
                   </header>
                   <ul className={styles.navMenuItems}>
                     <li>
-                      <Link href="/profile">Profile</Link>
+                      <Link href="/profile" onClick={() => setOpened(false)}>
+                        Profile
+                      </Link>
                     </li>
                     <li>
-                      <Link href="/quests">Quests</Link>
+                      <Link href="/quests" onClick={() => setOpened(false)}>
+                        Quests
+                      </Link>
                     </li>
                     <li>
-                      <Link href="/">Log out</Link>
+                      <button
+                        type="button"
+                        className={styles.logOut}
+                        onClick={() => {
+                          fetch("/api/users/logout", {
+                            method: "POST",
+                          }).then(() => router.push("/"));
+                        }}
+                      >
+                        Log out
+                      </button>
                     </li>
                   </ul>
                 </div>

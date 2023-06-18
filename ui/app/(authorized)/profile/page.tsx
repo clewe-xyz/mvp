@@ -1,3 +1,4 @@
+import { authorizedRequest } from "@/app/api/authorizedRequest";
 import mintNFT from "@/images/mint-nft.png";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import classNames from "classnames";
@@ -5,47 +6,33 @@ import Image from "next/image";
 import { Skill, SkillReward } from "../skill";
 import { AchievementsSlider } from "./achievements";
 import styles from "./page.module.css";
+import Link from "next/link";
 
 type UserProfile = {
   nickname: string;
-  level: number;
-  expToNextLevel: number;
-  currentLevelExperience: number;
-  skills: SkillReward[];
+  wallet_address?: string;
+  level_id: number;
+  level_accumulated_exp: number;
+  exp_to_next_level: number;
 };
 
-async function getProfileData() {
-  const userProfile: UserProfile = {
-    nickname: "Clewer Player",
-    level: 1,
-    expToNextLevel: 68,
-    currentLevelExperience: 32,
-    skills: [
-      {
-        id: "ewjnio2908",
-        topic: "Blockchain",
-        tag: "blockchain",
-        points: 5,
-      },
-      {
-        id: "fdmkl32oi",
-        topic: "Finance fundamentals",
-        tag: "finance",
-        points: 8,
-      },
-      {
-        id: "4903lkds",
-        topic: "DAOs",
-        tag: "dao",
-        points: 3,
-      },
-    ],
-  };
-  return Promise.resolve(userProfile);
+async function getProfile(): Promise<UserProfile> {
+  const profile = await authorizedRequest("users/me");
+  return profile.json();
+}
+
+async function getSkills(): Promise<SkillReward[]> {
+  const skills = await authorizedRequest("users/me/skills");
+  return skills.json();
 }
 
 export default async function UserProfile() {
-  const userProfile = await getProfileData();
+  const [userProfile, userSkills] = await Promise.all([
+    getProfile(),
+    getSkills(),
+  ]);
+  const levelMaximumExp =
+    userProfile.exp_to_next_level + userProfile.level_accumulated_exp;
   return (
     <main>
       <section className={classNames(styles.section, styles.nft)}>
@@ -71,17 +58,15 @@ export default async function UserProfile() {
         <h4 className={styles.nickName}>{userProfile.nickname}</h4>
         <div>
           <div className={styles.levelContainer}>
-            <h5 className={styles.level}>Level: {userProfile.level}</h5>
+            <h5 className={styles.level}>Level: {userProfile.level_id}</h5>
             <span className={styles.addedExperience}>
-              XP to next level: {userProfile.expToNextLevel}
+              XP to next level: {userProfile.exp_to_next_level}
             </span>
           </div>
           <div className={styles.levelProgress}>
             <ProgressLine
-              currentProgress={userProfile.currentLevelExperience}
-              totalProgress={
-                userProfile.currentLevelExperience + userProfile.expToNextLevel
-              }
+              currentProgress={userProfile.level_accumulated_exp}
+              totalProgress={levelMaximumExp}
             />
           </div>
         </div>
@@ -89,14 +74,24 @@ export default async function UserProfile() {
       <section className={styles.section}>
         <h4>Skills</h4>
         <div className={styles.skillsSummaryContainer}>
-          {userProfile.skills.map((skill) => (
-            <Skill
-              key={skill.id}
-              name={skill.topic}
-              tag={skill.tag}
-              points={`${skill.points}`}
-            />
-          ))}
+          {userSkills.length > 0 ? (
+            userSkills.map((skill) => (
+              <Skill
+                key={skill.id}
+                name={skill.topic}
+                tag={skill.tag}
+                points={`${skill.point}`}
+              />
+            ))
+          ) : (
+            <div>
+              Complete{" "}
+              <Link href="/quests" className="link">
+                quests
+              </Link>{" "}
+              to get new skills!
+            </div>
+          )}
         </div>
       </section>
       <section className={styles.section}>
