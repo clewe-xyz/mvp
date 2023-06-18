@@ -24,7 +24,7 @@ export async function authorizedRequest(url: string, config?: RequestConfig) {
 
   // Handle the case when access token has expired:
   // - update access and refresh tokens;
-  // - repeat a request with updated access token
+  // - repeat a request with an updated access token
   if (!response.ok) {
     if (response.status === 403) {
       // The access token has expired. Renew it
@@ -73,16 +73,21 @@ export async function authorizedRequest(url: string, config?: RequestConfig) {
           Authorization: `Bearer ${access_token}`,
         },
       });
+      const responsePayload = await response.json();
+      const responseWithUpdatedTokens = NextResponse.json(responsePayload, {
+        status: response.status,
+        statusText: response.statusText,
+      });
       // Set updated access and refresh tokens and return the response
-      response.headers.append(
+      responseWithUpdatedTokens.headers.append(
         "Set-Cookie",
         `access_token=${access_token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=172800`
       );
-      response.headers.append(
+      responseWithUpdatedTokens.headers.append(
         "Set-Cookie",
         `refresh_token=${refresh_token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=604800`
       );
-      return response;
+      return responseWithUpdatedTokens;
     } else {
       const errorDetails = await response.json();
       return NextResponse.json(errorDetails, { status: response.status });

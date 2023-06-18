@@ -1,10 +1,13 @@
-import SkillImage from "./SkillImage";
+import { SkillImage } from "./SkillImage";
 import styles from "./styles.module.css";
 
-export type SkillReward = {
+export type Skill = {
   id: string;
   topic: string;
   tag: string;
+};
+
+export type SkillReward = Skill & {
   point: number;
 };
 
