@@ -1,114 +1,41 @@
 "use client";
 
 import { Skill, SkillReward } from "@/app/(authorized)/skill";
+import { Input } from "@/ui-kit/inputs/Input";
 import { Modal } from "@/ui-kit/modal";
-import "@splidejs/react-splide/css/core";
 import classNames from "classnames";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import QuizPlayer from "./QuizPlayer";
 import QuizSlider from "./QuizSlider";
 import styles from "./page.module.css";
-import { Quiz } from "./types";
-import { Input } from "@/ui-kit/inputs/Input";
-import { useForm } from "react-hook-form";
+import { QuizQuestion } from "./types";
 
-const MOCKED_QUIZ: Quiz = {
-  id: "ae4jjo8",
-  title: "Finance fundamentals",
-  questions: [
-    {
-      id: "ior934",
-      type: "opened-text",
-      question:
-        "What are main decisions in the architecture of the first blockchain? One-two in a moment. Lets take control and add everything in a row fpr the sake of checking-out how it would behave in long-term questions. And where it going to lead us in this wonderful life",
-      answers: {
-        true_answers: "Publicity and trust",
-        fake_answers: null,
-      },
-      experience_rewad: 18,
-      skills_reward: [
-        {
-          id: "ewjnio2908",
-          topic: "Blockchain",
-          tag: "blockchain",
-          points: 3,
-        },
-      ],
-    },
-    {
-      id: "joo32900",
-      type: "single-option",
-      question: "Choose one of the many options?",
-      answers: {
-        true_answers: "First",
-        fake_answers: ["Second", "Third", "Fourth"],
-      },
-      experience_rewad: 10,
-      skills_reward: [
-        {
-          id: "fdmkl32oi",
-          topic: "Finance fundamentals",
-          tag: "finance",
-          points: 2,
-        },
-        {
-          id: "ewjnio2908",
-          topic: "Blockchain",
-          tag: "blockchain",
-          points: 2,
-        },
-      ],
-    },
-    {
-      id: "asdsaj984",
-      type: "multiple-options",
-      question: "Choose one of the many options?",
-      answers: {
-        true_answers: ["Third", "Fourth"],
-        fake_answers: ["First", "Second"],
-      },
-      experience_rewad: 30,
-      skills_reward: [
-        {
-          id: "fdmkl32oi",
-          topic: "Finance fundamentals",
-          tag: "finance",
-          points: 5,
-        },
-      ],
-    },
-    {
-      id: "fdl9043",
-      type: "multiple-options",
-      question: "Choose one of the many options?",
-      answers: {
-        true_answers: ["GlenA"],
-        fake_answers: ["ewq", "Secogfdfdnd", "JdVir"],
-      },
-      experience_rewad: 30,
-      skills_reward: [
-        {
-          id: "fdmkl32oi",
-          topic: "Finance fundamentals",
-          tag: "finance",
-          points: 5,
-        },
-      ],
-    },
-  ],
+type Props = {
+  questions: QuizQuestion[];
+  user: {
+    nickname: string;
+    level: number;
+    accumulatedExp: number;
+    expToNextLevel: number;
+  } | null;
+  allLevels: {
+    level: number;
+    exp: number;
+  }[];
 };
 
 type NickNameData = {
   nickname: string;
 };
 
-export default function SingleQuiz() {
-  const [nickname, setNickname] = useState("");
-  const [accumExp, setAccumExp] = useState(0);
+export default function QuizFlow({ questions, user }: Props) {
+  const [nickname, setNickname] = useState(user?.nickname ?? "");
+  const [userLevel, setUserLevel] = useState(user?.level ?? 1);
+  const [accumExp, setAccumExp] = useState(user?.accumulatedExp ?? 0);
   const [expReward, setExpReward] = useState<number | undefined>(undefined);
   const [accumSkills, setAccumSkills] = useState<SkillReward[]>([]);
-  const [userLevel, setUserLevel] = useState(1);
   const [correctAnswersAmount, setCorrectAnswersAmount] = useState(0);
   const [incorrectAnswersAmount, setIncorrectAnswersAmount] = useState(0);
   const [isCompletionModalOpened, openCompletionModal] = useState(false);
@@ -133,43 +60,37 @@ export default function SingleQuiz() {
 
   return (
     <>
-      <main className={styles.singleQuiz}>
-        {/* This is the container to align the layout properly */}
-        <div className={styles.questionContainer}>
-          <h3 className={styles.title}>{MOCKED_QUIZ.title}</h3>
-          <section className={styles.quizContainer}>
-            <QuizSlider
-              questions={MOCKED_QUIZ.questions}
-              onCorrectAnswer={({ expirienceReward, skillsReward }) => {
-                setAccumExp(accumExp + expirienceReward);
-                setAccumSkills(
-                  updateSkillsReward({
-                    accumulated: accumSkills,
-                    reward: skillsReward,
-                  })
-                );
-                setCorrectAnswersAmount(correctAnswersAmount + 1);
-                updateExpReward(expirienceReward);
-              }}
-              onIncorrectAnswer={() => {
-                setIncorrectAnswersAmount(incorrectAnswersAmount + 1);
-                updateExpReward(0);
-              }}
-              onFinish={() => {
-                openCompletionModal(true);
-              }}
-            />
-          </section>
-        </div>
-        <section className={styles.user}>
-          <QuizPlayer
-            nickname={nickname}
-            level={userLevel}
-            totalExperience={accumExp}
-            experienceReward={expReward}
-          />
-        </section>
-      </main>
+      <section className={styles.quizContainer}>
+        <QuizSlider
+          questions={questions}
+          onCorrectAnswer={({ expirienceReward, skillsReward }) => {
+            setAccumExp(accumExp + expirienceReward);
+            setAccumSkills(
+              updateSkillsReward({
+                accumulated: accumSkills,
+                reward: skillsReward,
+              })
+            );
+            setCorrectAnswersAmount(correctAnswersAmount + 1);
+            updateExpReward(expirienceReward);
+          }}
+          onIncorrectAnswer={() => {
+            setIncorrectAnswersAmount(incorrectAnswersAmount + 1);
+            updateExpReward(0);
+          }}
+          onFinish={() => {
+            openCompletionModal(true);
+          }}
+        />
+      </section>
+      <section className={styles.user}>
+        <QuizPlayer
+          nickname={nickname}
+          level={userLevel}
+          totalExperience={accumExp}
+          experienceReward={expReward}
+        />
+      </section>
       <Modal isOpened={isNicknameModalOpened} hideClose>
         <div className={styles.quizStatsContent}>
           <form onSubmit={handleSubmit(setupNickname)}>
@@ -226,7 +147,7 @@ export default function SingleQuiz() {
                     key={skill.id}
                     name={skill.topic}
                     tag={skill.tag}
-                    points={`+${skill.points}`}
+                    points={`+${skill.point}`}
                   />
                 ))}
               </div>
@@ -256,27 +177,28 @@ function updateSkillsReward({
   reward: SkillReward[];
 }) {
   /**
-   * 1. Shallow merge -> new list
-   * 2. Iterate through shallow merge, find all duplicates in the rest of the list
+   * 1. Shallow copy -> new list
+   * 2. Iterate through the shallow copy, find all duplicates in the rest of the list
    * 3. Summarise points, put final result to output list
    * 4. If duplicates not found - put to output list without summarization
-   * 5. If skill with this `id` is already in the final list - skip
+   * 5. If skill with this `tag` is already in the final list - skip,
+   * bacause it means calculation was already done on the previous iteration
    */
   const outputSkillsStats: SkillReward[] = [];
   const shallowMerge = [...accumulated, ...reward];
   shallowMerge.forEach((skill, idx, list) => {
     // Skip when skill were already calculated
     if (
-      outputSkillsStats.find((outputSkill) => outputSkill.id === skill.id) !==
+      outputSkillsStats.find((outputSkill) => outputSkill.tag === skill.tag) !==
       undefined
     ) {
       return;
     }
-    const duplicates = list.filter((element) => element.id === skill.id);
+    const duplicates = list.filter((element) => element.tag === skill.tag);
     const accumulatedPoints = duplicates.reduce((prev, current) => {
-      return (prev += current.points);
+      return (prev += current.point);
     }, 0);
-    outputSkillsStats.push({ ...skill, points: accumulatedPoints });
+    outputSkillsStats.push({ ...skill, point: accumulatedPoints });
   });
   return outputSkillsStats;
 }

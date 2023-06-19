@@ -2,7 +2,7 @@ import { SkillImage } from "./SkillImage";
 import styles from "./styles.module.css";
 
 export type Skill = {
-  id: string;
+  id: number;
   topic: string;
   tag: string;
 };

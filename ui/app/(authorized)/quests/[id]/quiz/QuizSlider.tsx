@@ -1,13 +1,14 @@
 import { SkillReward } from "@/app/(authorized)/skill";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css/core";
 import { useRef, useState } from "react";
-import MultipleAnswersQuestion, {
-  MultipleAnswer,
-} from "./MultipleAnswersQuestion";
-import OpenQuestion, { OpenQuestionAnswer } from "./OpenQuestion";
-import SingleAnswerQuestion, { SingleAnswer } from "./SingleAnswerQuestion";
 import styles from "./page.module.css";
+import {
+  MultipleAnswersQuestion,
+  OpenQuestion,
+  SingleAnswerQuestion,
+} from "./questions";
 import { QuestionAnswers, QuestionType, QuizQuestion } from "./types";
 
 type Props = {
@@ -86,13 +87,14 @@ export default function QuizSlider({
         {questions.map((question) => (
           <SplideSlide key={question.id} className={styles.quizSlide}>
             <ResolvedQuestion
+              id={question.id}
               question={question.question}
               type={question.type}
               answers={question.answers}
               onCorrect={() =>
                 fixateCorrectAnswer({
-                  expirienceReward: question.experience_rewad,
-                  skillsReward: question.skills_reward,
+                  expirienceReward: 20,
+                  skillsReward: question.skills,
                 })
               }
               onIncorrect={fixateIncorrectAnswer}
@@ -105,6 +107,7 @@ export default function QuizSlider({
 }
 
 type ResolvedQuestionProps = {
+  id: number;
   type: QuestionType;
   question: string;
   answers: QuestionAnswers;
@@ -113,39 +116,42 @@ type ResolvedQuestionProps = {
 };
 
 function ResolvedQuestion({
+  id,
   type,
   question,
   answers,
   onCorrect,
   onIncorrect,
 }: ResolvedQuestionProps) {
-  if (type === "opened-text") {
+  if (type === "Opened-text") {
     return (
       <OpenQuestion
+        id={id}
         question={question}
-        answers={answers as OpenQuestionAnswer}
         onCorrect={onCorrect}
         onIncorrect={onIncorrect}
       />
     );
   }
 
-  if (type === "multiple-options") {
+  if (type === "Multiple-options") {
     return (
       <MultipleAnswersQuestion
+        id={id}
         question={question}
-        answers={answers as MultipleAnswer}
+        answers={answers as string[]}
         onCorrect={onCorrect}
         onIncorrect={onIncorrect}
       />
     );
   }
 
-  if (type === "single-option") {
+  if (type === "Single-option") {
     return (
       <SingleAnswerQuestion
+        id={id}
         question={question}
-        answers={answers as SingleAnswer}
+        answers={answers as string[]}
         onCorrect={onCorrect}
         onIncorrect={onIncorrect}
       />

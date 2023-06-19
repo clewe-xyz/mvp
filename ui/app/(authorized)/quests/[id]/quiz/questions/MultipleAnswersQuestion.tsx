@@ -1,37 +1,42 @@
+import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 import { Checkbox } from "@/ui-kit/inputs/Checkbox";
 import { useForm } from "react-hook-form";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 
 type Props = {
+  id: number;
   question: string;
-  answers: MultipleAnswer;
+  answers: string[];
   onCorrect: () => void;
   onIncorrect: () => void;
-};
-
-export type MultipleAnswer = {
-  true_answers: string[];
-  fake_answers: string[];
 };
 
 type FormData = {
   answers: string[];
 };
 
-export default function MultipleAnswersQuestion({
+export function MultipleAnswersQuestion({
+  id,
   question,
   answers,
   onCorrect,
   onIncorrect,
 }: Props) {
   const { register, handleSubmit } = useForm<FormData>();
-  const options = [...answers.true_answers, ...answers.fake_answers];
 
   const validateAnswer = ({ answers: givenAnswers }: FormData) => {
-    if (areArraysEqual(givenAnswers, answers.true_answers)) {
-      return onCorrect();
-    }
-    return onIncorrect();
+    unauthorizedRequest(`/api/questions/${id}`, {
+      method: "POST",
+      body: JSON.stringify(givenAnswers),
+    })
+      .then((response) => response.json())
+      .then(({ is_correct }) => {
+        if (is_correct) {
+          return onCorrect();
+        } else {
+          return onIncorrect();
+        }
+      });
   };
 
   return (
@@ -42,7 +47,7 @@ export default function MultipleAnswersQuestion({
         onSubmit={handleSubmit(validateAnswer)}
       >
         <div className={styles.quizAnswerField}>
-          {options.map((option) => (
+          {answers.map((option) => (
             <Checkbox
               {...register("answers")}
               key={option}
@@ -59,11 +64,4 @@ export default function MultipleAnswersQuestion({
       </form>
     </>
   );
-}
-
-function areArraysEqual(list1: string[], list2: string[]) {
-  if (list1.length !== list2.length) {
-    return false;
-  }
-  return list1.every((element) => list2.includes(element));
 }
