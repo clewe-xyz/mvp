@@ -1,24 +1,22 @@
+import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 import { RadioGroup } from "@/ui-kit/inputs/RadioGroup";
 import { useForm } from "react-hook-form";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 
 type Props = {
+  id: number;
   question: string;
-  answers: SingleAnswer;
+  answers: string[];
   onCorrect: () => void;
   onIncorrect: () => void;
-};
-
-export type SingleAnswer = {
-  true_answers: string;
-  fake_answers: string[];
 };
 
 type FormData = {
   answer: string;
 };
 
-export default function SingleAnswerQuestion({
+export function SingleAnswerQuestion({
+  id,
   question,
   answers,
   onCorrect,
@@ -26,12 +24,19 @@ export default function SingleAnswerQuestion({
 }: Props) {
   const { register, handleSubmit } = useForm<FormData>();
   const validateAnswer = ({ answer }: FormData) => {
-    if (answer === answers.true_answers) {
-      return onCorrect();
-    }
-    return onIncorrect();
+    unauthorizedRequest(`/api/questions/${id}`, {
+      method: "POST",
+      body: JSON.stringify([answer]),
+    })
+      .then((response) => response.json())
+      .then(({ is_correct }) => {
+        if (is_correct) {
+          return onCorrect();
+        } else {
+          return onIncorrect();
+        }
+      });
   };
-  const options = [answers.true_answers, ...answers.fake_answers];
   return (
     <>
       <div className={styles.quizQuestion}>{question}</div>
@@ -40,7 +45,7 @@ export default function SingleAnswerQuestion({
         onSubmit={handleSubmit(validateAnswer)}
       >
         <div className={styles.quizAnswerField}>
-          <RadioGroup {...register("answer")} labels={options} />
+          <RadioGroup {...register("answer")} labels={answers} />
         </div>
         <div className={styles.quizAnswerActions}>
           <button className={styles.answerButton} type="submit">

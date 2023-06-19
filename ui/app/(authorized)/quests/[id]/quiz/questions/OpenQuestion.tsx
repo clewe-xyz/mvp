@@ -1,37 +1,34 @@
 import { Textarea } from "@/ui-kit/inputs/Textarea";
 import { useForm } from "react-hook-form";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
+import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 
 type Props = {
+  id: number;
   question: string;
-  answers: OpenQuestionAnswer;
   onCorrect: () => void;
   onIncorrect: () => void;
-};
-
-export type OpenQuestionAnswer = {
-  true_answers: string;
-  fake_answers: null;
 };
 
 type FormData = {
   answer: string;
 };
 
-export default function OpenQuestion({
-  question,
-  answers,
-  onCorrect,
-  onIncorrect,
-}: Props) {
+export function OpenQuestion({ id, question, onCorrect, onIncorrect }: Props) {
   const { register, handleSubmit } = useForm<FormData>();
   const validateAnswer = ({ answer }: FormData) => {
-    const normalizedAnswer = normalizeAnswer(answer);
-    const normalizedCorrectAnswer = normalizeAnswer(answers.true_answers);
-    if (normalizedAnswer === normalizedCorrectAnswer) {
-      return onCorrect();
-    }
-    return onIncorrect();
+    unauthorizedRequest(`/api/questions/${id}`, {
+      method: "POST",
+      body: JSON.stringify([answer]),
+    })
+      .then((response) => response.json())
+      .then(({ is_correct }) => {
+        if (is_correct) {
+          return onCorrect();
+        } else {
+          return onIncorrect();
+        }
+      });
   };
   return (
     <>
@@ -55,5 +52,5 @@ export default function OpenQuestion({
 
 function normalizeAnswer(answer: string) {
   const clonedSpace = /\s/gi;
-  return answer.trim().replaceAll(clonedSpace, " ").toLocaleLowerCase();
+  return answer.trim().replaceAll(clonedSpace, " ");
 }

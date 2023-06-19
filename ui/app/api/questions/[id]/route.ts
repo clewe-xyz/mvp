@@ -1,4 +1,4 @@
-import { authorizedRequest } from "@/app/api/authorizedRequest";
+import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 import { NextRequest } from "next/server";
 
 type Params = {
@@ -10,7 +10,7 @@ export async function POST(
   { params }: { params: Params }
 ) {
   const answers: string[] = await request.json();
-  return await authorizedRequest(`questions/${params.id}`, {
+  return await unauthorizedRequest(`questions/${params.id}`, {
     method: "POST",
     body: JSON.stringify({
       answers,

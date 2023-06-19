@@ -13,7 +13,7 @@ type Props = {
 
 export function SkillImage({ tag, className, height, width }: Props) {
   switch (tag) {
-    case "finance":
+    case "finance-fundamentals":
       return (
         <Image
           className={className}

@@ -24,6 +24,7 @@ export default async function Quests() {
       {quests.map((quest) => (
         <Quest
           key={quest.id}
+          id={quest.id}
           name={quest.name}
           description={quest.description}
           tag={quest.tag}

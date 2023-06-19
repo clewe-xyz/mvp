@@ -5,6 +5,7 @@ import QuestImage from "./QuestImage";
 import styles from "./page.module.css";
 
 type Props = {
+  id: number;
   name: string;
   description: string;
   tag: string;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export default function Quest({
+  id,
   name,
   description,
   tag,
@@ -40,7 +42,7 @@ export default function Quest({
       </div>
       <div className={styles.questActions}>
         <Link
-          href="#"
+          href={`/quests/${id}/preparation`}
           className={classNames(
             "button",
             "button-accent",
