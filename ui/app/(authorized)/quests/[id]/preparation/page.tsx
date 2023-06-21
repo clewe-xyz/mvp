@@ -13,10 +13,16 @@ type Params = {
   id: string;
 };
 
+type SearchParams = {
+  demo?: string;
+};
+
 export default async function SingleQuestPreparation({
   params,
+  searchParams,
 }: {
   params: Params;
+  searchParams: SearchParams;
 }) {
   const quest = await getQuest(params.id);
   return (
@@ -26,7 +32,10 @@ export default async function SingleQuestPreparation({
       </section>
       <section className={styles.actionsContainer}>
         <Link
-          href={`/quests/${params.id}/quiz`}
+          href={{
+            pathname: `/quests/${params.id}/quiz`,
+            query: { demo: searchParams.demo },
+          }}
           className={classNames("button", "button-accent")}
         >
           Start quiz

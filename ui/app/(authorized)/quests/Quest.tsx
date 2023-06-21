@@ -27,11 +27,18 @@ export default function Quest({
         <QuestImage tag={tag} />
       </div>
       <div className={styles.questAbout}>
+        {isCompleted ? (
+          <span className={styles.completionLabel}>Completed</span>
+        ) : null}
         <h3>{name}</h3>
         <p>{description}</p>
         <div className={styles.skills}>
           <div className={styles.singleSkill}>
-            <SkillImage className={styles.skillIcon} tag="finance" width={32} />
+            <SkillImage
+              className={styles.skillIcon}
+              tag="finance-fundamentals"
+              width={32}
+            />
             Finance
           </div>
           <div className={styles.singleSkill}>
@@ -41,16 +48,29 @@ export default function Quest({
         </div>
       </div>
       <div className={styles.questActions}>
-        <Link
-          href={`/quests/${id}/preparation`}
-          className={classNames(
-            "button",
-            "button-accent",
-            styles.questActionButton
-          )}
-        >
-          Start quest
-        </Link>
+        {isCompleted ? (
+          <Link
+            href={`/quests/${id}/preparation`}
+            className={classNames(
+              "button",
+              "button-outline",
+              styles.questActionButton
+            )}
+          >
+            Restart quest
+          </Link>
+        ) : (
+          <Link
+            href={`/quests/${id}/preparation`}
+            className={classNames(
+              "button",
+              "button-accent",
+              styles.questActionButton
+            )}
+          >
+            Start quest
+          </Link>
+        )}
       </div>
     </div>
   );
