@@ -1,10 +1,12 @@
 "use client";
 
 import { Skill, SkillReward } from "@/app/(authorized)/skill";
+import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 import { Input } from "@/ui-kit/inputs/Input";
 import { Modal } from "@/ui-kit/modal";
 import classNames from "classnames";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import QuizPlayer from "./QuizPlayer";
@@ -13,6 +15,7 @@ import styles from "./page.module.css";
 import { QuizQuestion } from "./types";
 
 type Props = {
+  id: number;
   questions: QuizQuestion[];
   user: {
     nickname: string;
@@ -30,7 +33,8 @@ type NickNameData = {
   nickname: string;
 };
 
-export default function QuizFlow({ questions, user }: Props) {
+export default function QuizFlow({ id: questId, questions, user }: Props) {
+  const [demoUserId, setDemoUserId] = useState<number>();
   const [nickname, setNickname] = useState(user?.nickname ?? "");
   const [userLevel, setUserLevel] = useState(user?.level ?? 1);
   const [accumExp, setAccumExp] = useState(user?.accumulatedExp ?? 0);
@@ -39,13 +43,24 @@ export default function QuizFlow({ questions, user }: Props) {
   const [correctAnswersAmount, setCorrectAnswersAmount] = useState(0);
   const [incorrectAnswersAmount, setIncorrectAnswersAmount] = useState(0);
   const [isCompletionModalOpened, openCompletionModal] = useState(false);
-  const [isNicknameModalOpened, openNicknameModal] = useState(true);
+  const [isNicknameModalOpened, openNicknameModal] = useState(!Boolean(user));
+
+  const { push } = useRouter();
 
   const { register, handleSubmit } = useForm<NickNameData>();
 
-  const setupNickname = ({ nickname }: NickNameData) => {
-    setNickname(nickname);
-    openNicknameModal(false);
+  const setupDemoUser = ({ nickname }: NickNameData) => {
+    unauthorizedRequest("/api/users/signup/demo", {
+      method: "POST",
+      body: JSON.stringify({ nickname }),
+    })
+      .then((response) => response.json())
+      .then(({ id }) => {
+        setNickname(nickname);
+        setDemoUserId(id);
+        setUserLevel(1);
+        openNicknameModal(false);
+      });
   };
 
   const expRewardTimeoutRef = useRef<NodeJS.Timeout>();
@@ -57,6 +72,15 @@ export default function QuizFlow({ questions, user }: Props) {
       2000
     );
   };
+
+  const completeQuest = () =>
+    unauthorizedRequest(`/api/quests/${questId}/complete`, {
+      method: "POST",
+      body: JSON.stringify({
+        experience: accumExp,
+        skills: accumSkills.map((skill) => ({ id: skill.id })),
+      }),
+    });
 
   return (
     <>
@@ -93,7 +117,7 @@ export default function QuizFlow({ questions, user }: Props) {
       </section>
       <Modal isOpened={isNicknameModalOpened} hideClose>
         <div className={styles.quizStatsContent}>
-          <form onSubmit={handleSubmit(setupNickname)}>
+          <form onSubmit={handleSubmit(setupDemoUser)}>
             <h3>
               <label htmlFor="demo-quest-nickname">Nickname</label>
             </h3>
@@ -155,13 +179,45 @@ export default function QuizFlow({ questions, user }: Props) {
           ) : null}
 
           <div className={styles.statsActions}>
-            <p>Want to save the progress and try more quests?</p>
-            <Link
-              href={`/registration?nickname=${nickname}`}
-              className={classNames("button", "button-accent")}
-            >
-              Create an account
-            </Link>
+            {user ? (
+              <button
+                type="button"
+                onClick={() => completeQuest().then(() => push("/quests"))}
+                className={classNames("button", "button-accent")}
+              >
+                Go to quests
+              </button>
+            ) : (
+              <>
+                <p>Want to save the progress and try more quests?</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    sessionStorage.setItem(
+                      "demo_user",
+                      JSON.stringify({
+                        id: demoUserId,
+                        questId,
+                        nickname,
+                        accumExp,
+                        accumSkills,
+                      })
+                    );
+                    push("/registration");
+                  }}
+                  className={classNames("button", "button-accent")}
+                >
+                  Create an account
+                </button>
+                <p className={styles.divider}>or just</p>
+                <Link
+                  href="/"
+                  className={classNames("button", "button-outline")}
+                >
+                  Leave
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </Modal>

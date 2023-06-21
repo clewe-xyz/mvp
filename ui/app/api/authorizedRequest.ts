@@ -11,8 +11,10 @@ export async function authorizedRequest(url: string, config?: RequestConfig) {
   const cookiesStore = cookies();
   const accessToken = cookiesStore.get("access_token");
 
+  const URL = url.startsWith("/") ? url : `${process.env.API_HOST_URL}/${url}`;
+
   // Design decision: Authorized requests must be dynamic, i.e. without caching
-  const response = await fetch(`${process.env.API_HOST_URL}/${url}`, {
+  const response = await fetch(URL, {
     ...(config ?? {}),
     method: config?.method ?? "GET",
     headers: {
@@ -64,7 +66,7 @@ export async function authorizedRequest(url: string, config?: RequestConfig) {
       // Repeat the original request, but with an updated access token
       const { access_token, refresh_token } =
         await updatedTokensResponse.json();
-      const response = await fetch(`${process.env.API_HOST_URL}/${url}`, {
+      const response = await fetch(URL, {
         ...(config ?? {}),
         method: config?.method ?? "GET",
         headers: {

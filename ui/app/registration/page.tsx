@@ -3,11 +3,7 @@ import { RegistrationForm } from "./RegistrationForm";
 import styles from "./styles.module.css";
 import { Suspense } from "react";
 
-type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-export default function RegistrationPage({ searchParams }: Props) {
+export default function RegistrationPage() {
   return (
     <div className={styles.registrationPage}>
       <header className={styles.header}>

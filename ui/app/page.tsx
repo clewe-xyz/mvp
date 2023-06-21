@@ -20,18 +20,37 @@ export default function Home() {
         <h2 className={styles.title}>
           Dive into web3 by completing quests and earn rewards
         </h2>
-        <h5 className={styles.offer}>
-          Do not have an account? Complete your first quest about finance
-          fundamentals and feel what is like to be a CleWer
-        </h5>
-        <div className={styles.heroHook}>
-          <Link
-            href="/quests/demo/preparation"
-            className="button button-accent"
-          >
-            Start your first quest
-          </Link>
-        </div>
+        {isAuthorized() ? (
+          <div className={styles.heroHook}>
+            <Link
+              href={{
+                pathname: "/quests",
+                query: { demo: true },
+              }}
+              className="button button-accent"
+            >
+              Go to quests
+            </Link>
+          </div>
+        ) : (
+          <>
+            <h5 className={styles.offer}>
+              Do not have an account? Complete your first quest about finance
+              fundamentals and feel what is like to be a CleWer
+            </h5>
+            <div className={styles.heroHook}>
+              <Link
+                href={{
+                  pathname: "/quests/1/preparation",
+                  query: { demo: true },
+                }}
+                className="button button-accent"
+              >
+                Start your first quest
+              </Link>
+            </div>
+          </>
+        )}
       </main>
     </>
   );

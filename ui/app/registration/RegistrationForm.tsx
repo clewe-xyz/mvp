@@ -1,9 +1,10 @@
 "use client";
 
 import { Input } from "@/ui-kit/inputs/Input";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.css";
+import { unauthorizedRequest } from "../api/unauthorizedRequest";
 
 type FormData = {
   email: string;
@@ -15,16 +16,30 @@ type FormData = {
 export function RegistrationForm() {
   const { push } = useRouter();
   const { register, handleSubmit, watch } = useForm<FormData>();
+  const demoUser = sessionStorage.getItem("demo_user");
+  const serializedDemoUser = demoUser ? JSON.parse(demoUser) : null;
+  const pwd = watch("password");
+
   const registration = ({ passwordConfirmation, ...creds }: FormData) => {
     fetch("/api/users/signup", {
       method: "POST",
-      body: JSON.stringify(creds),
+      body: JSON.stringify({ id: serializedDemoUser?.id, ...creds }),
     })
+      .then(() => {
+        if (serializedDemoUser) {
+          const { questId, accumExp, accumSkills } = serializedDemoUser;
+          return unauthorizedRequest(`/api/quests/${questId}/complete`, {
+            method: "POST",
+            body: JSON.stringify({
+              experience: accumExp,
+              skills: accumSkills.map((skill: any) => ({ id: skill.id })),
+            }),
+          }).then(() => sessionStorage.removeItem("demo_user"));
+        }
+      })
       .then(() => push("profile"))
       .catch((error) => console.error(error));
   };
-  const searchParams = useSearchParams();
-  const pwd = watch("password");
 
   return (
     <form
@@ -36,7 +51,7 @@ export function RegistrationForm() {
           type="text"
           label="Nickname"
           id="Nickname"
-          defaultValue={searchParams.get("nickname") ?? undefined}
+          defaultValue={serializedDemoUser?.nickname ?? undefined}
           required
           {...register("nickname", {
             required: true,

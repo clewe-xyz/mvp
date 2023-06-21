@@ -23,22 +23,37 @@ type Params = {
   id: string;
 };
 
-export default async function SingleQuiz({ params }: { params: Params }) {
+type SearchParams = {
+  demo?: string;
+};
+
+export default async function SingleQuiz({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const [quiz, user, levels] = await Promise.all([
     getQuest(params.id),
-    getCurrentUser(),
+    searchParams.demo ? Promise.resolve(null) : getCurrentUser(),
     getLevelsInfo(),
   ]);
   return (
     <main className={styles.singleQuiz}>
       <QuizFlow
+        id={quiz.id}
         questions={quiz.questions}
-        user={{
-          nickname: user.nickname,
-          level: user.level_id,
-          accumulatedExp: user.level_accumulated_exp,
-          expToNextLevel: user.exp_to_next_level,
-        }}
+        user={
+          user !== null
+            ? {
+                nickname: user.nickname,
+                level: user.level_id,
+                accumulatedExp: user.level_accumulated_exp,
+                expToNextLevel: user.exp_to_next_level,
+              }
+            : null
+        }
         allLevels={levels.map((lvl: any) => ({
           level: lvl.level_value,
           exp: lvl.total_exp,
