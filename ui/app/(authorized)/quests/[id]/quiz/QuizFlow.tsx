@@ -180,13 +180,23 @@ export default function QuizFlow({ id: questId, questions, user }: Props) {
 
           <div className={styles.statsActions}>
             {user ? (
-              <button
-                type="button"
-                onClick={() => completeQuest().then(() => push("/quests"))}
-                className={classNames("button", "button-accent")}
-              >
-                Go to quests
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => completeQuest().then(() => push("/quests"))}
+                  className={classNames("button", "button-accent", [
+                    styles.completeBtn,
+                  ])}
+                >
+                  Go to quests
+                </button>
+                <Link
+                  href={`/quests/${questId}/preparation`}
+                  className={classNames("button", "button-outline")}
+                >
+                  Try again
+                </Link>
+              </>
             ) : (
               <>
                 <p>Want to save the progress and try more quests?</p>
