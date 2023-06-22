@@ -16,7 +16,10 @@ type FormData = {
 export function RegistrationForm() {
   const { push } = useRouter();
   const { register, handleSubmit, watch } = useForm<FormData>();
-  const demoUser = sessionStorage.getItem("demo_user");
+  let demoUser = undefined;
+  if (typeof sessionStorage !== "undefined") {
+    demoUser = sessionStorage.getItem("demo_user");
+  }
   const serializedDemoUser = demoUser ? JSON.parse(demoUser) : null;
   const pwd = watch("password");
 
@@ -77,6 +80,7 @@ export function RegistrationForm() {
           required
           {...register("password", {
             required: true,
+            minLength: 9,
           })}
         />
       </div>
@@ -88,6 +92,7 @@ export function RegistrationForm() {
           required
           {...register("passwordConfirmation", {
             required: true,
+            minLength: 9,
             validate: (passwordConfirmation) => {
               if (pwd !== passwordConfirmation) {
                 return "Password doesn't match";
