@@ -156,6 +156,10 @@ button {
   text-decoration: none;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 .link {
   border-bottom: 1px solid var(--color-gray-50);
 }

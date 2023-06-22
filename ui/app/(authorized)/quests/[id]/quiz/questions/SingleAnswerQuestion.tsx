@@ -22,7 +22,11 @@ export function SingleAnswerQuestion({
   onCorrect,
   onIncorrect,
 }: Props) {
-  const { register, handleSubmit } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitted },
+  } = useForm<FormData>();
   const validateAnswer = ({ answer }: FormData) => {
     unauthorizedRequest(`/api/questions/${id}`, {
       method: "POST",
@@ -48,7 +52,11 @@ export function SingleAnswerQuestion({
           <RadioGroup {...register("answer")} labels={answers} />
         </div>
         <div className={styles.quizAnswerActions}>
-          <button className={styles.answerButton} type="submit">
+          <button
+            className={styles.answerButton}
+            type="submit"
+            disabled={isSubmitted}
+          >
             Answer
           </button>
         </div>

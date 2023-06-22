@@ -33,11 +33,17 @@ type NickNameData = {
   nickname: string;
 };
 
-export default function QuizFlow({ id: questId, questions, user }: Props) {
+export default function QuizFlow({
+  id: questId,
+  questions,
+  user,
+  allLevels,
+}: Props) {
   const [demoUserId, setDemoUserId] = useState<number>();
   const [nickname, setNickname] = useState(user?.nickname ?? "");
   const [userLevel, setUserLevel] = useState(user?.level ?? 1);
-  const [accumExp, setAccumExp] = useState(user?.accumulatedExp ?? 0);
+  const [totalAccumExp, setTotalAccumExp] = useState(0);
+  const [levelAccumExp, setLevelAccumExp] = useState(user?.accumulatedExp ?? 0);
   const [expReward, setExpReward] = useState<number | undefined>(undefined);
   const [accumSkills, setAccumSkills] = useState<SkillReward[]>([]);
   const [correctAnswersAmount, setCorrectAnswersAmount] = useState(0);
@@ -73,11 +79,22 @@ export default function QuizFlow({ id: questId, questions, user }: Props) {
     );
   };
 
+  const updateLevel = (accumulatedExp: number) => {
+    const currentLevelMaxExp =
+      allLevels.find(({ level }) => level === userLevel)?.exp ?? 100;
+    if (accumulatedExp > currentLevelMaxExp) {
+      setUserLevel((level) => level + 1);
+      setLevelAccumExp(accumulatedExp - currentLevelMaxExp);
+    } else {
+      setLevelAccumExp(accumulatedExp);
+    }
+  };
+
   const completeQuest = () =>
     unauthorizedRequest(`/api/quests/${questId}/complete`, {
       method: "POST",
       body: JSON.stringify({
-        experience: accumExp,
+        experience: totalAccumExp,
         skills: accumSkills.map((skill) => ({ id: skill.id })),
       }),
     });
@@ -88,22 +105,25 @@ export default function QuizFlow({ id: questId, questions, user }: Props) {
         <QuizSlider
           questions={questions}
           onCorrectAnswer={({ expirienceReward, skillsReward }) => {
-            setAccumExp(accumExp + expirienceReward);
+            setTotalAccumExp(totalAccumExp + expirienceReward);
             setAccumSkills(
               updateSkillsReward({
                 accumulated: accumSkills,
                 reward: skillsReward,
               })
             );
-            setCorrectAnswersAmount(correctAnswersAmount + 1);
             updateExpReward(expirienceReward);
+            updateLevel(levelAccumExp + expirienceReward);
+            setCorrectAnswersAmount(correctAnswersAmount + 1);
           }}
           onIncorrectAnswer={() => {
             setIncorrectAnswersAmount(incorrectAnswersAmount + 1);
             updateExpReward(0);
           }}
           onFinish={() => {
-            openCompletionModal(true);
+            setTimeout(() => {
+              openCompletionModal(true);
+            }, 1500);
           }}
         />
       </section>
@@ -111,7 +131,10 @@ export default function QuizFlow({ id: questId, questions, user }: Props) {
         <QuizPlayer
           nickname={nickname}
           level={userLevel}
-          totalExperience={accumExp}
+          accumExp={levelAccumExp}
+          levelMaxExp={
+            allLevels.find(({ level }) => level === userLevel)?.exp ?? 100
+          }
           experienceReward={expReward}
         />
       </section>
@@ -141,7 +164,7 @@ export default function QuizFlow({ id: questId, questions, user }: Props) {
           <div className={styles.experienceSummary}>
             <div className={styles.statBlock}>
               <div className={styles.statText}>
-                <div className={styles.statResult}>+{accumExp}</div>
+                <div className={styles.statResult}>+{totalAccumExp}</div>
                 <div className={styles.statTitle}>Experience gained</div>
               </div>
             </div>
@@ -209,7 +232,7 @@ export default function QuizFlow({ id: questId, questions, user }: Props) {
                         id: demoUserId,
                         questId,
                         nickname,
-                        accumExp,
+                        accumExp: totalAccumExp,
                         accumSkills,
                       })
                     );
