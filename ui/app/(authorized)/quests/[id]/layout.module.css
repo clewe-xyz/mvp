@@ -1,0 +1,8 @@
+.layout {
+  /* Mobile browsers have native elements: search bar, bottom panel. 
+   * 90vh is an empirical value to fit into a single screen without scrolling
+   */
+  height: calc(
+    90vh - 80px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+  );
+}
