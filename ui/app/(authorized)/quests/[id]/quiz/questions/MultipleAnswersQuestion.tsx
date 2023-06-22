@@ -22,7 +22,11 @@ export function MultipleAnswersQuestion({
   onCorrect,
   onIncorrect,
 }: Props) {
-  const { register, handleSubmit } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitted },
+  } = useForm<FormData>();
 
   const validateAnswer = ({ answers: givenAnswers }: FormData) => {
     unauthorizedRequest(`/api/questions/${id}`, {
@@ -57,7 +61,11 @@ export function MultipleAnswersQuestion({
           ))}
         </div>
         <div className={styles.quizAnswerActions}>
-          <button className={styles.answerButton} type="submit">
+          <button
+            className={styles.answerButton}
+            type="submit"
+            disabled={isSubmitted}
+          >
             Answer
           </button>
         </div>
