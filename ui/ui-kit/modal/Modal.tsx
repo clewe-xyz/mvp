@@ -1,5 +1,7 @@
+"use client";
+
 import classNames from "classnames";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./modal.module.css";
 
@@ -11,9 +13,17 @@ type Props = {
 };
 
 export function Modal({ isOpened, children, hideClose, onClose }: Props) {
+  const [isInitialized, initialize] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      initialize(true);
+    }
+  }, []);
+
   return (
     <>
-      {typeof window !== "undefined"
+      {isInitialized
         ? createPortal(
             <div
               className={classNames(styles.modal, {

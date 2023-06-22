@@ -8,11 +8,18 @@ import { createPortal } from "react-dom";
 import styles from "./navigation.module.css";
 
 export default function NavigationMenu() {
+  const [isInitialized, initialize] = useState(false);
   const [isOpened, setOpened] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const url = `${pathname}?${searchParams}`;
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      initialize(true);
+    }
+  }, []);
 
   useEffect(() => {
     setOpened(false);
@@ -29,7 +36,7 @@ export default function NavigationMenu() {
       >
         Menu
       </button>
-      {typeof window !== "undefined"
+      {isInitialized
         ? createPortal(
             <div
               className={classNames(styles.navMenu, {
