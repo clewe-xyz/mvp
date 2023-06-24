@@ -7,19 +7,35 @@ from pydantic import Field, root_validator, validator
 from app.schemas.skills import QuestionSkillDetails, SkillDetailsResponse
 
 
-class AnswerMultipleOption(BaseModel):
+class BaseAnswer(BaseModel):
+    true_answers: Union[list[str], str]
+    all_answers: Optional[list[str]] = None
+
+    @root_validator
+    def answers_to_lower(cls, values):
+        if true_answers := values.get('true_answers'):
+            if isinstance(true_answers, str):
+                values['true_answers'] = true_answers.lower()
+            else:
+                values['true_answers'] = [answer.lower() for answer in true_answers]
+        if all_answers := values.get('all_answers'):
+            values['all_answers'] = [answer.lower() for answer in all_answers]
+        return values
+
+
+class AnswerMultipleOption(BaseAnswer):
     true_answers: list[str]
-    fake_answers: list[str]
+    all_answers: list[str]
 
 
-class AnswerSingleOption(BaseModel):
+class AnswerSingleOption(BaseAnswer):
     true_answers: str
-    fake_answers: list[str]
+    all_answers: list[str]
 
 
-class AnswerOpenedText(BaseModel):
+class AnswerOpenedText(BaseAnswer):
     true_answers: str
-    fake_answers: None = None
+    all_answers: None = None
 
 
 Answers = Annotated[
@@ -36,6 +52,7 @@ class Question(DBBaseModel):
     @root_validator
     def check(cls, values):
         question_type = values['type']
+        print('\n\n\nTYPE', question_type)
         if question_type == QuestionType.OpenedText:
             values['answers'] = AnswerOpenedText(**values['answers'].dict())
         if question_type == QuestionType.SingleOption:
@@ -51,9 +68,9 @@ class QuestionWithFakeAnswers(DBBaseModel):
     answers: dict[str, Any]
 
     @validator('answers')
-    def get_fake_answers(cls, value):
-        if fake_answers := value.get('fake_answers'):
-            return fake_answers
+    def get_all_answers(cls, value):
+        if all_answers := value.get('all_answers'):
+            return all_answers
         return None
 
 
@@ -63,6 +80,7 @@ class QuestionCreate(Question):
 
 class CreateQuestion(Question):
     quest_id: int
+    experience_reward: int
 
 
 class QuestionUpdate(QuestionCreate):
@@ -96,6 +114,7 @@ class QuestionWithFakeAnswersAndSkillsDetails(QuestionWithFakeAnswersDetails):
 
 class QuestionDetailsResponse(QuestionWithFakeAnswers):
     id: int
+    experience_reward: int
     skills: list[SkillDetailsResponse]
 
 
@@ -105,3 +124,9 @@ class QuestionCheckAnswer(BaseModel):
 
 class Answer(BaseModel):
     answers: Union[list[str], str]
+
+    @validator('answers')
+    def answers_to_lower(cls, value):
+        if isinstance(value, str):
+            return value.lower()
+        return [answer.lower() for answer in value]

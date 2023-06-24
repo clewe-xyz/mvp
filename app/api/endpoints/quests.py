@@ -110,7 +110,9 @@ def get_my_quests(
 ):
     user_completed_quests_id = {quest.id for quest in user.completed_quests}
     quest_objs = db.query(models.Quest).all()
-    quest_schemas = [quests.MyQuestDetailsResponse.from_orm(quest_obj) for quest_obj in quest_objs]
+    quest_schemas = [
+        quests.MyQuestDetailsResponse.from_orm(quest_obj) for quest_obj in quest_objs
+    ]
     for schema in quest_schemas:
         schema.is_completed = schema.id in user_completed_quests_id
     return quest_schemas

@@ -79,7 +79,6 @@ class UserUpdate(UserCreate):
 
 class UserResponse(User):
     id: int
-    level_total_exp: Optional[int]
     exp_to_next_level: Optional[int]
     completed_quests: list[Optional[QuestDetails]]
 

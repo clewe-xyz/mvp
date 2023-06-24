@@ -1,9 +1,11 @@
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, Integer, VARCHAR, Text
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, Mapped
 
 from app.db.base_class import Base
+from app.schemas.skills import Skill
 
 if TYPE_CHECKING:
     from app.models import UserTable, UsersQuests, Question
@@ -27,3 +29,15 @@ class Quest(Base):
         back_populates='quest',
         cascade="all, delete",
     )
+
+    @hybrid_property
+    def skills(self) -> list[Skill]:
+        skills_tag_set = set()
+        skills_list = []
+        for question in self.questions:
+            for skill in question.skills:
+                skill_schema = Skill.from_orm(skill)
+                if skill_schema.tag not in skills_tag_set:
+                    skills_tag_set.add(skill_schema.tag)
+                    skills_list.append(skill_schema)
+        return skills_list

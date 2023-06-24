@@ -6,7 +6,7 @@ from app.schemas.questions import (
     QuestionWithFakeAnswersAndSkillsDetails,
     QuestionDetailsResponse,
 )
-from app.schemas.skills import SkillRequest
+from app.schemas.skills import SkillRequest, Skill
 
 
 class Quest(DBBaseModel):
@@ -45,7 +45,11 @@ class QuestDetailsResponse(QuestDetails):
     questions: list[QuestionDetailsResponse]
 
 
-class MyQuestDetailsResponse(QuestDetailsResponse):
+class QuestSkillsDetailsResponse(QuestDetails):
+    skills: list[Skill]
+
+
+class MyQuestDetailsResponse(QuestSkillsDetailsResponse):
     is_completed: bool = False
 
 
