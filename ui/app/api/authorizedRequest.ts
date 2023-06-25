@@ -5,6 +5,7 @@ type RequestConfig = {
   method?: string;
   body?: BodyInit;
   headers?: Record<string, string>;
+  cache?: RequestCache;
 };
 
 export async function authorizedRequest(url: string, config?: RequestConfig) {
@@ -16,6 +17,7 @@ export async function authorizedRequest(url: string, config?: RequestConfig) {
   // Design decision: Authorized requests must be dynamic, i.e. without caching
   const response = await fetch(URL, {
     ...(config ?? {}),
+    cache: config?.cache ?? "no-store",
     method: config?.method ?? "GET",
     headers: {
       ...(config?.headers ?? {}),
