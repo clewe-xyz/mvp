@@ -33,18 +33,16 @@ export default function Quest({
         <h3>{name}</h3>
         <p>{description}</p>
         <div className={styles.skills}>
-          <div className={styles.singleSkill}>
-            <SkillImage
-              className={styles.skillIcon}
-              tag="finance-fundamentals"
-              width={32}
-            />
-            Finance
-          </div>
-          <div className={styles.singleSkill}>
-            <SkillImage className={styles.skillIcon} tag="tokens" width={32} />
-            Crypto basics
-          </div>
+          {skills.map((skill) => (
+            <div key={skill.id} className={styles.singleSkill}>
+              <SkillImage
+                className={styles.skillIcon}
+                tag={skill.tag}
+                width={32}
+              />
+              {skill.topic}
+            </div>
+          ))}
         </div>
       </div>
       <div className={styles.questActions}>

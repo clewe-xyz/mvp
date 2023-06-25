@@ -93,7 +93,7 @@ export default function QuizSlider({
               answers={question.answers}
               onCorrect={() =>
                 fixateCorrectAnswer({
-                  expirienceReward: 50,
+                  expirienceReward: question.experience_reward,
                   skillsReward: question.skills,
                 })
               }
