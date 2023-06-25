@@ -170,13 +170,13 @@ export default function QuizFlow({
             </div>
           </div>
           <div className={styles.answersStatsSummary}>
-            <div className={classNames(styles.statBlock, styles.inheritWidth)}>
+            <div className={classNames(styles.statBlock)}>
               <div className={classNames(styles.statText, styles.correct)}>
                 <div className={styles.statResult}>{correctAnswersAmount}</div>
                 <div className={styles.statTitle}>Correct</div>
               </div>
             </div>
-            <div className={classNames(styles.statBlock, styles.inheritWidth)}>
+            <div className={classNames(styles.statBlock)}>
               <div className={classNames(styles.statText, styles.incorrect)}>
                 <div className={styles.statResult}>
                   {incorrectAnswersAmount}
@@ -222,7 +222,10 @@ export default function QuizFlow({
               </>
             ) : (
               <>
-                <p>Want to save the progress and try more quests?</p>
+                <p>
+                  You need an account to save the progress, re-take the quest
+                  and try other
+                </p>
                 <button
                   type="button"
                   onClick={() => {

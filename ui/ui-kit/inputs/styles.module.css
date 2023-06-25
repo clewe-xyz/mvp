@@ -74,16 +74,13 @@
 }
 
 .checkboxLabel {
-  align-items: center;
-  display: inline-grid;
+  display: block;
   font-size: 1.5rem;
   grid-template-columns: 18px auto;
   column-gap: 8px;
   user-select: none;
   cursor: pointer;
-}
-
-.checkboxLabel {
+  margin-bottom: 12px;
   margin-right: 16px;
 }
 
@@ -96,12 +93,13 @@
   border-radius: 2px;
   content: "";
   display: inline-block;
+  margin-right: 12px;
   height: 16px;
   width: 16px;
 }
 
 .radioContainer {
-  margin-right: 24px;
+  display: block;
 }
 
 .radioContainer:last-of-type {
@@ -121,10 +119,10 @@
 
 .radioLabel {
   font-size: 1.5rem;
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
   user-select: none;
   cursor: pointer;
+  margin-bottom: 12px;
 }
 
 .radioLabel::before {

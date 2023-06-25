@@ -43,7 +43,7 @@ export function SkillImage({ tag, className, height, width }: Props) {
           alt="DAOs skill"
         />
       );
-    case "tokens":
+    case "crypto-wallets":
       return (
         <Image
           className={className}

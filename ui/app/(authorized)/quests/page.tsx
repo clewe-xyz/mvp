@@ -8,7 +8,7 @@ type Quest = {
   name: string;
   description: string;
   tag: string;
-  skills: SkillType;
+  skills: SkillType[];
   is_completed: boolean;
 };
 
@@ -29,7 +29,7 @@ export default async function Quests() {
           description={quest.description}
           tag={quest.tag}
           isCompleted={quest.is_completed}
-          skills={[]}
+          skills={quest.skills}
         />
       ))}
     </main>
