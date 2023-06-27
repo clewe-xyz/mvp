@@ -46,6 +46,9 @@ export default function QuizFlow({
   const [levelAccumExp, setLevelAccumExp] = useState(user?.accumulatedExp ?? 0);
   const [expReward, setExpReward] = useState<number | undefined>(undefined);
   const [accumSkills, setAccumSkills] = useState<SkillReward[]>([]);
+  const [accumSkillsBEPayload, updateGainedSkillsBEPayload] = useState<
+    string[]
+  >([]);
   const [correctAnswersAmount, setCorrectAnswersAmount] = useState(0);
   const [incorrectAnswersAmount, setIncorrectAnswersAmount] = useState(0);
   const [isCompletionModalOpened, openCompletionModal] = useState(false);
@@ -95,7 +98,7 @@ export default function QuizFlow({
       method: "POST",
       body: JSON.stringify({
         experience: totalAccumExp,
-        skills: accumSkills.map((skill) => ({ id: skill.id })),
+        skills: accumSkillsBEPayload.map((id) => ({ id })),
       }),
     });
 
@@ -111,6 +114,9 @@ export default function QuizFlow({
                 accumulated: accumSkills,
                 reward: skillsReward,
               })
+            );
+            updateGainedSkillsBEPayload(
+              [...accumSkills, ...skillsReward].map((skill) => skill.id)
             );
             updateExpReward(expirienceReward);
             updateLevel(levelAccumExp + expirienceReward);
@@ -236,7 +242,7 @@ export default function QuizFlow({
                         questId,
                         nickname,
                         accumExp: totalAccumExp,
-                        accumSkills,
+                        accumSkills: accumSkillsBEPayload,
                       })
                     );
                     push("/registration");

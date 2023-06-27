@@ -35,7 +35,7 @@ export function RegistrationForm() {
             method: "POST",
             body: JSON.stringify({
               experience: accumExp,
-              skills: accumSkills.map((skill: any) => ({ id: skill.id })),
+              skills: accumSkills.map((id: string) => ({ id })),
             }),
           }).then(() => sessionStorage.removeItem("demo_user"));
         }
