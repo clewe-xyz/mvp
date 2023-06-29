@@ -1,6 +1,7 @@
+import json
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Integer, VARCHAR, Text, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, VARCHAR, Text, ForeignKey, Boolean, JSON
 from sqlalchemy.orm import relationship, Mapped
 from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
 
@@ -18,7 +19,7 @@ if TYPE_CHECKING:
 
 class UserTable(Base):
     id: int = Column(Integer, primary_key=True, index=True)
-    nickname: str = Column(VARCHAR(255))
+    nickname: str = Column(VARCHAR(255), unique=True)
     wallet_address: str = Column(VARCHAR(255))
     level_id: Mapped[int] = Column(
         Integer, ForeignKey('level.id', ondelete='SET NULL'), index=True
@@ -28,6 +29,7 @@ class UserTable(Base):
     password: str = Column(Text)
     is_active: bool = Column(Boolean, default=False)
     level: Mapped["Level"] = relationship('Level', back_populates='users')
+    nfts: json = Column(JSON)
     completed_quests: Mapped[list['Quest']] = relationship(
         'Quest', secondary="usersquests", back_populates='users'
     )

@@ -94,6 +94,33 @@ async def login(
 async def get_me(user: users.User = Depends(deps.get_current_user)):
     return users.UserResponse.from_orm(user)
 
+@router.patch(
+    '/me/',
+    response_model=users.UserResponse,
+    status_code=http_status.HTTP_200_OK,
+)
+def get_me(
+    update_data: users.UserUpdateWalletAddress,
+    user: users.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db)
+):
+    crud.user.update(db=db, db_obj=user, obj_in=update_data.dict())
+    return users.UserResponse.from_orm(user)
+
+
+@router.patch(
+    '/me/nft/',
+    response_model=users.UserResponse,
+    status_code=http_status.HTTP_200_OK,
+)
+def get_me(
+    update_data: users.UserUpdateNFT,
+    user: users.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db)
+):
+    crud.user.update(db=db, db_obj=user, obj_in=update_data.dict())
+    return users.UserResponse.from_orm(user)
+
 
 @router.get(
     '/me/access-token/',
