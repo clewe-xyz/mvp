@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import validator, Field, root_validator, EmailStr
+from pydantic import validator, Field, root_validator, EmailStr, conlist
 
 from app.schemas.base import DBBaseModel, BaseModel
 from app.schemas.skills import Skill
@@ -76,11 +76,16 @@ class UserSignup(UserCreate):
 class UserUpdate(UserCreate):
     id: int
 
+class UserNFT(DBBaseModel):
+    tx_hash: str
+    image_url: str
+
 
 class UserResponse(User):
     id: int
     exp_to_next_level: Optional[int]
     completed_quests: list[Optional[QuestDetails]]
+    nfts: Optional[list[UserNFT]]
 
 
 class SkillRequest(BaseModel):
@@ -104,3 +109,25 @@ class UserNotActiveCreate(UserNotActiveRequest):
     is_active: bool = False
     level_id: int = 1
     level_accumulated_exp: int = 0
+
+
+class UserUpdateWalletAddress(DBBaseModel):
+    wallet_address: str
+
+
+
+
+
+class UserUpdateNFT(DBBaseModel):
+    nfts: conlist(UserNFT, min_items=1, unique_items=True)
+
+    @root_validator
+    def uniqueness_check(csl, values):
+        nfts = values.get('nfts')
+        hash_set = {nft.tx_hash for nft in nfts}
+        img_set = {nft.image_url for nft in nfts}
+        if len(hash_set) != len(nfts) or len(img_set) != len(nfts):
+            raise ValueError('Not unique values')
+        return values
+
+
