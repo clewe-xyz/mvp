@@ -47,7 +47,7 @@ export default function QuizFlow({
   const [expReward, setExpReward] = useState<number | undefined>(undefined);
   const [accumSkills, setAccumSkills] = useState<SkillReward[]>([]);
   const [accumSkillsBEPayload, updateGainedSkillsBEPayload] = useState<
-    string[]
+    number[]
   >([]);
   const [correctAnswersAmount, setCorrectAnswersAmount] = useState(0);
   const [incorrectAnswersAmount, setIncorrectAnswersAmount] = useState(0);
@@ -115,9 +115,10 @@ export default function QuizFlow({
                 reward: skillsReward,
               })
             );
-            updateGainedSkillsBEPayload(
-              [...accumSkills, ...skillsReward].map((skill) => skill.id)
-            );
+            updateGainedSkillsBEPayload([
+              ...accumSkillsBEPayload,
+              ...skillsReward.map((skill) => skill.id),
+            ]);
             updateExpReward(expirienceReward);
             updateLevel(levelAccumExp + expirienceReward);
             setCorrectAnswersAmount(correctAnswersAmount + 1);

@@ -42,6 +42,7 @@
   --gradient-first: #2600fc;
   --gradient-second: #ff00ea;
   --gradient-angle: 25deg;
+  --gradient-reverse-angle: 155deg;
 }
 
 * {
@@ -190,6 +191,7 @@ button:disabled {
   color: var(--color-gray-10);
   display: inline-flex;
   align-items: center;
+  max-height: 56px;
   font-weight: 700;
   justify-content: center;
   flex-shrink: 0;
@@ -235,6 +237,23 @@ button:disabled {
     var(--gradient-angle),
     var(--gradient-first),
     var(--gradient-second)
+  );
+}
+
+.button-accent:active::after {
+  background-image: linear-gradient(
+    var(--gradient-reverse-angle),
+    var(--gradient-first),
+    var(--gradient-second)
+  );
+}
+
+.button-accent:disabled::after {
+  background-image: linear-gradient(
+    25deg,
+    rgb(128 128 128),
+    rgb(64 64 64 / 90%),
+    rgb(200 200 200 / 90%)
   );
 }
 
