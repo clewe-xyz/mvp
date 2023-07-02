@@ -3,18 +3,12 @@ import mintNFT from "@/images/mint-nft.png";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import classNames from "classnames";
 import Image from "next/image";
+import Link from "next/link";
 import { Skill, SkillReward } from "../skill";
 import { AchievementsSlider } from "./achievements";
 import styles from "./page.module.css";
-import Link from "next/link";
-
-type UserProfile = {
-  nickname: string;
-  wallet_address?: string;
-  level_id: number;
-  level_accumulated_exp: number;
-  exp_to_next_level: number;
-};
+import { UserProfile } from "./types";
+import { NFTSlider } from "./nft";
 
 async function getProfile(): Promise<UserProfile> {
   const profile = await authorizedRequest("users/me");
@@ -45,12 +39,12 @@ export default async function UserProfile() {
           </h4>
           <div className={styles.mintNFTDescription}>
             Create an NFT which will publically represents you current progress.
-            You can update the NFT later as your progress evolves.
+            You can update the NFT later as the progress evolves.
           </div>
           <div className={styles.mintNFTActions}>
-            <button className={classNames("button", "button-outline")}>
+            <Link href="/profile/create-nft" className="link">
               Create NFT
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -93,6 +87,10 @@ export default async function UserProfile() {
             </div>
           )}
         </div>
+      </section>
+      <section className={styles.section}>
+        <h4>NFTs</h4>
+        <NFTSlider />
       </section>
       <section className={styles.section}>
         <h4>Achievements</h4>

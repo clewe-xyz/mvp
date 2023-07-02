@@ -1,0 +1,1 @@
+export { NFTSlider } from "./NFTSlider";

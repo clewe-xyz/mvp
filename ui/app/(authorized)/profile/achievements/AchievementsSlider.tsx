@@ -14,7 +14,6 @@ import classNames from "classnames";
 export function AchievementsSlider() {
   return (
     <Splide
-      className={styles.achievement}
       options={{
         perPage: 1,
         perMove: 1,
