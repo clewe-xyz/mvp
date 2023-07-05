@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { ReactNode, useState } from "react";
-import styles from "./styles.module.css";
+import { SpinnerSM } from "../loaders";
 
 type Props = {
   asyncAction: () => Promise<unknown>;
@@ -20,11 +20,7 @@ export function AsyncButton({ asyncAction, className, children }: Props) {
       }}
       disabled={loading}
     >
-      {loading ? <Loading /> : children}
+      {loading ? <SpinnerSM /> : children}
     </button>
   );
-}
-
-function Loading() {
-  return <span className={styles.spinner} />;
 }

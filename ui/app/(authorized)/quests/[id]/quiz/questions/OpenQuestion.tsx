@@ -1,7 +1,8 @@
+import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 import { Textarea } from "@/ui-kit/inputs/Textarea";
+import { SpinnerSM } from "@/ui-kit/loaders";
 import { useForm } from "react-hook-form";
 import styles from "../page.module.css";
-import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 
 type Props = {
   id: number;
@@ -50,7 +51,7 @@ export function OpenQuestion({ id, question, onCorrect, onIncorrect }: Props) {
             type="submit"
             disabled={isSubmitted}
           >
-            Answer
+            {isSubmitted ? <SpinnerSM /> : "Answer"}
           </button>
         </div>
       </form>

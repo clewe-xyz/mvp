@@ -1,5 +1,6 @@
 import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 import { RadioGroup } from "@/ui-kit/inputs/RadioGroup";
+import { SpinnerSM } from "@/ui-kit/loaders";
 import { useForm } from "react-hook-form";
 import styles from "../page.module.css";
 
@@ -57,7 +58,7 @@ export function SingleAnswerQuestion({
             type="submit"
             disabled={isSubmitted}
           >
-            Answer
+            {isSubmitted ? <SpinnerSM /> : "Answer"}
           </button>
         </div>
       </form>

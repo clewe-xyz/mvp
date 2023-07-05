@@ -1,5 +1,6 @@
 import { unauthorizedRequest } from "@/app/api/unauthorizedRequest";
 import { Checkbox } from "@/ui-kit/inputs/Checkbox";
+import { SpinnerSM } from "@/ui-kit/loaders";
 import { useForm } from "react-hook-form";
 import styles from "../page.module.css";
 
@@ -66,7 +67,7 @@ export function MultipleAnswersQuestion({
             type="submit"
             disabled={isSubmitted}
           >
-            Answer
+            {isSubmitted ? <SpinnerSM /> : "Answer"}
           </button>
         </div>
       </form>
