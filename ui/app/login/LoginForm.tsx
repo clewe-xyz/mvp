@@ -4,6 +4,7 @@ import { Input } from "@/ui-kit/inputs/Input";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.css";
+import { SpinnerSM } from "@/ui-kit/loaders";
 
 type FormData = {
   email: string;
@@ -12,7 +13,11 @@ type FormData = {
 
 export function LoginForm() {
   const { push } = useRouter();
-  const { register, handleSubmit } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitted },
+  } = useForm<FormData>();
   const logIn = ({ email, password }: FormData) => {
     fetch("/api/users/login", {
       method: "POST",
@@ -47,8 +52,12 @@ export function LoginForm() {
         />
       </div>
       <div className={styles.actions}>
-        <button type="submit" className="button button-accent">
-          Log in
+        <button
+          type="submit"
+          className="button button-accent"
+          disabled={isSubmitted}
+        >
+          {isSubmitted ? <SpinnerSM /> : "Log in"}
         </button>
       </div>
     </form>

@@ -75,3 +75,12 @@
 .questActionButton {
   width: 100%;
 }
+
+.loadingContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 128px;
+}

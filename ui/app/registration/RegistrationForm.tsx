@@ -1,10 +1,11 @@
 "use client";
 
 import { Input } from "@/ui-kit/inputs/Input";
+import { SpinnerSM } from "@/ui-kit/loaders";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import styles from "./styles.module.css";
 import { unauthorizedRequest } from "../api/unauthorizedRequest";
+import styles from "./styles.module.css";
 
 type FormData = {
   email: string;
@@ -15,7 +16,12 @@ type FormData = {
 
 export function RegistrationForm() {
   const { push } = useRouter();
-  const { register, handleSubmit, watch } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitted },
+    watch,
+  } = useForm<FormData>();
   let demoUser = undefined;
   if (typeof sessionStorage !== "undefined") {
     demoUser = sessionStorage.getItem("demo_user");
@@ -103,8 +109,12 @@ export function RegistrationForm() {
         />
       </div>
       <div className={styles.actions}>
-        <button type="submit" className="button button-accent">
-          Create account
+        <button
+          type="submit"
+          className="button button-accent"
+          disabled={isSubmitted}
+        >
+          {isSubmitted ? <SpinnerSM /> : "Create account"}
         </button>
       </div>
     </form>
