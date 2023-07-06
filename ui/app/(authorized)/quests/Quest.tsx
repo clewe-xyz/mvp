@@ -25,11 +25,11 @@ export default function Quest({
     <div className={styles.quest}>
       <div className={styles.bgImageWrapper}>
         <QuestImage tag={tag} />
-      </div>
-      <div className={styles.questAbout}>
         {isCompleted ? (
           <span className={styles.completionLabel}>Completed</span>
         ) : null}
+      </div>
+      <div className={styles.questAbout}>
         <h3>{name}</h3>
         <p>{description}</p>
         <div className={styles.skills}>
