@@ -1,0 +1,55 @@
+.toast {
+  background-color: var(--color-gray-10);
+  border: 2px solid transparent;
+  display: inline-flex;
+  align-items: flex-start;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: calc(100% - 48px);
+  padding: 12px;
+  z-index: 100;
+}
+
+.error {
+  border-color: var(--color-red-10);
+  color: var(--color-red-10);
+  animation-name: shake;
+  animation-duration: 0.18s;
+  animation-iteration-count: 2;
+  animation-direction: normal;
+  animation-timing-function: ease-out;
+}
+
+.text {
+  margin-left: 12px;
+}
+
+.closeBtn {
+  border: none;
+  box-shadow: none;
+  line-height: 0;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(4px);
+    color: var(--color-red-10);
+  }
+  25% {
+    transform: translateX(8px);
+    color: var(--color-red-10);
+  }
+  50% {
+    transform: translateX(-4px);
+    color: var(--color-red-10);
+  }
+  75% {
+    transform: translateX(-8px);
+    color: var(--color-red-10);
+  }
+  100% {
+    transform: translateX(0);
+    color: var(--color-red-10);
+  }
+}

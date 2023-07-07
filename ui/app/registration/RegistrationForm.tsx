@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { unauthorizedRequest } from "../api/unauthorizedRequest";
 import styles from "./styles.module.css";
+import { useToasts } from "@/ui-kit/toasts";
 
 type FormData = {
   email: string;
@@ -14,12 +15,14 @@ type FormData = {
   passwordConfirmation: string;
 };
 
+const PASSWORD_MIN_LENGTH = 9;
+
 export function RegistrationForm() {
   const { push } = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { isSubmitted },
+    formState: { isSubmitting, errors },
     watch,
   } = useForm<FormData>();
   let demoUser = undefined;
@@ -29,25 +32,36 @@ export function RegistrationForm() {
   const serializedDemoUser = demoUser ? JSON.parse(demoUser) : null;
   const pwd = watch("password");
 
-  const registration = ({ passwordConfirmation, ...creds }: FormData) => {
-    fetch("/api/users/signup", {
-      method: "POST",
-      body: JSON.stringify({ id: serializedDemoUser?.id, ...creds }),
-    })
-      .then(() => {
-        if (serializedDemoUser) {
-          const { questId, accumExp, accumSkills } = serializedDemoUser;
-          return unauthorizedRequest(`/api/quests/${questId}/complete`, {
-            method: "POST",
-            body: JSON.stringify({
-              experience: accumExp,
-              skills: accumSkills.map((id: string) => ({ id })),
-            }),
-          }).then(() => sessionStorage.removeItem("demo_user"));
-        }
-      })
-      .then(() => push("profile"))
-      .catch((error) => console.error(error));
+  const { displayErrorToast } = useToasts();
+
+  const registration = async ({ passwordConfirmation, ...creds }: FormData) => {
+    try {
+      const signupResponse = await fetch("/api/users/signup", {
+        method: "POST",
+        body: JSON.stringify({ id: serializedDemoUser?.id, ...creds }),
+      });
+
+      if (!signupResponse.ok) {
+        const errorDetails = await signupResponse.json();
+        return displayErrorToast(errorDetails.detail);
+      }
+
+      if (serializedDemoUser) {
+        const { questId, accumExp, accumSkills } = serializedDemoUser;
+        await unauthorizedRequest(`/api/quests/${questId}/complete`, {
+          method: "POST",
+          body: JSON.stringify({
+            experience: accumExp,
+            skills: accumSkills.map((id: string) => ({ id })),
+          }),
+        });
+        sessionStorage.removeItem("demo_user");
+      }
+
+      return push("profile");
+    } catch (error: any) {
+      return displayErrorToast(error.message);
+    }
   };
 
   return (
@@ -84,9 +98,14 @@ export function RegistrationForm() {
           label="Password"
           id="Password"
           required
+          error={
+            errors.password && errors.password.type === "minLength"
+              ? "Password must containt al least 9 characters"
+              : errors.password?.message
+          }
           {...register("password", {
             required: true,
-            minLength: 9,
+            minLength: PASSWORD_MIN_LENGTH,
           })}
         />
       </div>
@@ -96,9 +115,15 @@ export function RegistrationForm() {
           label="Confirm password"
           id="confirm-password"
           required
+          error={
+            errors.passwordConfirmation &&
+            errors.passwordConfirmation.type === "minLength"
+              ? "Password must containt al least 9 characters"
+              : errors.passwordConfirmation?.message
+          }
           {...register("passwordConfirmation", {
             required: true,
-            minLength: 9,
+            minLength: PASSWORD_MIN_LENGTH,
             validate: (passwordConfirmation) => {
               if (pwd !== passwordConfirmation) {
                 return "Password doesn't match";
@@ -112,9 +137,9 @@ export function RegistrationForm() {
         <button
           type="submit"
           className="button button-accent"
-          disabled={isSubmitted}
+          disabled={isSubmitting}
         >
-          {isSubmitted ? <SpinnerSM /> : "Create account"}
+          {isSubmitting ? <SpinnerSM /> : "Create account"}
         </button>
       </div>
     </form>

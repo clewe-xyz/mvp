@@ -1,10 +1,11 @@
 "use client";
 
 import { Input } from "@/ui-kit/inputs/Input";
+import { SpinnerSM } from "@/ui-kit/loaders";
+import { useToasts } from "@/ui-kit/toasts";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.css";
-import { SpinnerSM } from "@/ui-kit/loaders";
 
 type FormData = {
   email: string;
@@ -16,15 +17,27 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitted },
+    formState: { isSubmitted, isSubmitting },
   } = useForm<FormData>();
-  const logIn = ({ email, password }: FormData) => {
-    fetch("/api/users/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    })
-      .then(() => push("profile"))
-      .catch((error) => console.error(error));
+
+  const { displayErrorToast } = useToasts();
+
+  const logIn = async ({ email, password }: FormData) => {
+    try {
+      const loginResponse = await fetch("/api/users/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!loginResponse.ok) {
+        const errorDetails = await loginResponse.json();
+        return displayErrorToast(errorDetails.detail);
+      }
+
+      return push("profile");
+    } catch (error: any) {
+      return displayErrorToast(error.message);
+    }
   };
 
   return (
@@ -55,9 +68,9 @@ export function LoginForm() {
         <button
           type="submit"
           className="button button-accent"
-          disabled={isSubmitted}
+          disabled={isSubmitting}
         >
-          {isSubmitted ? <SpinnerSM /> : "Log in"}
+          {isSubmitting ? <SpinnerSM /> : "Log in"}
         </button>
       </div>
     </form>

@@ -170,23 +170,23 @@
 @keyframes pulse-incorrect {
   0% {
     transform: translateX(2px);
-    color: #dd0000;
+    color: var(--color-red-10);
   }
   25% {
     transform: translateX(4px);
-    color: #dd0000;
+    color: var(--color-red-10);
   }
   50% {
     transform: translateX(-2px);
-    color: #dd0000;
+    color: var(--color-red-10);
   }
   75% {
     transform: translateX(-4px);
-    color: #dd0000;
+    color: var(--color-red-10);
   }
   100% {
     transform: translateX(0);
-    color: #dd0000;
+    color: var(--color-red-10);
   }
 }
 
