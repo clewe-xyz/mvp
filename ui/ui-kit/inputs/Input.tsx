@@ -2,12 +2,16 @@ import { HTMLProps, Ref, forwardRef } from "react";
 import styles from "./styles.module.css";
 import classNames from "classnames";
 
-type Props = HTMLProps<HTMLInputElement> & {
+type InputProps = HTMLProps<HTMLInputElement> & {
+  error?: string;
+};
+
+type Props = InputProps & {
   refObject?: Ref<HTMLInputElement>;
 };
 
 export const Input = forwardRef(
-  (props: HTMLProps<HTMLInputElement>, refObject: Ref<HTMLInputElement>) => (
+  (props: InputProps, refObject: Ref<HTMLInputElement>) => (
     <InputComponent {...props} ref={null} refObject={refObject} />
   )
 );
@@ -27,6 +31,9 @@ function InputComponent({ refObject, label, ...props }: Props) {
         id={props.id}
         ref={refObject}
       />
+      {props.error ? (
+        <span className={styles.errorMessage}>{props.error}</span>
+      ) : null}
     </>
   );
 }

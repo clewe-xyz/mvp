@@ -3,6 +3,7 @@ import { mabryPro, spaceGrotesk, stolzl } from "@/ui-kit/fonts";
 import classNames from "classnames";
 import Image from "next/image";
 import "./globals.css";
+import { ToastProvider } from "@/ui-kit/toasts";
 
 export const metadata = {
   title: "CleWe",
@@ -38,7 +39,7 @@ export default function RootLayout({
             width="390"
           />
         </div>
-        {children}
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );

@@ -138,3 +138,8 @@
   margin-right: 8px;
   width: 16px;
 }
+
+.errorMessage {
+  font-size: 0.9rem;
+  color: var(--color-red-10);
+}
