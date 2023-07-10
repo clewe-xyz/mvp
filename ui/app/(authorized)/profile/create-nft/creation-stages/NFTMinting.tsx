@@ -4,6 +4,7 @@ import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import classNames from "classnames";
 import { toPng } from "html-to-image";
+import { DateTime } from "luxon";
 import Image from "next/image";
 import { NFTStorage } from "nft.storage";
 import { useEffect, useRef, useState } from "react";
@@ -168,7 +169,12 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
           </section>
           <footer className={styles.footer}>
             <span className={styles.logo}>CleWe</span>
-            <span>Created on _human-Readable date_</span>
+            <span>
+              Created on{" "}
+              {DateTime.now()
+                .setLocale("en-US")
+                .toLocaleString(DateTime.DATE_FULL)}
+            </span>
           </footer>
         </div>
       </div>
