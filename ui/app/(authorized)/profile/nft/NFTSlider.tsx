@@ -5,6 +5,7 @@ import profileNFTPreview from "@/images/nft/image-equilibrium.jpg";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import classNames from "classnames";
+import { DateTime } from "luxon";
 import Image from "next/image";
 import Link from "next/link";
 import "./nft-slider.css";
@@ -50,7 +51,12 @@ export function NFTSlider() {
           >
             Update NFT
           </button>
-          <div className={styles.nftUpdateDate}>Last update: July 5, 2023</div>
+          <div className={styles.nftUpdateDate}>
+            Last update:{" "}
+            {DateTime.now()
+              .setLocale("en-US")
+              .toLocaleString(DateTime.DATE_FULL)}
+          </div>
         </div>
       </SplideSlide>
     </Splide>

@@ -18,11 +18,15 @@
     "eslint": "8.39.0",
     "eslint-config-next": "13.4.6",
     "html-to-image": "^1.11.11",
+    "luxon": "^3.3.0",
     "next": "13.4.6",
     "nft.storage": "^7.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.44.3",
     "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.3.0"
   }
 }
