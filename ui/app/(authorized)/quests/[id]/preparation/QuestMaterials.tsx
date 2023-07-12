@@ -11,41 +11,67 @@ export function QuestMaterials({ className, tag }: Props) {
     return (
       <>
         <SplideSlide className={className}>
-          Blockchain is a special kind of computer program that helps people
-          keep track of important information like money or contracts.
+          <p>
+            Blockchain is&nbsp;a&nbsp;special kind of&nbsp;computer program that
+            helps people keep track of&nbsp;important information like money
+            or&nbsp;contracts.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          It's like a big notebook that lots of people can write in, but nobody
-          can erase or change what's already written.
+          <p>
+            It&rsquo;s like a&nbsp;big notebook that lots of&nbsp;people can
+            write in, but nobody can erase or&nbsp;change what&rsquo;s already
+            written.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          Every time someone writes something new in the blockchain notebook,
-          everyone else gets a copy to check that everything is correct.
+          <p>
+            Every time someone writes something new in&nbsp;the blockchain
+            notebook, everyone else gets a&nbsp;copy to&nbsp;check that
+            everything is&nbsp;correct.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          This means that even if one person tries to cheat, the other people
-          can catch them and stop them from doing anything bad.
+          <p>
+            This means that even if&nbsp;one person tries to&nbsp;cheat, the
+            other people can catch them and stop them from doing anything bad.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          Originally, blockchain was used for something called Bitcoin, which is
-          like a special kind of money that only exists on the internet.
+          <p>
+            Originally, blockchain was used for something called Bitcoin, which
+            is&nbsp;like a&nbsp;special kind of&nbsp;money that only exists
+            on&nbsp;the internet.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          But now, people are using it for lots of other things too, like
-          keeping track of who owns a piece of land or making sure that a
-          product was made in a safe and ethical way.
+          <p>
+            But now, people are using it&nbsp;for lots of&nbsp;other things too,
+            like keeping track of&nbsp;who owns a&nbsp;piece of&nbsp;land
+            or&nbsp;making sure that a&nbsp;product was made in&nbsp;a&nbsp;safe
+            and ethical way.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          By using blockchain, we can make sure that things are fair and honest,
-          and that bad people can't get away with doing bad things.
+          <p>
+            By&nbsp;using blockchain, we&nbsp;can make sure that things are fair
+            and honest, and that bad people can&rsquo;t get away with doing bad
+            things.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          It's like having a big group of friends who always keep an eye on each
-          other to make sure nobody is doing anything wrong.
+          <p>
+            It&rsquo;s like having a&nbsp;big group of&nbsp;friends who always
+            keep an&nbsp;eye on&nbsp;each other to&nbsp;make sure nobody
+            is&nbsp;doing anything wrong.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          In short, blockchain is a powerful tool that helps us keep track of
-          important information and keep things fair for everyone.
+          <p>
+            In&nbsp;short, blockchain is&nbsp;a&nbsp;powerful tool that helps
+            us&nbsp;keep track of&nbsp;important information and keep things
+            fair for everyone.
+          </p>
         </SplideSlide>
         <SplideSlide>
           <p>
@@ -67,22 +93,31 @@ export function QuestMaterials({ className, tag }: Props) {
     return (
       <>
         <SplideSlide className={className}>
-          Decentralized exchanges, or dexes, are virtual markets where people
-          can trade digital currencies directly. There is no need for a
-          middleman such as a bank or a company. This makes transactions more
-          secure, private, transparent, and trustworthy since there is no
-          personal information given or trust in a third party. Transactions are
-          recorded on a blockchain.
+          <p>
+            Decentralized exchanges, or&nbsp;dexes, are virtual markets where
+            people can trade digital currencies directly. There
+            is&nbsp;no&nbsp;need for a&nbsp;middleman such as&nbsp;a&nbsp;bank
+            or&nbsp;a&nbsp;company. This makes transactions more secure,
+            private, transparent, and trustworthy since there
+            is&nbsp;no&nbsp;personal information given or&nbsp;trust
+            in&nbsp;a&nbsp;third party. Transactions are recorded
+            on&nbsp;a&nbsp;blockchain.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          Dexes are open-source, making them more democratic and decentralized.
-          Anyone can use and access the software. This means that everyone has
-          an equal opportunity to participate and contribute to the network.
+          <p>
+            Dexes are open-source, making them more democratic and
+            decentralized. Anyone can use and access the software. This means
+            that everyone has an&nbsp;equal opportunity to&nbsp;participate and
+            contribute to&nbsp;the network.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          To learn more about dexes and how they can help you trade digital
-          currencies securely and privately, check them out. Always stay curious
-          and have fun in the world of crypto and web3!
+          <p>
+            To&nbsp;learn more about dexes and how they can help you trade
+            digital currencies securely and privately, check them out. Always
+            stay curious and have fun in&nbsp;the world of&nbsp;crypto and web3!
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
           <p>Watch this 7-minute video to learn more on DEX topic!</p>
@@ -103,27 +138,40 @@ export function QuestMaterials({ className, tag }: Props) {
     return (
       <>
         <SplideSlide className={className}>
-          In the world of web3, there's a magical wallet called a Web3 wallet!
-          It's like a secret hiding place for your digital money, also known as
-          cryptocurrencies.
+          <p>
+            In&nbsp;the world of&nbsp;web3, there&rsquo;s a&nbsp;magical wallet
+            called a&nbsp;Web3 wallet! It&rsquo;s like a&nbsp;secret hiding
+            place for your digital money, also known as&nbsp;cryptocurrencies.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          Using your Web3 wallet, like Metamask, you can buy all sorts of cool
-          things in web3. It's like having a treasure chest full of magical
-          coins!
+          <p>
+            Using your Web3 wallet, like Metamask, you can buy all sorts
+            of&nbsp;cool things in&nbsp;web3. It&rsquo;s like having
+            a&nbsp;treasure chest full of&nbsp;magical coins!
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          To keep your Web3 wallet safe, create a secret code that only you
-          know. It's like a magic spell that protects your digital money.
+          <p>
+            To&nbsp;keep your Web3 wallet safe, create a&nbsp;secret code that
+            only you know. It&rsquo;s like a&nbsp;magic spell that protects your
+            digital money.
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          With your Web3 wallet and digital money, you can buy things in web3.
-          It's like using a magic wand to make things happen!
+          <p>
+            With your Web3 wallet and digital money, you can buy things
+            in&nbsp;web3. It&rsquo;s like using a&nbsp;magic wand to&nbsp;make
+            things happen!
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
-          In short, Web3 wallets are special wallets used to buy things in the
-          magical world of web3. They're like a secret treasure chest full of
-          magical coins that you can use to buy all sorts of cool things!
+          <p>
+            In&nbsp;short, Web3 wallets are special wallets used to&nbsp;buy
+            things in&nbsp;the magical world of&nbsp;web3. They&rsquo;re like
+            a&nbsp;secret treasure chest full of&nbsp;magical coins that you can
+            use to&nbsp;buy all sorts of&nbsp;cool things!
+          </p>
         </SplideSlide>
         <SplideSlide className={className}>
           <p>
