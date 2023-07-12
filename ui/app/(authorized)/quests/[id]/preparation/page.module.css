@@ -34,6 +34,12 @@
   overflow-y: auto;
 }
 
+.materialsSlideVideo {
+  width: 100%;
+  max-width: 560px;
+  height: 315px;
+}
+
 .actionsContainer {
   height: 100%;
   width: 100%;
