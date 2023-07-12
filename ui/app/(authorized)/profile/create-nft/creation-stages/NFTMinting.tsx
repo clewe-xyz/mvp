@@ -9,7 +9,9 @@ import Image from "next/image";
 import { NFTStorage } from "nft.storage";
 import { useEffect, useRef, useState } from "react";
 import { UserProfile } from "../../types";
+import { initWeb3 } from "./initWeb3";
 import styles from "./profileToImage.module.css";
+import { useToasts } from "@/ui-kit/toasts";
 
 type Props = {
   user: UserProfile;
@@ -24,6 +26,8 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
   const levelMaximumExp = user.exp_to_next_level + user.level_accumulated_exp;
   const profileRoot = useRef<HTMLDivElement>(null);
   const NFTActionsContainer = useRef<HTMLDivElement>(null);
+
+  const { displayErrorToast } = useToasts();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -92,10 +96,12 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
                     name: "The captured progress made on the CleWe platform",
                     description:
                       "This is an NFT that shows and makes your educational progress visible to others",
-                  }).then((metadata) => {
-                    console.log("NFT metadata was uploaded", metadata);
-                    onMint();
                   })
+                    .then((metadata) => {
+                      console.log("NFT metadata was uploaded", metadata);
+                      onMint();
+                    })
+                    .catch((error) => displayErrorToast(error.message))
                 }
               >
                 Mint NFT
@@ -107,13 +113,16 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
                 className={classNames("button-accent", styles.mintNFTBtn)}
                 asyncAction={() =>
                   mintNFT(preview, {
+                    walletAddress: user.wallet_address,
                     name: "The captured progress made on the CleWe platform",
                     description:
                       "This is an NFT that shows and makes your educational progress visible to others",
-                  }).then((metadata) => {
-                    console.log("NFT metadata was uploaded", metadata);
-                    onMint();
                   })
+                    .then((metadata) => {
+                      console.log("NFT metadata was uploaded", metadata);
+                      onMint();
+                    })
+                    .catch((error) => displayErrorToast(error.message))
                 }
               >
                 Mint NFT
@@ -183,6 +192,7 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
 }
 
 type Config = {
+  walletAddress?: string;
   name: string;
   description: string;
 };
@@ -192,10 +202,18 @@ const NFTStorageClient = new NFTStorage({
 });
 
 export async function mintNFT(imageBase64Data: string, config: Config) {
-  // const metadata = await uploadToIPFS(imageBase64Data, config);
-  const metadata = Promise.resolve([]);
-  // TODO: Call smart contract to mint NFT
-  return metadata;
+  const metadata = await uploadToIPFS(imageBase64Data, config);
+  const web3 = await initWeb3();
+  // TODO: replace with the real ABI
+  const ABI = [""];
+  const smartContract = new web3.eth.Contract(
+    ABI as any,
+    process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS
+  );
+  const mintReceipt = await smartContract.methods.mintNFT().send({
+    from: config.walletAddress,
+  });
+  return mintReceipt;
 }
 
 async function uploadToIPFS(imageBase64Data: string, config: Config) {

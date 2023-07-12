@@ -2,6 +2,8 @@ type RequestConfig = {
   method?: string;
   body?: BodyInit;
   headers?: Record<string, string>;
+  cache?: RequestCache;
+  next?: NextFetchRequestConfig;
 };
 
 export async function unauthorizedRequest(url: string, config?: RequestConfig) {

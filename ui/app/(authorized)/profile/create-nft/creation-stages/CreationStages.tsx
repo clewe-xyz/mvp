@@ -15,6 +15,7 @@ import { UserProfile } from "../../types";
 import NFTMinting from "./NFTMinting";
 import { connectMetaMaskWallet } from "./connectCryptoWallet";
 import styles from "./styles.module.css";
+import { useToasts } from "@/ui-kit/toasts";
 
 type Props = {
   user: UserProfile;
@@ -22,11 +23,12 @@ type Props = {
 };
 
 export default function CreationStages({ user, skills }: Props) {
-  const stages = [{ id: 11 }, { id: 35 }, { id: 90 }];
   const [quizProgress, setQuizProgress] = useState(0); // from 0 to 100
-  const progressStep =
-    stages.length > 1 ? Number((100 / (stages.length - 1)).toFixed(1)) : 100;
+  const progressStep = 50;
+  const [walletAddress, setWalletAddress] = useState(user.wallet_address);
   const splide = useRef<Splide>(null);
+
+  const { displayErrorToast } = useToasts();
 
   const goToNextQuestionOrFinish = () => {
     if (quizProgress === 100) {
@@ -42,11 +44,11 @@ export default function CreationStages({ user, skills }: Props) {
     setQuizProgress(updatedQuizProgress);
   };
 
-  const updateWalletAddress = (walletAddress: string) =>
+  const updateWalletAddress = (walletAddress?: string) =>
     fetch("/api/users/me", {
       method: "PATCH",
       body: JSON.stringify(walletAddress),
-    });
+    }).then(() => setWalletAddress(walletAddress));
 
   return (
     <div className={styles.container}>
@@ -76,6 +78,7 @@ export default function CreationStages({ user, skills }: Props) {
                 connectMetaMaskWallet()
                   .then(updateWalletAddress)
                   .then(goToNextQuestionOrFinish)
+                  .catch((error) => displayErrorToast(error.message))
               }
             >
               Connect a MetaMask wallet
@@ -84,7 +87,10 @@ export default function CreationStages({ user, skills }: Props) {
         </SplideSlide>
         <SplideSlide className={styles.singleSlide}>
           <NFTMinting
-            user={user}
+            user={{
+              ...user,
+              wallet_address: user.wallet_address ?? walletAddress,
+            }}
             skills={skills}
             onMint={() => {
               // TODO: Update user with generated NFT data
