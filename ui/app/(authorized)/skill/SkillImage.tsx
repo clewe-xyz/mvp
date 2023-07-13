@@ -13,16 +13,6 @@ type Props = {
 
 export function SkillImage({ tag, className, height, width }: Props) {
   switch (tag) {
-    case "finance-fundamentals":
-      return (
-        <Image
-          className={className}
-          src={finance}
-          height={height}
-          width={width}
-          alt="Finance skill"
-        />
-      );
     case "blockchain":
       return (
         <Image
@@ -33,7 +23,18 @@ export function SkillImage({ tag, className, height, width }: Props) {
           alt="Blockchain skill"
         />
       );
+    case "finance-fundamentals":
+      return (
+        <Image
+          className={className}
+          src={finance}
+          height={height}
+          width={width}
+          alt="Finances skill"
+        />
+      );
     case "dao":
+    case "dex":
       return (
         <Image
           className={className}
@@ -54,7 +55,14 @@ export function SkillImage({ tag, className, height, width }: Props) {
         />
       );
     default:
-      break;
+      return (
+        <Image
+          className={className}
+          src={dao}
+          height={height}
+          width={width}
+          alt="Fallback image for a skill"
+        />
+      );
   }
-  return null;
 }

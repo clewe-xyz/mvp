@@ -26,12 +26,12 @@ export function AchievementsSlider() {
     >
       <SplideSlide
         className={classNames(styles.achievementsSlide, {
-          [styles.locked]: false,
+          [styles.locked]: true,
         })}
       >
         <div className={styles.achievementImage}>
           <span className={styles.statusBadgeContainer}>
-            <span className={styles.statusBadge}>Unlocked</span>
+            <span className={styles.statusBadge}>Coming soon</span>
             <Image alt="Expogen" src={expogenImage} />
           </span>
         </div>
@@ -49,15 +49,15 @@ export function AchievementsSlider() {
       >
         <div className={styles.achievementImage}>
           <span className={styles.statusBadgeContainer}>
-            <span className={styles.statusBadge}>Locked</span>
+            <span className={styles.statusBadge}>Coming soon</span>
             <Image alt="Skillgen" src={skillgenImage} />
           </span>
         </div>
         <div className={styles.achievementText}>
-          <h5 className={styles.achievementsTitle}>Finance SkillGen</h5>
+          <h5 className={styles.achievementsTitle}>Block Skiller</h5>
           <div className={styles.achievementsDescription}>
-            Earn more than 10 points on the &ldquo;Finance fundamentals&rdquo;
-            skill in one day
+            Earn more than 10 points on the &ldquo;Blockchain&rdquo; skill in
+            one day
           </div>
         </div>
       </SplideSlide>
@@ -68,7 +68,7 @@ export function AchievementsSlider() {
       >
         <div className={styles.achievementImage}>
           <span className={styles.statusBadgeContainer}>
-            <span className={styles.statusBadge}>Locked</span>
+            <span className={styles.statusBadge}>Coming soon</span>
             <Image alt="Feedbacked" src={feedbacked} />
           </span>
         </div>
@@ -79,7 +79,7 @@ export function AchievementsSlider() {
           </div>
         </div>
         <div className={styles.achievementActions}>
-          <button className={classNames("button", "button-accent")}>
+          <button className={classNames("button", "button-accent")} disabled>
             Take the survey
           </button>
         </div>
