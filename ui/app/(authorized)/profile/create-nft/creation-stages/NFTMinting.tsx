@@ -2,6 +2,7 @@ import { Skill, SkillReward } from "@/app/(authorized)/skill";
 import newTabIcon from "@/images/newtab.svg";
 import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
+import { useToasts } from "@/ui-kit/toasts";
 import classNames from "classnames";
 import { toPng } from "html-to-image";
 import { DateTime } from "luxon";
@@ -9,14 +10,19 @@ import Image from "next/image";
 import { NFTStorage } from "nft.storage";
 import { useEffect, useRef, useState } from "react";
 import { UserProfile } from "../../types";
+import contractABI from "./abi.json";
 import { initWeb3 } from "./initWeb3";
 import styles from "./profileToImage.module.css";
-import { useToasts } from "@/ui-kit/toasts";
 
 type Props = {
   user: UserProfile;
   skills: SkillReward[];
-  onMint: () => void;
+  onMint: (metadata: TransactionMetadata) => void;
+};
+
+export type TransactionMetadata = {
+  transactionHash: string;
+  transactionIndex: bigint;
 };
 
 export default function NFTMinting({ user, skills, onMint }: Props) {
@@ -50,7 +56,7 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
     })
       .then(setPreview)
       .catch((error) =>
-        console.error("Error while creating image from node", error)
+        displayErrorToast(`Error while creating image from node: ${error}`)
       );
   };
 
@@ -70,7 +76,7 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
           <p>Preview how you NFT will look like after minting.</p>
           <p>
             When the mint finishes, we will provide you a link to a blockchain
-            transaction and NFT preview on the OpenSea;
+            transaction and NFT preview on the OpenSea
           </p>
           <p>Also, an NFT reference will be available in your profile</p>
         </>
@@ -93,14 +99,33 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
                 className={classNames("button-accent", styles.mintNFTBtn)}
                 asyncAction={() =>
                   mintNFT(preview, {
+                    walletAddress: user.wallet_address,
                     name: "The captured progress made on the CleWe platform",
                     description:
                       "This is an NFT that shows and makes your educational progress visible to others",
+                    attributes: [
+                      {
+                        trait_type: "Level",
+                        value: user.level_id,
+                        max_value: 10,
+                      },
+                      {
+                        trait_type: "Experience",
+                        value: user.level_accumulated_exp,
+                        max_value: levelMaximumExp,
+                      },
+                      {
+                        trait_type: "Last update",
+                        display_type: "date",
+                        value: DateTime.now().toSeconds(),
+                      },
+                      ...skills.map((skill) => ({
+                        trait_type: skill.topic,
+                        value: skill.point,
+                      })),
+                    ],
                   })
-                    .then((metadata) => {
-                      console.log("NFT metadata was uploaded", metadata);
-                      onMint();
-                    })
+                    .then(onMint)
                     .catch((error) => displayErrorToast(error.message))
                 }
               >
@@ -117,11 +142,29 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
                     name: "The captured progress made on the CleWe platform",
                     description:
                       "This is an NFT that shows and makes your educational progress visible to others",
+                    attributes: [
+                      {
+                        trait_type: "Level",
+                        value: user.level_id,
+                        max_value: 10,
+                      },
+                      {
+                        trait_type: "Experience",
+                        value: user.level_accumulated_exp,
+                        max_value: levelMaximumExp,
+                      },
+                      {
+                        trait_type: "Last update",
+                        display_type: "date",
+                        value: DateTime.now().toSeconds(),
+                      },
+                      ...skills.map((skill) => ({
+                        trait_type: skill.topic,
+                        value: skill.point,
+                      })),
+                    ],
                   })
-                    .then((metadata) => {
-                      console.log("NFT metadata was uploaded", metadata);
-                      onMint();
-                    })
+                    .then(onMint)
                     .catch((error) => displayErrorToast(error.message))
                 }
               >
@@ -178,12 +221,6 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
           </section>
           <footer className={styles.footer}>
             <span className={styles.logo}>CleWe</span>
-            <span>
-              Created on{" "}
-              {DateTime.now()
-                .setLocale("en-US")
-                .toLocaleString(DateTime.DATE_FULL)}
-            </span>
           </footer>
         </div>
       </div>
@@ -191,27 +228,42 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
   );
 }
 
+type Attribute = {
+  display_type?: string;
+  trait_type: string;
+  value: number | string;
+  max_value?: number;
+};
+
 type Config = {
   walletAddress?: string;
   name: string;
   description: string;
+  attributes?: Attribute[];
 };
 
 const NFTStorageClient = new NFTStorage({
   token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY as string,
 });
 
-export async function mintNFT(imageBase64Data: string, config: Config) {
+export async function mintNFT(
+  imageBase64Data: string,
+  { walletAddress, ...config }: Config
+) {
+  if (!walletAddress) {
+    throw new Error(
+      "Wallet address must be defined to mint NFT. Please, connect a Metamask and try once more"
+    );
+  }
   const metadata = await uploadToIPFS(imageBase64Data, config);
   const web3 = await initWeb3();
-  // TODO: replace with the real ABI
-  const ABI = [""];
   const smartContract = new web3.eth.Contract(
-    ABI as any,
+    contractABI,
     process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS
   );
-  const mintReceipt = await smartContract.methods.mintNFT().send({
-    from: config.walletAddress,
+  // @ts-ignore
+  const mintReceipt = await smartContract.methods.mintItem(metadata.url).send({
+    from: walletAddress,
   });
   return mintReceipt;
 }

@@ -4,7 +4,7 @@ import Web3 from "web3";
 export async function initWeb3() {
   let provider = await detectEthereumProvider();
   if (!provider) {
-    throw new Error("Please install MetaMask browser extension");
+    throw new Error("Please install MetaMask extension");
   }
   if (typeof window !== "undefined") {
     if (provider !== window.ethereum) {

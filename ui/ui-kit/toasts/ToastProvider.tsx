@@ -21,7 +21,7 @@ export function ToastProvider({ children }: Props) {
     clearTimeout(toastTimer.current);
     setErrorOpened(true);
     setMessage(msg);
-    toastTimer.current = setTimeout(closeErrorToast, 4000);
+    toastTimer.current = setTimeout(closeErrorToast, 7000);
   };
 
   const closeErrorToast = () => {

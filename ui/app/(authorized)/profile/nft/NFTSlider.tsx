@@ -8,10 +8,15 @@ import classNames from "classnames";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import Link from "next/link";
+import { UserNFTMetadata } from "../types";
 import "./nft-slider.css";
 import styles from "./nft.module.css";
 
-export function NFTSlider() {
+type Props = {
+  nfts: UserNFTMetadata[];
+};
+
+export function NFTSlider({ nfts }: Props) {
   return (
     <Splide
       options={{
@@ -24,41 +29,52 @@ export function NFTSlider() {
       }}
       tag="div"
     >
-      <SplideSlide className={classNames(styles.nftSlide)}>
-        <div className={styles.nftImage}>
-          <span className={styles.statusBadgeContainer}>
-            <Image alt="Profile NFT" src={profileNFTPreview} />
-          </span>
-        </div>
-        <div className={styles.nftText}>
-          <div className={styles.nftDescription}>
-            <Link href={""} target="_blank" className="link">
-              NFT on OpenSea&nbsp;
-              <Image src={newTabIcon} alt="New tab" width={16} />
+      {nfts.map((nft) => (
+        <SplideSlide className={classNames(styles.nftSlide)}>
+          <div className={styles.nftImage}>
+            <span className={styles.statusBadgeContainer}>
+              <Image alt="Profile NFT" src={profileNFTPreview} />
+            </span>
+          </div>
+          <div className={styles.nftText}>
+            <div className={styles.nftDescription}>
+              <Link
+                href={`${process.env.NEXT_PUBLIC_OPENSEA_GATEWAY}/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/${nft.tx_index}`}
+                target="_blank"
+                className="link"
+              >
+                NFT on OpenSea&nbsp;
+                <Image src={newTabIcon} alt="New tab" width={16} />
+              </Link>
+            </div>
+            <div className={styles.nftDescription}>
+              <Link
+                href={`${process.env.NEXT_PUBLIC_BSC_GATEWAY}/${nft.tx_hash}`}
+                target="_blank"
+                className="link"
+              >
+                Transaction details on BNB Chain&nbsp;
+                <Image src={newTabIcon} alt="New tab" width={16} />
+              </Link>
+            </div>
+          </div>
+          <div className={styles.nftActions}>
+            <Link
+              href="/profile/create-nft"
+              className={classNames("button", "button-accent")}
+            >
+              Update NFT
             </Link>
+            <div className={styles.nftUpdateDate}>
+              Last update:{" "}
+              {DateTime.fromSeconds(nft.updated_at.time, {
+                zone: nft.updated_at.zone,
+                locale: "en-US",
+              }).toLocaleString(DateTime.DATE_FULL)}
+            </div>
           </div>
-          <div className={styles.nftDescription}>
-            <Link href={""} target="_blank" className="link">
-              Transaction details on BNB Chain&nbsp;
-              <Image src={newTabIcon} alt="New tab" width={16} />
-            </Link>
-          </div>
-        </div>
-        <div className={styles.nftActions}>
-          <button
-            type="button"
-            className={classNames("button", "button-accent")}
-          >
-            Update NFT
-          </button>
-          <div className={styles.nftUpdateDate}>
-            Last update:{" "}
-            {DateTime.now()
-              .setLocale("en-US")
-              .toLocaleString(DateTime.DATE_FULL)}
-          </div>
-        </div>
-      </SplideSlide>
+        </SplideSlide>
+      ))}
     </Splide>
   );
 }

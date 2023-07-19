@@ -5,17 +5,22 @@ import lightning from "@/images/lightning-bolt.svg";
 import newTabIcon from "@/images/newtab.svg";
 import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
+import { useToasts } from "@/ui-kit/toasts";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import classNames from "classnames";
+import { DateTime } from "luxon";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
-import { UserProfile } from "../../types";
-import NFTMinting from "./NFTMinting";
-import { connectMetaMaskWallet } from "./connectCryptoWallet";
+import { useEffect, useRef, useState } from "react";
+import { UserNFTMetadata, UserProfile } from "../../types";
+import { checkBSCConnection, connectToBCS } from "./BSCConnection";
+import NFTMinting, { TransactionMetadata } from "./NFTMinting";
+import {
+  connectMetaMaskWallet,
+  getActiveMetaMaskAccount,
+} from "./connectCryptoWallet";
 import styles from "./styles.module.css";
-import { useToasts } from "@/ui-kit/toasts";
 
 type Props = {
   user: UserProfile;
@@ -23,25 +28,48 @@ type Props = {
 };
 
 export default function CreationStages({ user, skills }: Props) {
-  const [quizProgress, setQuizProgress] = useState(0); // from 0 to 100
-  const progressStep = 50;
-  const [walletAddress, setWalletAddress] = useState(user.wallet_address);
+  const [progress, setProgress] = useState(0); // from 0 to 100
+  const [walletAddress, setWalletAddress] = useState<string | null>();
+  const [isConnectedToChain, markAsConnectedToChain] = useState<boolean>();
+  const progressStep = calculateProgressStep({
+    walletConnected: Boolean(walletAddress),
+    chainConnected: Boolean(isConnectedToChain),
+  });
+  const [newNFT, setNFT] = useState<UserNFTMetadata>();
   const splide = useRef<Splide>(null);
 
   const { displayErrorToast } = useToasts();
 
+  useEffect(() => {
+    getActiveMetaMaskAccount().then(setWalletAddress);
+  }, []);
+
+  useEffect(() => {
+    checkBSCConnection().then(markAsConnectedToChain);
+  }, []);
+
+  const performConditionalNavigation = (splide: any) => {
+    let skippedStepsAmount = 0;
+    if (walletAddress) {
+      skippedStepsAmount += 1;
+    }
+    if (isConnectedToChain) {
+      skippedStepsAmount += 1;
+    }
+    if (skippedStepsAmount > 0) {
+      splide.go(skippedStepsAmount);
+    }
+  };
+
   const goToNextQuestionOrFinish = () => {
-    if (quizProgress === 100) {
+    if (progress === 100) {
       // Finish the process
       return null;
     }
     splide.current?.go(">");
     // Normalize decimal value, to simplify calculation of a last question
-    const updatedQuizProgress = Math.min(
-      Math.ceil(quizProgress + progressStep),
-      100
-    );
-    setQuizProgress(updatedQuizProgress);
+    const updatedProgress = Math.min(Math.ceil(progress + progressStep), 100);
+    setProgress(updatedProgress);
   };
 
   const updateWalletAddress = (walletAddress?: string) =>
@@ -50,10 +78,43 @@ export default function CreationStages({ user, skills }: Props) {
       body: JSON.stringify(walletAddress),
     }).then(() => setWalletAddress(walletAddress));
 
+  const updateNFTs = (nftMetadata: TransactionMetadata) =>
+    fetch("/api/users/me/nft", {
+      method: "PATCH",
+      body: JSON.stringify({
+        nfts: [
+          {
+            tx_hash: nftMetadata.transactionHash,
+            tx_index: nftMetadata.transactionIndex.toString(),
+            updated_at: {
+              time: DateTime.now().toSeconds(),
+              zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            },
+          },
+        ],
+      }),
+    }).then(() =>
+      setNFT({
+        tx_hash: nftMetadata.transactionHash,
+        tx_index: nftMetadata.transactionIndex.toString(),
+        updated_at: {
+          time: DateTime.now().toSeconds(),
+          zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
+      })
+    );
+
+  const isLoading =
+    walletAddress === undefined || isConnectedToChain === undefined;
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.progress}>
-        <ProgressLine currentProgress={quizProgress} />
+        <ProgressLine currentProgress={progress} />
       </div>
       <Splide
         className={styles.slider}
@@ -67,6 +128,7 @@ export default function CreationStages({ user, skills }: Props) {
         }}
         tag="div"
         ref={splide}
+        onReady={performConditionalNavigation}
       >
         <SplideSlide className={styles.singleSlide}>
           <p>We need to associate your upcoming NFT with a crypto wallet.</p>
@@ -86,32 +148,59 @@ export default function CreationStages({ user, skills }: Props) {
           </div>
         </SplideSlide>
         <SplideSlide className={styles.singleSlide}>
+          <p>For today we operate only on BNB Smart Chain (BSC)</p>
+          <p>Seems like your account is connected to different chain.</p>
+          <p>To proceed, we need to switch to BSC</p>
+          <div className={styles.actionsContainer}>
+            <AsyncButton
+              className="button-accent"
+              asyncAction={() =>
+                connectToBCS()
+                  .then(() => markAsConnectedToChain(true))
+                  .then(goToNextQuestionOrFinish)
+                  .catch((error) => displayErrorToast(error.message))
+              }
+            >
+              Yes, switch to BSC
+            </AsyncButton>
+          </div>
+        </SplideSlide>
+        <SplideSlide className={styles.singleSlide}>
           <NFTMinting
             user={{
               ...user,
-              wallet_address: user.wallet_address ?? walletAddress,
+              wallet_address: walletAddress ?? undefined,
             }}
             skills={skills}
-            onMint={() => {
-              // TODO: Update user with generated NFT data
-              goToNextQuestionOrFinish();
+            onMint={(transactionMetadata) => {
+              updateNFTs(transactionMetadata)
+                .then(goToNextQuestionOrFinish)
+                .catch((error) => displayErrorToast(error.message));
             }}
           />
         </SplideSlide>
         <SplideSlide className={styles.singleSlide}>
           <h3>
-            Congratulations{" "}
+            Congratulations&nbsp;
             <Image src={lightning} alt="Lightnight icon" height={40} />
           </h3>
           <div className={styles.actionsContainer}>
             <div>
-              <Link href={""} target="_blank" className="link">
+              <Link
+                href={`${process.env.NEXT_PUBLIC_OPENSEA_GATEWAY}/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/${newNFT?.tx_index}`}
+                target="_blank"
+                className="link"
+              >
                 NFT on OpenSea&nbsp;
                 <Image src={newTabIcon} alt="New tab" width={24} />
               </Link>
             </div>
             <div>
-              <Link href={""} target="_blank" className="link">
+              <Link
+                href={`${process.env.NEXT_PUBLIC_BSC_GATEWAY}/${newNFT?.tx_hash}`}
+                target="_blank"
+                className="link"
+              >
                 Transaction details on BNB Chain&nbsp;
                 <Image src={newTabIcon} alt="New tab" width={24} />
               </Link>
@@ -127,4 +216,22 @@ export default function CreationStages({ user, skills }: Props) {
       </Splide>
     </div>
   );
+}
+
+function calculateProgressStep({
+  walletConnected,
+  chainConnected,
+}: {
+  walletConnected: boolean;
+  chainConnected: boolean;
+}) {
+  const MAX_STEPS = 3;
+  let steps = MAX_STEPS;
+  if (walletConnected) {
+    steps -= 1;
+  }
+  if (chainConnected) {
+    steps -= 1;
+  }
+  return Number((100 / steps).toFixed(1));
 }
