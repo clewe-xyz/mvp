@@ -7,11 +7,14 @@ export async function checkBSCConnection() {
 }
 
 export async function connectToBCS() {
+  const chainId = `0x${parseInt(
+    process.env.NEXT_PUBLIC_BSC_NET_ID as string
+  ).toString(16)}`;
   try {
     await initWeb3();
     await window.ethereum.request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: "0x61" }],
+      params: [{ chainId }],
     });
   } catch (error: any) {
     // This error code indicates that the chain has not been added to MetaMask.
@@ -21,15 +24,15 @@ export async function connectToBCS() {
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: "0x61",
-              chainName: "BCS Test Network",
+              chainId,
+              chainName: process.env.NEXT_PUBLIC_BSC_NET_NAME,
               nativeCurrency: {
-                name: "BNB",
-                symbol: "BNB",
+                name: process.env.NEXT_PUBLIC_BSC_SYMBOL,
+                symbol: process.env.NEXT_PUBLIC_BSC_SYMBOL,
                 decimals: 18,
               },
-              rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
-              blockExplorerUrls: ["https://testnet.bscscan.com"],
+              rpcUrls: [process.env.NEXT_PUBLIC_BSC_RPC_URL],
+              blockExplorerUrls: [process.env.NEXT_PUBLIC_BSC_EXPLORER_URL],
             },
           ],
         });
