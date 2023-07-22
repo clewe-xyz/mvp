@@ -30,7 +30,7 @@ export function NFTSlider({ nfts }: Props) {
       tag="div"
     >
       {nfts.map((nft) => (
-        <SplideSlide className={classNames(styles.nftSlide)}>
+        <SplideSlide key={nft.tx_hash} className={classNames(styles.nftSlide)}>
           <div className={styles.nftImage}>
             <span className={styles.statusBadgeContainer}>
               <Image alt="Profile NFT" src={profileNFTPreview} />
