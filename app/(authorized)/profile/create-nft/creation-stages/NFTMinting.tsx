@@ -1,5 +1,6 @@
 import { Skill, SkillReward } from "@/app/(authorized)/skill";
 import newTabIcon from "@/images/newtab.svg";
+import contractABI from "@/smart-contract/abi.json";
 import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import { useToasts } from "@/ui-kit/toasts";
@@ -10,7 +11,6 @@ import Image from "next/image";
 import { NFTStorage } from "nft.storage";
 import { useEffect, useRef, useState } from "react";
 import { UserProfile } from "../../types";
-import contractABI from "./abi.json";
 import { initWeb3 } from "./initWeb3";
 import styles from "./profileToImage.module.css";
 

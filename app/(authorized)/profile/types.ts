@@ -11,7 +11,7 @@ export type UserNFTMetadata = {
   tx_hash: string;
   tx_index: string;
   updated_at: {
-    time: number;
+    time: string;
     zone: string;
   };
 };

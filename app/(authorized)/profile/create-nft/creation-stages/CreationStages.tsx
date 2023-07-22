@@ -87,7 +87,7 @@ export default function CreationStages({ user, skills }: Props) {
             tx_hash: nftMetadata.transactionHash,
             tx_index: nftMetadata.transactionIndex.toString(),
             updated_at: {
-              time: DateTime.now().toSeconds(),
+              time: DateTime.now().toISO(),
               zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             },
           },
@@ -98,7 +98,7 @@ export default function CreationStages({ user, skills }: Props) {
         tx_hash: nftMetadata.transactionHash,
         tx_index: nftMetadata.transactionIndex.toString(),
         updated_at: {
-          time: DateTime.now().toSeconds(),
+          time: DateTime.now().toISO() as string,
           zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
       })

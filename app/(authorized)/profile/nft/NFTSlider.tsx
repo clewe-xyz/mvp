@@ -67,7 +67,7 @@ export function NFTSlider({ nfts }: Props) {
             </Link>
             <div className={styles.nftUpdateDate}>
               Last update:{" "}
-              {DateTime.fromSeconds(nft.updated_at.time, {
+              {DateTime.fromISO(nft.updated_at.time, {
                 zone: nft.updated_at.zone,
                 locale: "en-US",
               }).toLocaleString(DateTime.DATE_FULL)}
