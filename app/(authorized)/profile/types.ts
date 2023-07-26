@@ -9,7 +9,8 @@ export type UserProfile = {
 
 export type UserNFTMetadata = {
   tx_hash: string;
-  tx_index: string;
+  token_id: string;
+  from_address?: string | null;
   updated_at: {
     time: string;
     zone: string;

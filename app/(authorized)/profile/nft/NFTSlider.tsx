@@ -39,7 +39,7 @@ export function NFTSlider({ nfts }: Props) {
           <div className={styles.nftText}>
             <div className={styles.nftDescription}>
               <Link
-                href={`${process.env.NEXT_PUBLIC_OPENSEA_GATEWAY}/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/${nft.tx_index}`}
+                href={`${process.env.NEXT_PUBLIC_OPENSEA_GATEWAY}/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/${nft.token_id}`}
                 target="_blank"
                 className="link"
               >

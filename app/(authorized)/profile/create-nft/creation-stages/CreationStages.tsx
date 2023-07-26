@@ -85,7 +85,8 @@ export default function CreationStages({ user, skills }: Props) {
         nfts: [
           {
             tx_hash: nftMetadata.transactionHash,
-            tx_index: nftMetadata.transactionIndex.toString(),
+            token_id: nftMetadata.tokenId ?? "",
+            from_address: walletAddress,
             updated_at: {
               time: DateTime.now().toISO(),
               zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -96,7 +97,7 @@ export default function CreationStages({ user, skills }: Props) {
     }).then(() =>
       setNFT({
         tx_hash: nftMetadata.transactionHash,
-        tx_index: nftMetadata.transactionIndex.toString(),
+        token_id: nftMetadata.tokenId ?? "",
         updated_at: {
           time: DateTime.now().toISO() as string,
           zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -187,7 +188,7 @@ export default function CreationStages({ user, skills }: Props) {
           <div className={styles.actionsContainer}>
             <div>
               <Link
-                href={`${process.env.NEXT_PUBLIC_OPENSEA_GATEWAY}/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/${newNFT?.tx_index}`}
+                href={`${process.env.NEXT_PUBLIC_OPENSEA_GATEWAY}/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/${newNFT?.token_id}`}
                 target="_blank"
                 className="link"
               >

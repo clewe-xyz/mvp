@@ -22,7 +22,7 @@ type Props = {
 
 export type TransactionMetadata = {
   transactionHash: string;
-  transactionIndex: bigint;
+  tokenId?: string;
 };
 
 export default function NFTMinting({ user, skills, onMint }: Props) {
@@ -265,7 +265,12 @@ export async function mintNFT(
   const mintReceipt = await smartContract.methods.mintItem(metadata.url).send({
     from: walletAddress,
   });
-  return mintReceipt;
+  return {
+    ...mintReceipt,
+    tokenId: mintReceipt.logs[0].topics
+      ? web3.utils.hexToNumber(mintReceipt.logs[0].topics[3]).toString()
+      : undefined,
+  };
 }
 
 async function uploadToIPFS(imageBase64Data: string, config: Config) {
