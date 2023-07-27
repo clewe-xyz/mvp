@@ -13,7 +13,7 @@ import { DateTime } from "luxon";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { UserNFTMetadata, UserProfile } from "../../types";
+import { UserNFTMetadata, UserProfile } from "../../../types";
 import { checkBSCConnection, connectToBCS } from "./BSCConnection";
 import NFTMinting, { TransactionMetadata } from "./NFTMinting";
 import {

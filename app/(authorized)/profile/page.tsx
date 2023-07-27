@@ -43,7 +43,7 @@ export default async function UserProfile() {
               progress. You can update the NFT later as the progress evolves.
             </div>
             <div className={styles.mintNFTActions}>
-              <Link href="/profile/create-nft" className="link">
+              <Link href="/profile/nft/create" className="link">
                 Create NFT
               </Link>
             </div>

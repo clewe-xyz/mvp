@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import Link from "next/link";
-import { UserNFTMetadata } from "../types";
+import { UserNFTMetadata } from "../../types";
 import "./nft-slider.css";
 import styles from "./nft.module.css";
 
@@ -60,7 +60,9 @@ export function NFTSlider({ nfts }: Props) {
           </div>
           <div className={styles.nftActions}>
             <Link
-              href="/profile/create-nft"
+              href={{
+                pathname: `/profile/nft/${nft.token_id}`,
+              }}
               className={classNames("button", "button-accent")}
             >
               Update NFT
@@ -70,7 +72,7 @@ export function NFTSlider({ nfts }: Props) {
               {DateTime.fromISO(nft.updated_at.time, {
                 zone: nft.updated_at.zone,
                 locale: "en-US",
-              }).toLocaleString(DateTime.DATE_FULL)}
+              }).toRelative()}
             </div>
           </div>
         </SplideSlide>

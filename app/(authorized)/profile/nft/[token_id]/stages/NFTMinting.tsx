@@ -10,13 +10,14 @@ import { DateTime } from "luxon";
 import Image from "next/image";
 import { NFTStorage } from "nft.storage";
 import { useEffect, useRef, useState } from "react";
-import { UserProfile } from "../../types";
+import { UserProfile } from "../../../types";
 import { initWeb3 } from "./initWeb3";
 import styles from "./profileToImage.module.css";
 
 type Props = {
   user: UserProfile;
   skills: SkillReward[];
+  tokenId: string;
   onMint: (metadata: TransactionMetadata) => void;
 };
 
@@ -25,7 +26,7 @@ export type TransactionMetadata = {
   tokenId?: string;
 };
 
-export default function NFTMinting({ user, skills, onMint }: Props) {
+export default function NFTMinting({ user, skills, tokenId, onMint }: Props) {
   const [isInitialized, initialize] = useState(false);
   const [preview, setPreview] = useState<string | undefined>(undefined);
 
@@ -98,8 +99,9 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
               <AsyncButton
                 className={classNames("button-accent", styles.mintNFTBtn)}
                 asyncAction={() =>
-                  mintNFT(preview, {
+                  updateNFT(preview, {
                     walletAddress: user.wallet_address,
+                    tokenId,
                     name: "The captured progress made on the CleWe platform",
                     description:
                       "This is an NFT that shows and makes your educational progress visible to others",
@@ -137,8 +139,9 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
               <AsyncButton
                 className={classNames("button-accent", styles.mintNFTBtn)}
                 asyncAction={() =>
-                  mintNFT(preview, {
+                  updateNFT(preview, {
                     walletAddress: user.wallet_address,
+                    tokenId,
                     name: "The captured progress made on the CleWe platform",
                     description:
                       "This is an NFT that shows and makes your educational progress visible to others",
@@ -235,45 +238,50 @@ type Attribute = {
   max_value?: number;
 };
 
-type Config = {
-  walletAddress?: string;
+type TokenMetadata = {
   name: string;
   description: string;
   attributes?: Attribute[];
 };
 
+type Config = {
+  walletAddress?: string;
+  tokenId: string;
+} & TokenMetadata;
+
 const NFTStorageClient = new NFTStorage({
   token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY as string,
 });
 
-export async function mintNFT(
+async function updateNFT(
   imageBase64Data: string,
-  { walletAddress, ...config }: Config
+  { walletAddress, tokenId, ...tokenMetadata }: Config
 ) {
   if (!walletAddress) {
     throw new Error(
       "Wallet address must be defined to mint NFT. Please, connect a Metamask and try once more"
     );
   }
-  const metadata = await uploadToIPFS(imageBase64Data, config);
+  const metadata = await uploadToIPFS(imageBase64Data, tokenMetadata);
   const web3 = await initWeb3();
   const smartContract = new web3.eth.Contract(
     contractABI,
     process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS
   );
-  // @ts-ignore
-  const mintReceipt = await smartContract.methods.mintItem(metadata.url).send({
-    from: walletAddress,
-  });
+
+  const mintReceipt = await smartContract.methods
+    // @ts-ignore
+    .updateMetadata(Number(tokenId), metadata.url)
+    .send({
+      from: walletAddress,
+    });
   return {
     ...mintReceipt,
-    tokenId: mintReceipt.logs[0].topics
-      ? web3.utils.hexToNumber(mintReceipt.logs[0].topics[3]).toString()
-      : undefined,
+    tokenId,
   };
 }
 
-async function uploadToIPFS(imageBase64Data: string, config: Config) {
+async function uploadToIPFS(imageBase64Data: string, config: TokenMetadata) {
   const file = await convertBase64ToPNG(
     imageBase64Data,
     "CleWe-progress-nft.png"

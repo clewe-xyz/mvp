@@ -1,1 +1,1 @@
-export { NFTSlider } from "./NFTSlider";
+export { NFTSlider } from "./slider/NFTSlider";
