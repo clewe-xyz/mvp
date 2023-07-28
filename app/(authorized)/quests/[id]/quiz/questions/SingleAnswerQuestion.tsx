@@ -31,7 +31,7 @@ export function SingleAnswerQuestion({
   const validateAnswer = ({ answer }: FormData) => {
     unauthorizedRequest(`/api/questions/${id}`, {
       method: "POST",
-      body: JSON.stringify([answer]),
+      body: JSON.stringify(answer),
     })
       .then((response) => response.json())
       .then(({ is_correct }) => {
