@@ -33,7 +33,6 @@ export function SingleAnswerQuestion({
     },
   });
   const validateAnswer = (data: FormData) => {
-    console.log("Form sends an answer", data);
     unauthorizedRequest(`/api/questions/${id}`, {
       method: "POST",
       body: JSON.stringify(data.answer),

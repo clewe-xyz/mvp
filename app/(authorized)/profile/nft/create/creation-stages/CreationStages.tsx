@@ -41,11 +41,15 @@ export default function CreationStages({ user, skills }: Props) {
   const { displayErrorToast } = useToasts();
 
   useEffect(() => {
-    getActiveMetaMaskAccount().then(setWalletAddress);
+    getActiveMetaMaskAccount()
+      .then(setWalletAddress)
+      .catch((error) => displayErrorToast(error.message));
   }, []);
 
   useEffect(() => {
-    checkBSCConnection().then(markAsConnectedToChain);
+    checkBSCConnection()
+      .then(markAsConnectedToChain)
+      .catch((error) => displayErrorToast(error.message));
   }, []);
 
   const performConditionalNavigation = (splide: any) => {
