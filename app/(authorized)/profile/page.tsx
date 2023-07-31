@@ -85,7 +85,7 @@ export default async function UserProfile() {
         <div className={styles.skillsSummaryContainer}>
           {userSkills.length > 0 ? (
             userSkills.map((skill) => (
-              <div className={styles.skillRow}>
+              <div key={skill.id} className={styles.skillRow}>
                 <span className={styles.skillDatapoint}>{skill.topic}</span>
                 <span className={styles.skillDatapoint}>
                   {skill.point}

@@ -225,7 +225,7 @@ export default function NFTMinting({ user, skills, tokenId, onMint }: Props) {
             <div className={styles.skillsSummaryContainer}>
               {skills.length > 0 ? (
                 skills.map((skill) => (
-                  <div className={styles.skillRow}>
+                  <div key={skill.id} className={styles.skillRow}>
                     <span className={styles.skillDatapoint}>{skill.topic}</span>
                     <span className={styles.skillDatapoint}>
                       {skill.point}
