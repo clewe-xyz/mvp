@@ -35,7 +35,7 @@ function RadioGroupComponent({
               {...props}
               type="radio"
               name={name}
-              value={label}
+              defaultValue={label}
               checked={label.toLowerCase() === selected?.toLowerCase()}
               onChange={onInputChange}
               className={styles.radio}

@@ -27,9 +27,13 @@ export function SingleAnswerQuestion({
     register,
     handleSubmit,
     formState: { isSubmitted },
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    defaultValues: {
+      answer: "",
+    },
+  });
   const validateAnswer = (data: FormData) => {
-    console.log("Formv sends an answer", data);
+    console.log("Form sends an answer", data);
     unauthorizedRequest(`/api/questions/${id}`, {
       method: "POST",
       body: JSON.stringify(data.answer),
