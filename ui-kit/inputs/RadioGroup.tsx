@@ -19,11 +19,15 @@ function RadioGroupComponent({
   refObject,
   name,
   labels,
+  onChange,
   ...props
 }: RadioGroupProps) {
   const [selected, setSelected] = useState<string>();
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSelected(e.target.value);
+    if (onChange) {
+      onChange(e);
+    }
   };
 
   return (
