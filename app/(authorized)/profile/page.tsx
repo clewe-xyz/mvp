@@ -4,7 +4,8 @@ import { ProgressLine } from "@/ui-kit/progress-line";
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
-import { Skill, SkillReward } from "../skill";
+import skillsHeroBG from "@/images/skills/skills-hero-bg.png";
+import { SkillReward } from "../skill";
 import { AchievementsSlider } from "./achievements";
 import { NFTSlider } from "./nft";
 import styles from "./page.module.css";
@@ -68,17 +69,29 @@ export default async function UserProfile() {
           </div>
         </div>
       </section>
-      <section className={styles.section}>
+      <section className={classNames(styles.section, styles.skills)}>
+        <Image
+          alt="Skills"
+          src={skillsHeroBG}
+          quality={100}
+          fill
+          sizes="100vw"
+          style={{
+            objectFit: "cover",
+            filter: `opacity(20%)`,
+          }}
+        />
         <h4>Skills</h4>
         <div className={styles.skillsSummaryContainer}>
           {userSkills.length > 0 ? (
             userSkills.map((skill) => (
-              <Skill
-                key={skill.id}
-                name={skill.topic}
-                tag={skill.tag}
-                points={`${skill.point}`}
-              />
+              <div className={styles.skillRow}>
+                <span className={styles.skillDatapoint}>{skill.topic}</span>
+                <span className={styles.skillDatapoint}>
+                  {skill.point}
+                  <span className={styles.skillMeasure}>pts</span>
+                </span>
+              </div>
             ))
           ) : (
             <div>

@@ -7,6 +7,15 @@
   transition: box-shadow 0.1s ease-in-out;
 }
 
+.section.skills {
+  min-height: 220px;
+}
+
+.skills h4 {
+  position: relative;
+  z-index: 1;
+}
+
 .section.nft {
   background-color: rgba(255, 255, 255, 0.05);
   background-image: linear-gradient(
@@ -67,14 +76,25 @@
 }
 
 .skillsSummaryContainer {
-  display: grid;
-  align-items: start;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  column-gap: 20px;
-  row-gap: 20px;
-  grid-template-rows: max-content;
-  overflow-x: auto;
+  max-width: 360px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.skillRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--sizes-heading-h5-size);
+}
+
+.skillRow:not(:last-of-type) {
+  margin-bottom: 12px;
+}
+
+.skillMeasure {
+  font-size: 1rem;
 }
 
 .loadingContainer {
