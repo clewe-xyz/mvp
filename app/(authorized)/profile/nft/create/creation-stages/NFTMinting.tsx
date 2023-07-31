@@ -1,5 +1,6 @@
-import { Skill, SkillReward } from "@/app/(authorized)/skill";
+import { SkillReward } from "@/app/(authorized)/skill";
 import newTabIcon from "@/images/newtab.svg";
+import skillsHeroBG from "@/images/skills/skills-hero-bg.png";
 import contractABI from "@/smart-contract/abi.json";
 import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
@@ -174,18 +175,16 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
             </>
           )
         ) : (
-          <AsyncButton
-            className="button-accent"
-            asyncAction={convertProfileToImage}
-          >
-            Generate NFT image
-          </AsyncButton>
+          <div>Preparing NFT Preview ...</div>
         )}
       </div>
       {/* Profile stats layout, which serves as source for image generation */}
       <div className={styles.profileSourceContainer}>
         <div className={styles.profile} ref={profileRoot}>
           <section className={styles.levelStatsSection}>
+            <header>
+              <span className={styles.logo}>CleWe</span>
+            </header>
             <h3 className={styles.nickName}>{user.nickname}</h3>
             <div>
               <div className={styles.levelContainer}>
@@ -203,25 +202,34 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
             </div>
           </section>
           <section className={styles.skillsSection}>
+            <Image
+              alt="Skills"
+              src={skillsHeroBG}
+              quality={100}
+              fill
+              sizes="100vw"
+              style={{
+                objectFit: "cover",
+                filter: `opacity(20%)`,
+              }}
+            />
             <h4 className={styles.skillsTitle}>Skills</h4>
             <div className={styles.skillsSummaryContainer}>
               {skills.length > 0 ? (
                 skills.map((skill) => (
-                  <Skill
-                    key={skill.tag}
-                    name={skill.topic}
-                    tag={skill.tag}
-                    points={`${skill.point}`}
-                  />
+                  <div className={styles.skillRow}>
+                    <span className={styles.skillDatapoint}>{skill.topic}</span>
+                    <span className={styles.skillDatapoint}>
+                      {skill.point}
+                      <span className={styles.skillMeasure}>pts</span>
+                    </span>
+                  </div>
                 ))
               ) : (
                 <div>No Skills for now</div>
               )}
             </div>
           </section>
-          <footer className={styles.footer}>
-            <span className={styles.logo}>CleWe</span>
-          </footer>
         </div>
       </div>
     </>

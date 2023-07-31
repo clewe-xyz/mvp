@@ -3,11 +3,6 @@
   width: 400px;
 }
 
-.header {
-  padding: 15px 15px 48px;
-  text-align: center;
-}
-
 .logo {
   font-family: var(--font-space-grotesk);
   font-weight: 700;
@@ -80,16 +75,34 @@
 }
 
 .skillsSection {
+  min-height: 220px;
   padding: 15px;
+  position: relative;
+}
+
+.skillsSummaryContainer,
+.skillsTitle {
+  position: relative;
+  z-index: 1;
 }
 
 .skillsSummaryContainer {
-  display: grid;
+  margin: 0 auto;
+}
+
+.skillRow {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  grid-template-columns: repeat(2, 180px);
-  grid-template-rows: max-content;
-  column-gap: 12px;
-  row-gap: 12px;
+  font-size: var(--sizes-heading-h5-size);
+}
+
+.skillRow:not(:last-of-type) {
+  margin-bottom: 12px;
+}
+
+.skillMeasure {
+  font-size: 1rem;
 }
 
 .footer {
