@@ -9,7 +9,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Params }
 ) {
-  const answers: string[] = await request.json();
+  const answers: string | string[] = await request.json();
   return await unauthorizedRequest(`questions/${params.id}`, {
     method: "POST",
     body: JSON.stringify({
