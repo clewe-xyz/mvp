@@ -12,7 +12,7 @@ import Image from "next/image";
 import { NFTStorage } from "nft.storage";
 import { useEffect, useRef, useState } from "react";
 import { UserProfile } from "../../../types";
-import { initWeb3 } from "./initWeb3";
+import { initWeb3 } from "../../initWeb3";
 import styles from "./profileToImage.module.css";
 
 type Props = {

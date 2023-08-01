@@ -14,12 +14,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { UserNFTMetadata, UserProfile } from "../../../types";
-import { checkBSCConnection, connectToBCS } from "./BSCConnection";
-import NFTMinting, { TransactionMetadata } from "./NFTMinting";
+import { checkBSCConnection, connectToBCS } from "../../BSCConnection";
 import {
   connectMetaMaskWallet,
   getActiveMetaMaskAccount,
-} from "./connectCryptoWallet";
+} from "../../connectCryptoWallet";
+import NFTMinting, { TransactionMetadata } from "./NFTMinting";
 import styles from "./styles.module.css";
 
 type Props = {

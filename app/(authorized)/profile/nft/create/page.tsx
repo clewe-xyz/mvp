@@ -1,7 +1,7 @@
 import { authorizedRequest } from "@/app/api/authorizedRequest";
 import { SkillReward } from "../../../skill";
 import { UserProfile } from "../../types";
-import CreationStages from "./creation-stages/CreationStages";
+import CreationStages from "./stages/CreationStages";
 
 async function getProfile(): Promise<UserProfile> {
   const profile = await authorizedRequest("users/me");
