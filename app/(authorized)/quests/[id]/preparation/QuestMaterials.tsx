@@ -134,7 +134,7 @@ export function QuestMaterials({ className, tag }: Props) {
     );
   }
 
-  if (tag === "wallets") {
+  if (tag === "crypto-wallets") {
     return (
       <>
         <SplideSlide className={className}>

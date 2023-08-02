@@ -75,10 +75,10 @@ export default function NFTMinting({ user, skills, tokenId, onMint }: Props) {
     <>
       {preview ? (
         <>
-          <p>Preview how you NFT will look like after minting.</p>
+          <p>Preview how you NFT will look like after update.</p>
           <p>
-            When the mint finishes, we will provide you a link to a blockchain
-            transaction and NFT preview on the OpenSea
+            We will provide you a link to a blockchain transaction and NFT
+            preview on the OpenSea
           </p>
           <p>Also, an NFT reference will be available in your profile</p>
         </>
@@ -225,7 +225,7 @@ export default function NFTMinting({ user, skills, tokenId, onMint }: Props) {
             <div className={styles.skillsSummaryContainer}>
               {skills.length > 0 ? (
                 skills.map((skill) => (
-                  <div key={skill.id} className={styles.skillRow}>
+                  <div key={skill.tag} className={styles.skillRow}>
                     <span className={styles.skillDatapoint}>{skill.topic}</span>
                     <span className={styles.skillDatapoint}>
                       {skill.point}
