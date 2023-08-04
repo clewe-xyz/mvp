@@ -56,9 +56,9 @@ export default function CreationStages({ user, skills }: Props) {
     let skippedStepsAmount = 0;
     if (walletAddress) {
       skippedStepsAmount += 1;
-    }
-    if (isConnectedToChain) {
-      skippedStepsAmount += 1;
+      if (isConnectedToChain) {
+        skippedStepsAmount += 1;
+      }
     }
     if (skippedStepsAmount > 0) {
       splide.go(skippedStepsAmount);
