@@ -1,9 +1,12 @@
-import { initWeb3 } from "./initWeb3";
-
 export async function checkBSCConnection() {
-  const web3 = await initWeb3();
-  const chainId = await web3.eth.getChainId();
-  return chainId.toString() === process.env.NEXT_PUBLIC_BSC_NET_ID;
+  const chainId = await window.ethereum?.request({
+    method: "eth_chainId",
+    params: [],
+  });
+  return (
+    parseInt(chainId as string, 16).toString() ===
+    process.env.NEXT_PUBLIC_BSC_NET_ID
+  );
 }
 
 export async function connectToBCS() {
@@ -11,8 +14,7 @@ export async function connectToBCS() {
     process.env.NEXT_PUBLIC_BSC_NET_ID as string
   ).toString(16)}`;
   try {
-    await initWeb3();
-    await window.ethereum.request({
+    await window.ethereum?.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId }],
     });
@@ -20,7 +22,7 @@ export async function connectToBCS() {
     // This error code indicates that the chain has not been added to MetaMask.
     if (error.code === 4902) {
       try {
-        await window.ethereum.request({
+        await window.ethereum?.request({
           method: "wallet_addEthereumChain",
           params: [
             {

@@ -2,12 +2,9 @@ import { initWeb3 } from "./initWeb3";
 
 export async function connectMetaMaskWallet() {
   try {
-    const web3 = await initWeb3();
-    const activeAccounts = await web3.eth.getAccounts();
-    if (activeAccounts[0]) {
-      return activeAccounts[0];
-    }
-    const accounts = await web3.eth.requestAccounts();
+    const accounts = (await window.ethereum?.request({
+      method: "eth_requestAccounts",
+    })) as string[];
     return accounts[0];
   } catch (error: any) {
     if (error.code === 4001) {
@@ -20,8 +17,10 @@ export async function connectMetaMaskWallet() {
 
 export async function getActiveMetaMaskAccount() {
   try {
-    const web3 = await initWeb3();
-    const accounts = await web3.eth.getAccounts();
+    const accounts = (await window.ethereum?.request({
+      method: "eth_accounts",
+      params: [],
+    })) as string[];
     return accounts[0] ?? null;
   } catch (error) {
     return null;

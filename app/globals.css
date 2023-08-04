@@ -152,6 +152,10 @@ p {
   margin-bottom: 20px;
 }
 
+img {
+  display: inline;
+}
+
 a,
 button {
   color: inherit;

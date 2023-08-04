@@ -57,9 +57,9 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
     let skippedStepsAmount = 0;
     if (walletAddress) {
       skippedStepsAmount += 1;
-    }
-    if (isConnectedToChain) {
-      skippedStepsAmount += 1;
+      if (isConnectedToChain) {
+        skippedStepsAmount += 1;
+      }
     }
     if (skippedStepsAmount > 0) {
       splide.go(skippedStepsAmount);
@@ -76,12 +76,6 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
     const updatedProgress = Math.min(Math.ceil(progress + progressStep), 100);
     setProgress(updatedProgress);
   };
-
-  const updateWalletAddress = (walletAddress?: string) =>
-    fetch("/api/users/me", {
-      method: "PATCH",
-      body: JSON.stringify(walletAddress),
-    }).then(() => setWalletAddress(walletAddress));
 
   const updateNFTs = (nftMetadata: TransactionMetadata) =>
     fetch("/api/users/me/nft", {
@@ -144,7 +138,7 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
               className="button-accent"
               asyncAction={() =>
                 connectMetaMaskWallet()
-                  .then(updateWalletAddress)
+                  .then(setWalletAddress)
                   .then(goToNextQuestionOrFinish)
                   .catch((error) => displayErrorToast(error.message))
               }

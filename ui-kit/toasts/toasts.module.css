@@ -31,6 +31,10 @@
   line-height: 0;
 }
 
+.closeBtn img {
+  min-width: 32px;
+}
+
 @keyframes shake {
   0% {
     transform: translateX(4px);
