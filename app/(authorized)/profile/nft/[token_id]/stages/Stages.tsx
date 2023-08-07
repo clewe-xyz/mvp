@@ -21,6 +21,7 @@ import {
 } from "../../connectCryptoWallet";
 import NFTMinting, { TransactionMetadata } from "./NFTMinting";
 import styles from "./styles.module.css";
+import { useChainId, useConnect, useSDK } from "@metamask/sdk-react";
 
 type Props = {
   user: UserProfile;
@@ -36,22 +37,41 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
     walletConnected: Boolean(walletAddress),
     chainConnected: Boolean(isConnectedToChain),
   });
+  const { connectAsync } = useConnect();
   const [newNFT, setNFT] = useState<UserNFTMetadata>();
   const splide = useRef<Splide>(null);
+
+  const { account, provider } = useSDK();
+  const chainId = useChainId();
+  console.log("MM SDK account", account, provider, chainId);
 
   const { displayErrorToast } = useToasts();
 
   useEffect(() => {
-    getActiveMetaMaskAccount()
-      .then(setWalletAddress)
-      .catch((error) => displayErrorToast(error.message));
-  }, []);
+    provider?.on("accountsChanged", (acc: unknown) => {
+      console.log("Account changed", acc);
+      if ((acc as string[]).length === 0 && typeof window !== "undefined") {
+        window.localStorage.removeItem("providerType");
+        window.localStorage.removeItem(".sdk-comm");
+        window.localStorage.removeItem("wagmi.store");
+        window.localStorage.removeItem("wagmi.cache");
+        window.localStorage.removeItem("wagmi.wallet");
+        window.localStorage.removeItem("wagmi.connected");
+      }
+    });
+  }, [provider]);
 
-  useEffect(() => {
-    checkBSCConnection()
-      .then(markAsConnectedToChain)
-      .catch((error) => displayErrorToast(error.message));
-  }, []);
+  // useEffect(() => {
+  //   getActiveMetaMaskAccount()
+  //     .then(setWalletAddress)
+  //     .catch((error) => displayErrorToast(error.message));
+  // }, []);
+
+  // useEffect(() => {
+  //   checkBSCConnection()
+  //     .then(markAsConnectedToChain)
+  //     .catch((error) => displayErrorToast(error.message));
+  // }, []);
 
   const performConditionalNavigation = (splide: any) => {
     let skippedStepsAmount = 0;
@@ -107,9 +127,9 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
   const isLoading =
     walletAddress === undefined || isConnectedToChain === undefined;
 
-  if (isLoading) {
-    return null;
-  }
+  // if (isLoading) {
+  //   return null;
+  // }
 
   return (
     <div className={styles.container}>
@@ -137,8 +157,8 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
             <AsyncButton
               className="button-accent"
               asyncAction={() =>
-                connectMetaMaskWallet()
-                  .then(setWalletAddress)
+                connectAsync()
+                  .then((result) => setWalletAddress(result.account))
                   .then(goToNextQuestionOrFinish)
                   .catch((error) => displayErrorToast(error.message))
               }

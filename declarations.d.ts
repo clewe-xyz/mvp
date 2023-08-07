@@ -1,4 +1,4 @@
-import { SDKProvider } from "@metamask/sdk";
+import { SDKProvider } from "@metamask/sdk-react";
 
 declare global {
   interface Window {
