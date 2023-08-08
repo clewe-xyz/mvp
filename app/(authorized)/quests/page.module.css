@@ -46,7 +46,7 @@
 
 .questImage {
   border-radius: 16px 16px 0 0;
-  max-width: 100%;
+  width: 100%;
   height: auto;
 }
 

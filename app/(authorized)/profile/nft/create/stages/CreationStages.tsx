@@ -6,6 +6,7 @@ import newTabIcon from "@/images/newtab.svg";
 import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import { useToasts } from "@/ui-kit/toasts";
+import { useChainId, useConnect, useSDK } from "@metamask/sdk-react";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import classNames from "classnames";
@@ -14,11 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { UserNFTMetadata, UserProfile } from "../../../types";
-import { checkBSCConnection, connectToBCS } from "../../BSCConnection";
-import {
-  connectMetaMaskWallet,
-  getActiveMetaMaskAccount,
-} from "../../connectCryptoWallet";
+import { connectToBCS } from "../../BSCConnection";
 import NFTMinting, { TransactionMetadata } from "./NFTMinting";
 import styles from "./styles.module.css";
 
@@ -40,17 +37,36 @@ export default function CreationStages({ user, skills }: Props) {
 
   const { displayErrorToast } = useToasts();
 
-  useEffect(() => {
-    getActiveMetaMaskAccount()
-      .then(setWalletAddress)
-      .catch((error) => displayErrorToast(error.message));
-  }, []);
+  const { connectAsync } = useConnect();
+  const { account, provider } = useSDK();
+  const chainId = useChainId();
+  console.log("MM SDK account", account, provider, chainId);
 
   useEffect(() => {
-    checkBSCConnection()
-      .then(markAsConnectedToChain)
-      .catch((error) => displayErrorToast(error.message));
-  }, []);
+    provider?.on("accountsChanged", (acc: unknown) => {
+      console.log("Account changed", acc);
+      if ((acc as string[]).length === 0 && typeof window !== "undefined") {
+        window.localStorage.removeItem("providerType");
+        window.localStorage.removeItem(".sdk-comm");
+        window.localStorage.removeItem("wagmi.store");
+        window.localStorage.removeItem("wagmi.cache");
+        window.localStorage.removeItem("wagmi.wallet");
+        window.localStorage.removeItem("wagmi.connected");
+      }
+    });
+  }, [provider]);
+
+  // useEffect(() => {
+  //   getActiveMetaMaskAccount()
+  //     .then(setWalletAddress)
+  //     .catch((error) => displayErrorToast(error.message));
+  // }, []);
+
+  // useEffect(() => {
+  //   checkBSCConnection()
+  //     .then(markAsConnectedToChain)
+  //     .catch((error) => displayErrorToast(error.message));
+  // }, []);
 
   const performConditionalNavigation = (splide: any) => {
     let skippedStepsAmount = 0;
@@ -109,12 +125,12 @@ export default function CreationStages({ user, skills }: Props) {
       })
     );
 
-  const isLoading =
-    walletAddress === undefined || isConnectedToChain === undefined;
+  // const isLoading =
+  //   walletAddress === undefined || isConnectedToChain === undefined;
 
-  if (isLoading) {
-    return null;
-  }
+  // if (isLoading) {
+  //   return null;
+  // }
 
   return (
     <div className={styles.container}>
@@ -142,8 +158,8 @@ export default function CreationStages({ user, skills }: Props) {
             <AsyncButton
               className="button-accent"
               asyncAction={() =>
-                connectMetaMaskWallet()
-                  .then(updateWalletAddress)
+                connectAsync()
+                  .then((result) => setWalletAddress(result.account))
                   .then(goToNextQuestionOrFinish)
                   .catch((error) => displayErrorToast(error.message))
               }

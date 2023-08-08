@@ -6,6 +6,7 @@ import newTabIcon from "@/images/newtab.svg";
 import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import { useToasts } from "@/ui-kit/toasts";
+import { useChainId, useConnect, useSDK } from "@metamask/sdk-react";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import classNames from "classnames";
@@ -14,14 +15,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { UserNFTMetadata, UserProfile } from "../../../types";
-import { checkBSCConnection, connectToBCS } from "../../BSCConnection";
-import {
-  connectMetaMaskWallet,
-  getActiveMetaMaskAccount,
-} from "../../connectCryptoWallet";
+import { connectToBCS } from "../../BSCConnection";
 import NFTMinting, { TransactionMetadata } from "./NFTMinting";
 import styles from "./styles.module.css";
-import { useChainId, useConnect, useSDK } from "@metamask/sdk-react";
 
 type Props = {
   user: UserProfile;
