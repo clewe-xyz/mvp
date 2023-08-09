@@ -88,6 +88,11 @@ textarea {
   );
 }
 
+input,
+textarea {
+  color: var(--color-gray-100);
+}
+
 h1,
 h2,
 h3 {
@@ -154,6 +159,7 @@ p {
 
 img {
   display: inline;
+  max-width: none;
 }
 
 a,

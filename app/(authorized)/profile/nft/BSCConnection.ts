@@ -14,7 +14,7 @@ export async function connectToBCS() {
     process.env.NEXT_PUBLIC_BSC_NET_ID as string
   ).toString(16)}`;
   try {
-    await window.ethereum?.request({
+    return await window.ethereum?.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId }],
     });
@@ -22,7 +22,7 @@ export async function connectToBCS() {
     // This error code indicates that the chain has not been added to MetaMask.
     if (error.code === 4902) {
       try {
-        await window.ethereum?.request({
+        return await window.ethereum?.request({
           method: "wallet_addEthereumChain",
           params: [
             {

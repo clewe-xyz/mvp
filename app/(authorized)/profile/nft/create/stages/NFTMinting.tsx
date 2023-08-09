@@ -10,7 +10,7 @@ import { toPng } from "html-to-image";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import { NFTStorage } from "nft.storage";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { UserProfile } from "../../../types";
 import { initWeb3 } from "../../initWeb3";
 import styles from "./profileToImage.module.css";
@@ -46,7 +46,7 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
     convertProfileToImage();
   }, []);
 
-  const convertProfileToImage = () => {
+  const convertProfileToImage = useCallback(() => {
     if (profileRoot.current === null || NFTActionsContainer.current === null) {
       return Promise.resolve(undefined);
     }
@@ -59,7 +59,7 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
       .catch((error) =>
         displayErrorToast(`Error while creating image from node: ${error}`)
       );
-  };
+  }, []);
 
   const previewNFTImage = () => {
     const newTab = window.open();
@@ -217,7 +217,7 @@ export default function NFTMinting({ user, skills, onMint }: Props) {
             <div className={styles.skillsSummaryContainer}>
               {skills.length > 0 ? (
                 skills.map((skill) => (
-                  <div key={skill.id} className={styles.skillRow}>
+                  <div key={skill.tag} className={styles.skillRow}>
                     <span className={styles.skillDatapoint}>{skill.topic}</span>
                     <span className={styles.skillDatapoint}>
                       {skill.point}
