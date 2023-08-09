@@ -8,7 +8,6 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     <MetaMaskProvider
       sdkOptions={{
         dappMetadata: {},
-        checkInstallationImmediately: false,
       }}
     >
       {children}
