@@ -6,7 +6,7 @@ import newTabIcon from "@/images/newtab.svg";
 import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import { useToasts } from "@/ui-kit/toasts";
-import { useChainId, useConnect, useSDK } from "@metamask/sdk-react";
+import { useConnect, useSDK } from "@metamask/sdk-react";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import classNames from "classnames";
@@ -26,61 +26,67 @@ type Props = {
 };
 
 export default function UpdateStages({ user, skills, tokenId }: Props) {
-  const [progress, setProgress] = useState(0); // from 0 to 100
-  const [walletAddress, setWalletAddress] = useState<string | null>();
-  const [isConnectedToChain, markAsConnectedToChain] = useState<boolean>();
-  const progressStep = calculateProgressStep({
-    walletConnected: Boolean(walletAddress),
-    chainConnected: Boolean(isConnectedToChain),
-  });
-  const { connectAsync } = useConnect();
-  const [newNFT, setNFT] = useState<UserNFTMetadata>();
-  const splide = useRef<Splide>(null);
+  const { provider } = useSDK();
 
-  const { account, provider } = useSDK();
-  const chainId = useChainId();
-  console.log("MM SDK account", account, provider, chainId);
-
-  const { displayErrorToast } = useToasts();
+  const cleanupWagmiSession = (acc: string[]) => {
+    if ((acc as string[]).length === 0 && typeof window !== "undefined") {
+      window.localStorage.removeItem("providerType");
+      window.localStorage.removeItem("wagmi.store");
+      window.localStorage.removeItem("wagmi.wallet");
+      window.localStorage.removeItem("wagmi.connected");
+    }
+  };
 
   useEffect(() => {
     provider?.on("accountsChanged", (acc: unknown) => {
-      console.log("Account changed", acc);
-      if ((acc as string[]).length === 0 && typeof window !== "undefined") {
-        window.localStorage.removeItem("providerType");
-        window.localStorage.removeItem(".sdk-comm");
-        window.localStorage.removeItem("wagmi.store");
-        window.localStorage.removeItem("wagmi.cache");
-        window.localStorage.removeItem("wagmi.wallet");
-        window.localStorage.removeItem("wagmi.connected");
-      }
+      cleanupWagmiSession(acc as string[]);
     });
+
+    return () => {
+      provider?.removeListener("accountsChanged", cleanupWagmiSession);
+    };
   }, [provider]);
 
-  // useEffect(() => {
-  //   getActiveMetaMaskAccount()
-  //     .then(setWalletAddress)
-  //     .catch((error) => displayErrorToast(error.message));
-  // }, []);
+  const isLoading =
+    provider?.selectedAddress === undefined || provider?.chainId === undefined;
 
-  // useEffect(() => {
-  //   checkBSCConnection()
-  //     .then(markAsConnectedToChain)
-  //     .catch((error) => displayErrorToast(error.message));
-  // }, []);
+  if (isLoading) {
+    return null;
+  }
 
-  const performConditionalNavigation = (splide: any) => {
-    let skippedStepsAmount = 0;
-    if (walletAddress) {
-      skippedStepsAmount += 1;
-      if (isConnectedToChain) {
-        skippedStepsAmount += 1;
-      }
-    }
-    if (skippedStepsAmount > 0) {
-      splide.go(skippedStepsAmount);
-    }
-  };
+  return (
+    <StagesSlides
+      user={user}
+      skills={skills}
+      tokenId={tokenId}
+      walletAddress={provider?.selectedAddress}
+      chainId={provider?.chainId}
+    />
+  );
+}
+
+type StagesSlidesProps = Props & {
+  tokenId: string;
+  walletAddress: string | null;
+  chainId: string | null;
+};
+
+function StagesSlides({
+  user,
+  skills,
+  tokenId,
+  walletAddress,
+  chainId,
+}: StagesSlidesProps) {
+  // Stages content calculation need to be performed once during initialization
+  // After wallet/chain connection, keep setps the same to prevent unexpected slides skippage
+  const [initialWalletAddress] = useState<string | null>(walletAddress);
+  const [initialChainId] = useState<string | null>(chainId);
+  const [progress, setProgress] = useState(0); // from 0 to 100
+  const [newNFT, setNFT] = useState<UserNFTMetadata>();
+  const splide = useRef<Splide>(null);
+  const { displayErrorToast } = useToasts();
+  const { connectAsync } = useConnect();
 
   const goToNextQuestionOrFinish = () => {
     if (progress === 100) {
@@ -88,9 +94,19 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
       return null;
     }
     splide.current?.go(">");
+    const progressStep = calculateProgressStep({
+      walletConnected: Boolean(initialWalletAddress),
+      chainConnected: isBSCChainConnected(initialChainId),
+    });
     // Normalize decimal value, to simplify calculation of a last question
     const updatedProgress = Math.min(Math.ceil(progress + progressStep), 100);
     setProgress(updatedProgress);
+  };
+
+  const isBSCChainConnected = (chainId: string | null) => {
+    return chainId
+      ? parseInt(chainId, 16).toString() === process.env.NEXT_PUBLIC_BSC_NET_ID
+      : false;
   };
 
   const updateNFTs = (nftMetadata: TransactionMetadata) =>
@@ -120,12 +136,112 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
       })
     );
 
-  const isLoading =
-    walletAddress === undefined || isConnectedToChain === undefined;
-
-  // if (isLoading) {
-  //   return null;
-  // }
+  const basicStages = [
+    !initialWalletAddress ? (
+      <>
+        <p>We need to associate your upcoming NFT with a crypto wallet.</p>
+        <p>For now, only MetaMask is supported</p>
+        <div className={styles.actionsContainer}>
+          <AsyncButton
+            className="button-accent"
+            asyncAction={() =>
+              connectAsync()
+                .then(goToNextQuestionOrFinish)
+                .catch((error) => displayErrorToast(error.message))
+            }
+          >
+            Connect a MetaMask wallet
+          </AsyncButton>
+        </div>
+      </>
+    ) : null,
+    !isBSCChainConnected(initialChainId) ? (
+      <>
+        <p>For today we operate only on BNB Smart Chain (BSC)</p>
+        {/* There could be a case when it turns out a user was connected to expected chain
+            after wallet connection.
+            Design trade-off: display message that everything is ok and he can proceed
+        */}
+        {isBSCChainConnected(chainId) ? (
+          <>
+            <p>Seems like your account is connected to the right chain.</p>
+            <p>You can proceed to the NFT update stage</p>
+            <div className={styles.actionsContainer}>
+              <button
+                className={classNames("button", "button-accent")}
+                type="button"
+                onClick={goToNextQuestionOrFinish}
+              >
+                Proceed
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p>Seems like your account is connected to different chain.</p>
+            <p>To proceed, we need to switch to BSC</p>
+            <div className={styles.actionsContainer}>
+              <AsyncButton
+                className="button-accent"
+                asyncAction={() =>
+                  connectToBCS()
+                    .then(goToNextQuestionOrFinish)
+                    .catch((error) => displayErrorToast(error.message))
+                }
+              >
+                Yes, switch to BSC
+              </AsyncButton>
+            </div>
+          </>
+        )}
+      </>
+    ) : null,
+    <NFTMinting
+      key="nft-mint"
+      tokenId={tokenId}
+      user={{
+        ...user,
+        wallet_address: walletAddress ?? undefined,
+      }}
+      skills={skills}
+      onMint={(transactionMetadata) => {
+        updateNFTs(transactionMetadata)
+          .then(goToNextQuestionOrFinish)
+          .catch((error) => displayErrorToast(error.message));
+      }}
+    />,
+    <>
+      <h3>
+        Congratulations&nbsp;
+        <Image src={lightning} alt="Lightnight icon" height={40} />
+      </h3>
+      <div className={styles.actionsContainer}>
+        <div>
+          <Link
+            href={`${process.env.NEXT_PUBLIC_OPENSEA_GATEWAY}/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/${newNFT?.token_id}`}
+            target="_blank"
+            className="link"
+          >
+            NFT on OpenSea&nbsp;
+            <Image src={newTabIcon} alt="New tab" width={24} />
+          </Link>
+        </div>
+        <div>
+          <Link
+            href={`${process.env.NEXT_PUBLIC_BSC_GATEWAY}/${newNFT?.tx_hash}`}
+            target="_blank"
+            className="link"
+          >
+            Transaction details on BNB Chain&nbsp;
+            <Image src={newTabIcon} alt="New tab" width={24} />
+          </Link>
+        </div>
+        <Link className={classNames("button", "button-accent")} href="/profile">
+          Go to profile
+        </Link>
+      </div>
+    </>,
+  ];
 
   return (
     <div className={styles.container}>
@@ -144,92 +260,17 @@ export default function UpdateStages({ user, skills, tokenId }: Props) {
         }}
         tag="div"
         ref={splide}
-        onReady={performConditionalNavigation}
       >
-        <SplideSlide className={styles.singleSlide}>
-          <p>We need to associate your upcoming NFT with a crypto wallet.</p>
-          <p>For now, only MetaMask is supported</p>
-          <div className={styles.actionsContainer}>
-            <AsyncButton
-              className="button-accent"
-              asyncAction={() =>
-                connectAsync()
-                  .then((result) => setWalletAddress(result.account))
-                  .then(goToNextQuestionOrFinish)
-                  .catch((error) => displayErrorToast(error.message))
-              }
+        {basicStages
+          .filter((stage) => stage !== null)
+          .map((stage, idx) => (
+            <SplideSlide
+              key={`nft-stage-${idx}`}
+              className={styles.singleSlide}
             >
-              Connect a MetaMask wallet
-            </AsyncButton>
-          </div>
-        </SplideSlide>
-        <SplideSlide className={styles.singleSlide}>
-          <p>For today we operate only on BNB Smart Chain (BSC)</p>
-          <p>Seems like your account is connected to different chain.</p>
-          <p>To proceed, we need to switch to BSC</p>
-          <div className={styles.actionsContainer}>
-            <AsyncButton
-              className="button-accent"
-              asyncAction={() =>
-                connectToBCS()
-                  .then(() => markAsConnectedToChain(true))
-                  .then(goToNextQuestionOrFinish)
-                  .catch((error) => displayErrorToast(error.message))
-              }
-            >
-              Yes, switch to BSC
-            </AsyncButton>
-          </div>
-        </SplideSlide>
-        <SplideSlide className={styles.singleSlide}>
-          <NFTMinting
-            user={{
-              ...user,
-              wallet_address: walletAddress ?? undefined,
-            }}
-            skills={skills}
-            tokenId={tokenId}
-            onMint={(transactionMetadata) => {
-              updateNFTs(transactionMetadata)
-                .then(goToNextQuestionOrFinish)
-                .catch((error) => displayErrorToast(error.message));
-            }}
-          />
-        </SplideSlide>
-        <SplideSlide className={styles.singleSlide}>
-          <h3>
-            Congratulations&nbsp;
-            <Image src={lightning} alt="Lightnight icon" height={40} />
-          </h3>
-          <div className={styles.actionsContainer}>
-            <div>
-              <Link
-                href={`${process.env.NEXT_PUBLIC_OPENSEA_GATEWAY}/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/${newNFT?.token_id}`}
-                target="_blank"
-                className="link"
-              >
-                NFT on OpenSea&nbsp;
-                <Image src={newTabIcon} alt="New tab" width={24} />
-              </Link>
-            </div>
-            <div>
-              <Link
-                href={`${process.env.NEXT_PUBLIC_BSC_GATEWAY}/${newNFT?.tx_hash}`}
-                target="_blank"
-                className="link"
-              >
-                Transaction details on BNB Chain&nbsp;
-                <Image src={newTabIcon} alt="New tab" width={24} />
-              </Link>
-            </div>
-            <Link
-              className={classNames("button", "button-accent")}
-              href="/profile"
-            >
-              Go to profile
-            </Link>
-          </div>
-        </SplideSlide>
+              {stage}
+            </SplideSlide>
+          ))}
       </Splide>
     </div>
   );
