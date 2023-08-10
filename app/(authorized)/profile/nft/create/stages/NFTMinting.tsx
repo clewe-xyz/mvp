@@ -264,6 +264,7 @@ async function mintNFT(
     );
   }
   const metadata = await uploadToIPFS(imageBase64Data, config);
+  console.log("Metadata for FNT", metadata);
   const web3 = await initWeb3();
   const smartContract = new web3.eth.Contract(
     contractABI,
