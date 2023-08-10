@@ -1,15 +1,7 @@
-export async function checkBSCConnection() {
-  const chainId = await window.ethereum?.request({
-    method: "eth_chainId",
-    params: [],
-  });
-  return (
-    parseInt(chainId as string, 16).toString() ===
-    process.env.NEXT_PUBLIC_BSC_NET_ID
-  );
-}
-
-export async function connectToBCS() {
+export async function connectToBCS(provider?: any) {
+  if (!provider) {
+    throw new Error("You must install MetaMask to switch networks");
+  }
   const chainId = `0x${parseInt(
     process.env.NEXT_PUBLIC_BSC_NET_ID as string
   ).toString(16)}`;
@@ -41,6 +33,8 @@ export async function connectToBCS() {
       } catch (error: any) {
         throw new Error(error.message);
       }
+    } else {
+      throw new Error(error.message);
     }
   }
 }

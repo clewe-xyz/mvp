@@ -5,14 +5,15 @@ import contractABI from "@/smart-contract/abi.json";
 import { AsyncButton } from "@/ui-kit/buttons";
 import { ProgressLine } from "@/ui-kit/progress-line";
 import { useToasts } from "@/ui-kit/toasts";
+import { useSDK } from "@metamask/sdk-react";
 import classNames from "classnames";
 import { toPng } from "html-to-image";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import { NFTStorage } from "nft.storage";
 import { useEffect, useRef, useState } from "react";
+import Web3 from "web3";
 import { UserProfile } from "../../../types";
-import { initWeb3 } from "../../initWeb3";
 import styles from "./profileToImage.module.css";
 
 type Props = {
@@ -28,6 +29,7 @@ export type TransactionMetadata = {
 };
 
 export default function NFTMinting({ user, skills, tokenId, onMint }: Props) {
+  const { provider } = useSDK();
   const [isInitialized, initialize] = useState(false);
   const [preview, setPreview] = useState<string | undefined>(undefined);
 
@@ -100,7 +102,7 @@ export default function NFTMinting({ user, skills, tokenId, onMint }: Props) {
               <AsyncButton
                 className={classNames("button-accent", styles.mintNFTBtn)}
                 asyncAction={() =>
-                  updateNFT(preview, {
+                  updateNFT(preview, provider, {
                     walletAddress: user.wallet_address,
                     tokenId,
                     name: "The captured progress made on the CleWe platform",
@@ -140,7 +142,7 @@ export default function NFTMinting({ user, skills, tokenId, onMint }: Props) {
               <AsyncButton
                 className={classNames("button-accent", styles.mintNFTBtn)}
                 asyncAction={() =>
-                  updateNFT(preview, {
+                  updateNFT(preview, provider, {
                     walletAddress: user.wallet_address,
                     tokenId,
                     name: "The captured progress made on the CleWe platform",
@@ -268,6 +270,7 @@ const NFTStorageClient = new NFTStorage({
 
 async function updateNFT(
   imageBase64Data: string,
+  provider: any,
   { walletAddress, tokenId, ...tokenMetadata }: Config
 ) {
   if (!walletAddress) {
@@ -276,8 +279,7 @@ async function updateNFT(
     );
   }
   const metadata = await uploadToIPFS(imageBase64Data, tokenMetadata);
-  console.log("Metadata for FNT", metadata);
-  const web3 = await initWeb3();
+  const web3 = new Web3(provider);
   const smartContract = new web3.eth.Contract(
     contractABI,
     process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS

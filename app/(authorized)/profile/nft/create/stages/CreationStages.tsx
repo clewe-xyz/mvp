@@ -53,14 +53,7 @@ export default function CreationStages({ user, skills }: Props) {
     return null;
   }
 
-  return (
-    <StagesSlides
-      user={user}
-      skills={skills}
-      walletAddress={provider?.selectedAddress}
-      chainId={provider?.chainId}
-    />
-  );
+  return <StagesSlides user={user} skills={skills} />;
 }
 
 type StagesSlidesProps = Props & {
@@ -68,16 +61,14 @@ type StagesSlidesProps = Props & {
   chainId: string | null;
 };
 
-function StagesSlides({
-  user,
-  skills,
-  walletAddress,
-  chainId,
-}: StagesSlidesProps) {
+function StagesSlides({ user, skills }: Props) {
   // Stages content calculation need to be performed once during initialization
-  // After wallet/chain connection, keep setps the same to prevent unexpected slides skippage
-  const [initialWalletAddress] = useState<string | null>(walletAddress);
-  const [initialChainId] = useState<string | null>(chainId);
+  // After wallet/chain being connected, keep setps the same to prevent unexpected slides skippage
+  const { provider } = useSDK();
+  const [initialWalletAddress] = useState<string | null>(
+    provider?.selectedAddress ?? null
+  );
+  const [initialChainId] = useState<string | null>(provider?.chainId ?? null);
   const [progress, setProgress] = useState(0); // from 0 to 100
   const [newNFT, setNFT] = useState<UserNFTMetadata>();
   const splide = useRef<Splide>(null);
@@ -113,7 +104,7 @@ function StagesSlides({
           {
             tx_hash: nftMetadata.transactionHash,
             token_id: nftMetadata.tokenId ?? "",
-            from_address: walletAddress,
+            from_address: provider?.selectedAddress,
             updated_at: {
               time: DateTime.now().toISO(),
               zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -158,7 +149,7 @@ function StagesSlides({
             after wallet connection.
             Design trade-off: display message that everything is ok and he can proceed
         */}
-        {isBSCChainConnected(chainId) ? (
+        {isBSCChainConnected(provider?.chainId ?? null) ? (
           <>
             <p>Seems like your account is connected to the right chain.</p>
             <p>You can proceed to the NFT minting stage</p>
@@ -180,7 +171,7 @@ function StagesSlides({
               <AsyncButton
                 className="button-accent"
                 asyncAction={() =>
-                  connectToBCS()
+                  connectToBCS(provider)
                     .then(goToNextQuestionOrFinish)
                     .catch((error) => displayErrorToast(error.message))
                 }
@@ -196,7 +187,7 @@ function StagesSlides({
       key="nft-mint"
       user={{
         ...user,
-        wallet_address: walletAddress ?? undefined,
+        wallet_address: provider?.selectedAddress ?? undefined,
       }}
       skills={skills}
       onMint={(transactionMetadata) => {
