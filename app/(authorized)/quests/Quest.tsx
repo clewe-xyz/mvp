@@ -46,18 +46,7 @@ export default function Quest({
         </div>
       </div>
       <div className={styles.questActions}>
-        {isCompleted ? (
-          <Link
-            href={`/quests/${id}/preparation`}
-            className={classNames(
-              "button",
-              "button-outline",
-              styles.questActionButton
-            )}
-          >
-            Restart quest
-          </Link>
-        ) : (
+        {isCompleted ? null : (
           <Link
             href={`/quests/${id}/preparation`}
             className={classNames(

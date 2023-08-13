@@ -11,6 +11,8 @@ import { NFTSlider } from "./nft";
 import styles from "./page.module.css";
 import { UserProfile } from "./types";
 
+export const dynamic = "force-dynamic";
+
 async function getProfile(): Promise<UserProfile> {
   const profile = await authorizedRequest("users/me");
   return profile.json();

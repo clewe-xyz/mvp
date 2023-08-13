@@ -3,6 +3,8 @@ import { SkillType } from "../skill";
 import Quest from "./Quest";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 type Quest = {
   id: number;
   name: string;
