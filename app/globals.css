@@ -63,6 +63,9 @@ body {
   line-height: 1.5;
   max-width: 100vw;
   position: relative;
+}
+
+body {
   touch-action: none;
 }
 
