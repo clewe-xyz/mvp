@@ -65,10 +65,6 @@ body {
   position: relative;
 }
 
-body {
-  touch-action: none;
-}
-
 html,
 body,
 a,
