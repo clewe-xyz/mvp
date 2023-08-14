@@ -291,6 +291,10 @@ async function updateNFT(
     .send({
       from: walletAddress,
     });
+  // Update metadata on OpenSea in a bg mode, to not disrupt the main process
+  // OpenSea metadata can be updated manually on their website
+  updateOpenSeaMetadata(tokenId);
+
   return {
     ...mintReceipt,
     tokenId,
@@ -316,4 +320,17 @@ async function convertBase64ToPNG(
   const response = await fetch(imageBase64Data);
   const arrayBuffer = await response.blob();
   return new File([arrayBuffer], name, { type: "image/png" });
+}
+
+async function updateOpenSeaMetadata(tokenId: string) {
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_OPENSEA_API_GATEWAY}/chain/${process.env.NEXT_PUBLIC_OPENSEA_CHAIN}/contract/${process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS}/nfts/${tokenId}/refresh`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "X-API-KEY": process.env.NEXT_PUBLIC_OPENSEA_API_KEY ?? "",
+      },
+    }
+  ).catch((error) => console.error(error.message));
 }
