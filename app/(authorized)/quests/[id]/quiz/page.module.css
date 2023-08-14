@@ -199,6 +199,7 @@
   border-radius: 16px;
   box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.26);
   max-width: 240px;
+  min-width: 160px;
   overflow: hidden;
   position: relative;
   text-align: center;
@@ -219,10 +220,10 @@
 }
 
 .answersStatsSummary {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
   grid-column-gap: 20px;
   align-items: start;
+  justify-content: center;
   margin-top: 20px;
 }
 
@@ -249,11 +250,13 @@
   overflow-x: auto;
 }
 
-.skillsSummaryContainer .statBlock {
+.skillsSummaryContainer .statBlock,
+.answersStatsSummary .statBlock {
   flex-shrink: 0;
 }
 
-.skillsSummaryContainer .statBlock:not(:last-of-type) {
+.skillsSummaryContainer .statBlock:not(:last-of-type),
+.answersStatsSummary .statBlock:not(:last-of-type) {
   margin-right: 16px;
 }
 

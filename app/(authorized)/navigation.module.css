@@ -26,7 +26,7 @@
   left: 0;
 }
 
-.navBlockContent::before {
+.navBlock::before {
   content: "";
   display: block;
   height: 4px;
@@ -36,6 +36,11 @@
     var(--gradient-first),
     var(--gradient-second)
   );
+}
+
+.navBlockContent {
+  max-width: 768px;
+  margin: 0 auto;
 }
 
 .navBlockHeader {
