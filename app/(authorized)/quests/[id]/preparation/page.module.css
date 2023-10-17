@@ -34,6 +34,15 @@
   overflow-y: auto;
 }
 
+.mediaContainer {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.mediaContainer img {
+  max-width: 100%;
+}
+
 .materialsSlideVideo {
   width: 100%;
   max-width: 560px;

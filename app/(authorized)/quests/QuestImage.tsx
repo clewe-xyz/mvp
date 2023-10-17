@@ -17,7 +17,7 @@ export default function QuestImage({ tag }: Props) {
       );
     case "dex":
       return <Image className={styles.questImage} src={quest2} alt="DEX" />;
-    case "wallets":
+    case "crypto-wallets":
       return (
         <Image
           className={styles.questImage}
